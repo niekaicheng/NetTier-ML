@@ -1,0 +1,133 @@
+项目类型： 应用型（小组，需审阅 10 篇论文） 核心思路： 参考 CIC-IDS2017 论文中的层级（Hierarchical）思想。第一层用轻量级模型（如随机森林）快速过滤正常流量，第二层用深度学习（如你下载的 TransECA-Net 简化版）识别具体攻击类型。
+• 选题名称： A Hierarchical Network Intrusion Detection Framework Integrating Statistical Features and Sequence Modeling.
+• 数据集： CIC-IDS2017（Kaggle 有完整免费数据）。
+• 实验内容： 
+1. 使用 Python 的 pandas 进行数据清洗。 
+2. 对比传统 ML（随机森林/XGBoost）与序列模型（如简化的 Transformer）在分类准确率和推理速度上的差异。 
+3. 验证“分层过滤”是否能显著降低系统在处理大规模网络流量时的计算延迟。
+• 对应参考文献： 引用你的论文 1, 2, 6 (数据来源) 和 5, 9 (模型方法)。
+
+我的数据来源选择了 CIC-IDS2017 archive文件夹中是我下载的数据。数据格式为.parquet
+
+文件列表是
+Benign-Monday-no-metadata.parquet
+Botnet-Friday-no-metadata.parquet
+Bruteforce-Tuesday-no-metadata.parquet
+DDoS-Friday-no-metadata.parquet
+DoS-Wednesday-no-metadata.parquet
+Infiltration-Wednesday-no-metadata.parquet
+Labelled-Thursday-no-metadata.parquet
+Labelled-Tuesday-no-metadata.parquet
+Labelled-Wednesday-no-metadata.parquet
+WebAttacks-Thursday-no-metadata.parquet
+
+项目核心流程思路
+在处理大规模机器学习项目时，我们将流程拆分为三个核心层：
+
+ETL 层 (Cleaning): 负责将原始数据转换为 Antigravity 可处理的张量或分布式对象。
+
+Core 层 (Modeling): 包含模型定义、训练逻辑及评估指标。
+
+App 层 (Presentation): 负责结果的可视化和交互式展示。
+
+推荐项目架构 (File Structure)
+my-ml-project/
+├── data/                   # 存储原始数据和清洗后的中间件
+├── configs/                # 配置文件 (yaml/json)，控制超参数和路径
+├── src/                    # 源代码根目录
+│   ├── cleaning/           # 1. 数据清洗模块
+│   │   ├── __init__.py
+│   │   ├── processor.py    # 使用 Antigravity 的分布式清洗逻辑
+│   │   └── validators.py   # 数据质量检查
+│   ├── modeling/           # 2. 建模与训练模块
+│   │   ├── __init__.py
+│   │   ├── architecture.py # 模型结构定义
+│   │   ├── trainer.py      # 训练循环与分布式策略
+│   │   └── evaluator.py    # 评估模型性能
+│   └── presentation/       # 3. 数据展示模块
+│       ├── __init__.py
+│       ├── dashboard.py    # Streamlit 或 Plotly 展示脚本
+│       └── plots.py        # 绘图逻辑（混淆矩阵、Loss 曲线）
+├── notebooks/              # 用于前期探索的 Jupyter Notebooks
+├── .github/                # Copilot 配置
+│   └── copilot-instructions.md # 给 Copilot 的“技能”说明书
+├── main.py                 # 项目统一入口
+└── requirements.txt
+
+学习训练得到的模型文件
+我现在要先可视化这些模型文件
+能够展示出模型的分类报告（Classification Report）
+能够展示出模型的混淆矩阵（Confusion Matrix）
+能够展示出模型的特征重要性（Feature Importance）
+
+
+要查看该项目的学习结果和具体学习内容，你需要从**代码输出**、**模型文件分析**以及**特征贡献度**三个层面入手。
+
+以下是具体的查看方法：
+
+---
+
+### 1. 查看评估指标（代码输出）
+
+当你运行 `python run_pipeline.py` 时，控制台通常会输出一个 **分类报告（Classification Report）**。这是最直观的学习结果：
+
+* **Precision (精确率)**：模型说是攻击的流量中，实际真是攻击的比例。
+* **Recall (召回率)**：实际所有的攻击流量中，被模型成功捕捉到的比例（对于 Stage 1 尤为重要）。
+* **F1-Score**：精确率和召回率的平衡指标。
+* **Confusion Matrix (混淆矩阵)**：可以看到具体的误报（正常看作攻击）和漏报（攻击看作正常）的数量。
+
+---
+
+### 2. 查看“学习到了什么”：特征重要性
+
+随机森林最大的优势是其**可解释性**。你可以通过 Python 代码提取模型认为最重要的“学习内容”：
+
+```python
+import joblib
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. 加载训练好的模型
+model = joblib.load('models_chk/stage1_rf.joblib') 
+
+# 2. 提取特征重要性
+importances = model.feature_importances_
+feature_names = [...] # 这里填入你 77 个特征的名字
+
+# 3. 排序并查看前 10 个最关键的学习点
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+print(feature_importance_df.sort_values(by='Importance', ascending=False).head(10))
+
+```
+
+**这意味着：** 如果结果显示 `Destination Port` 或 `Flow IAT Max` 的重要性最高，说明模型学习到了“特定端口的异常频率”或“数据包时间间隔”是识别攻击的核心依据。
+
+---
+
+### 3. 查看数据预处理的学习结果
+
+在 `models_chk/preprocessor.joblib` 中，存储了模型对数据分布的理解。你可以加载它来查看模型学习到的数据特征：
+
+* **均值 (Means) 与方差 (Variances)**：反映了 CIC-IDS2017 数据集网络流量的基准水平。
+* **标签编码 (Label Encoding)**：模型将 "Botnet"、"DoS" 等字符串映射成的数字对应关系。
+
+---
+
+### 4. 查看 Stage 2 的深度特征提取
+
+对于 Stage 2 的 **TransECA-Net**，它的学习内容存储在神经网络的权重中。你可以通过以下方式查看：
+
+* **Loss Curve (损失曲线)**：查看模型在 1 个 epoch 内的学习速度，判断是否收敛。
+* **Attention Maps (注意力图)**：TransECA-Net 中的 ECA 模块会学习哪些特征通道（Channel）之间存在强关联。
+
+---
+
+### 5. 检查项目结构中的“证据”
+
+* **`models_chk/` 目录**：检查该文件夹下生成的文件日期，确保它们是你最近训练产生的。
+* **`logs/` (如果有)**：查看训练日志，里面记录了每一轮迭代的准确率变化。
+
+**建议下一步：**
+如果你想看具体排名第一的特征是什么，可以尝试运行我上面提供的 `feature_importances_` 脚本。
+
+写一个完整的脚本来可视化这些“学习结果”

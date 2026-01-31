@@ -1,0 +1,37 @@
+# Agent files
+.agent/
+
+# Temporary files
+temp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Model checkpoints (optional - uncomment if you don't want to track large models)
+# models_chk/
+
+# Results (optional - uncomment if you don't want to track results)
+# results/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
