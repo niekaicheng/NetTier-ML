@@ -1,0 +1,75 @@
+Hierarchical Network Intrusion Detection System (H-NIDS) Framework
+---
+
+# Hierarchical Network Intrusion Detection System (H-NIDS)
+
+## 1. Project Overview (Overview)
+
+This project implements a hierarchical intrusion detection framework based on the **CIC-IDS2017** dataset,
+aiming to balance detection accuracy and response latency for massive network traffic through a "funnel-style" filtering mechanism.
+
+* **Stage 1 (Coarse Filtering Layer):** Uses **Random Forest**. Focuses on lightweight and high recall, performs binary classification (normal vs attack).
+* **Stage 2 (Fine Inspection Layer):** Uses **TransECA-Net** (CNN + ECA + Transformer). Focuses on deep semantic feature extraction, performs multi-class attack identification.
+* **Core Advantage:** By filtering out over 90% of normal traffic, significantly reduces the computational pressure on deep learning models.
+
+---
+
+## 2. Implementation Details (Implementation Details)
+
+### System Architecture
+
+* **Environment:** Python 3.10
+* **Core Libraries:** PyTorch, Scikit-Learn, Pandas, Joblib
+* **Directory Structure:**
+```text
+src/
+├── processing/     # ETL layer: data loading, cleaning, feature scaling
+├── models/         # Model definitions (Stage1, Stage2, Hybrid Controller)
+└── models_chk/     # Stores pre-trained weights and Scaler objects
+```
+
+### Core Component Logic
+
+1. **Stage 1 Filter (`src/models/stage1_rf.py`)**
+* **Objective:** Quick identification of mixed attacks (PortScan, DoS, Botnet, etc.).
+* **Performance:** Recall ~99%, single sample inference latency **< 0.1ms**.
+
+2. **Stage 2 TransECA-Net (`src/models/stage2_transeca.py`)**
+* **Architecture:** `1D-CNN` (local features) → `ECA Attention` (channel enhancement) → `Transformer Encoder` (global temporal).
+* **Input:** 77-dimensional traffic statistical feature sequence.
+
+3. **Hybrid Controller (`src/models/hybrid.py`)**
+* **Function:** Scheduling hub. Only when Stage 1 marks a sample as "malicious" does it activate Stage 2 for deep detection.
+
+---
+
+## 3. Experimental Verification Results (Verification Results)
+
+### End-to-End Pipeline Performance
+
+The system was stress-tested by simulating **20,000** mixed traffic samples (including normal and various attacks):
+
+| Evaluation Metric | Experimental Result | Notes |
+| --- | --- | --- |
+| **Throughput** | **~70,000 samples/sec** | Pure CPU environment test |
+| **Total Latency** | **0.28s** | Total time to process 20k batch data |
+| **Filtering Efficacy** | **~10%** | Stage 1 successfully blocked 90% of invalid computation |
+| **Detection Recall** | **> 97%** | Stage 1's capture rate for attack samples |
+
+> **Verification Command:** `python run_pipeline.py`
+
+---
+
+## 4. Next Steps and Optimization (Next Steps)
+
+* **Deep Fine-tuning:** Current Stage 2 only performs 1 epoch of POC training, subsequent iterations need to be increased to improve multi-class accuracy.
+* **System Robustness:** Optimize the loading logic of `models_chk/preprocessor.joblib` to ensure complete consistency of feature distributions between inference and training phases.
+* **Deployment:** Use **FastAPI** to encapsulate the `HierarchicalIDS` interface, or develop a **Streamlit** dashboard for real-time traffic monitoring.
+
+---
+
+## Known Issues (Known Issues)
+
+* **Class Imbalance:** Due to extremely few samples of some attack types (such as WebAttacks), they may be missing in small-scale random test sets, causing `classification_report` to trigger warnings. It is recommended to use **SMOTE resampling** or stratified sampling in subsequent experiments.
+
+---

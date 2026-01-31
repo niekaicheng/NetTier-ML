@@ -1,0 +1,131 @@
+Project Type: Application-based (Team project, requires reviewing 10 papers)
+Core Concept: Reference the Hierarchical idea from the CIC-IDS2017 paper. The first layer uses a lightweight model (such as Random Forest) to quickly filter normal traffic, and the second layer uses deep learning (like the simplified version of TransECA-Net you downloaded) to identify specific attack types.
+• Project Title: A Hierarchical Network Intrusion Detection Framework Integrating Statistical Features and Sequence Modeling.
+• Dataset: CIC-IDS2017 (complete free data available on Kaggle).
+• Experimental Content:
+1. Use Python's pandas for data cleaning.
+2. Compare traditional ML (Random Forest/XGBoost) with sequence models (such as simplified Transformer) in terms of classification accuracy and inference speed.
+3. Verify whether "hierarchical filtering" can significantly reduce computational latency when processing large-scale network traffic.
+• Reference Literature: Cite your papers 1, 2, 6 (data sources) and 5, 9 (model methods).
+
+My data source is CIC-IDS2017. The data is in the archive folder that I downloaded. The data format is .parquet
+
+File List:
+Benign-Monday-no-metadata.parquet
+Botnet-Friday-no-metadata.parquet
+Bruteforce-Tuesday-no-metadata.parquet
+DDoS-Friday-no-metadata.parquet
+DoS-Wednesday-no-metadata.parquet
+Infiltration-Wednesday-no-metadata.parquet
+Labelled-Thursday-no-metadata.parquet
+Labelled-Tuesday-no-metadata.parquet
+Labelled-Wednesday-no-metadata.parquet
+WebAttacks-Thursday-no-metadata.parquet
+
+Project Core Process Concept
+When handling large-scale machine learning projects, we split the process into three core layers:
+
+ETL Layer (Cleaning): Responsible for converting raw data into processable tensors or distributed objects.
+
+Core Layer (Modeling): Contains model definitions, training logic, and evaluation metrics.
+
+App Layer (Presentation): Responsible for visualization and interactive display of results.
+
+Recommended Project Structure (File Structure)
+my-ml-project/
+├── data/                   # Store raw data and cleaned intermediate files
+├── configs/                # Configuration files (yaml/json), control hyperparameters and paths
+├── src/                    # Source code root directory
+│   ├── cleaning/           # 1. Data cleaning module
+│   │   ├── __init__.py
+│   │   ├── processor.py    # Distributed cleaning logic using Antigravity
+│   │   └── validators.py   # Data quality checks
+│   ├── modeling/           # 2. Modeling and training module
+│   │   ├── __init__.py
+│   │   ├── architecture.py # Model architecture definition
+│   │   ├── trainer.py      # Training loop and distributed strategy
+│   │   └── evaluator.py    # Model performance evaluation
+│   └── presentation/       # 3. Data presentation module
+│       ├── __init__.py
+│       ├── dashboard.py    # Streamlit or Plotly display scripts
+│       └── plots.py        # Plotting logic (confusion matrix, Loss curves)
+├── notebooks/              # Jupyter Notebooks for early exploration
+├── main.py                 # Unified project entry point
+└── requirements.txt
+
+Trained Model Files
+I now want to visualize these model files first
+Able to display the Classification Report
+Able to display the Confusion Matrix
+Able to display the Feature Importance
+
+
+To view the learning results and specific learning content of this project, you need to start from three aspects: **code output**, **model file analysis**, and **feature contribution**.
+
+Here are specific viewing methods:
+
+---
+
+### 1. View Evaluation Metrics (Code Output)
+
+When you run `python run_pipeline.py`, the console usually outputs a **Classification Report**. This is the most intuitive learning result:
+
+* **Precision**: Among the traffic the model identifies as attacks, the proportion that are actually attacks.
+* **Recall**: Among all actual attack traffic, the proportion successfully captured by the model (especially important for Stage 1).
+* **F1-Score**: A balanced metric of precision and recall.
+* **Confusion Matrix**: Shows the specific number of false positives (normal traffic identified as attacks) and false negatives (attacks identified as normal).
+
+---
+
+### 2. View "What Was Learned": Feature Importance
+
+The biggest advantage of Random Forest is its **interpretability**. You can extract the most important "learned content" that the model considers through Python code:
+
+```python
+import joblib
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Load the trained model
+model = joblib.load('models_chk/stage1_rf.joblib') 
+
+# 2. Extract feature importance
+importances = model.feature_importances_
+feature_names = [...] # Fill in your 77 feature names here
+
+# 3. Sort and view the top 10 most critical learning points
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+print(feature_importance_df.sort_values(by='Importance', ascending=False).head(10))
+```
+
+**This means:** If the results show that `Destination Port` or `Flow IAT Max` have the highest importance, it indicates that the model has learned that "abnormal frequency of specific ports" or "packet time intervals" are the core bases for identifying attacks.
+
+---
+
+### 3. View Data Preprocessing Learning Results
+
+In `models_chk/preprocessor.joblib`, the model's understanding of data distribution is stored. You can load it to view the data features the model has learned:
+
+* **Means and Variances**: Reflect the baseline level of network traffic in the CIC-IDS2017 dataset.
+* **Label Encoding**: The numerical correspondence that the model maps strings like "Botnet", "DoS", etc. to.
+
+---
+
+### 4. View Stage 2 Deep Feature Extraction
+
+For Stage 2's **TransECA-Net**, its learned content is stored in the neural network weights. You can view it in the following ways:
+
+* **Loss Curve**: View the model's learning speed within 1 epoch to determine whether it has converged.
+* **Attention Maps**: The ECA module in TransECA-Net learns which feature channels have strong correlations.
+
+---
+
+### 5. Check "Evidence" in Project Structure
+
+* **`models_chk/` directory**: Check the file dates generated in this folder to ensure they were produced by your recent training.
+* **`logs/` (if available)**: View training logs, which record the accuracy changes for each iteration.
+
+**Suggested next step:**
+If you want to see what the top-ranked feature is specifically, you can try running the `feature_importances_` script I provided above.
+
+Write a complete script to visualize these "learning results"

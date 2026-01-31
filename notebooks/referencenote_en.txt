@@ -1,0 +1,31 @@
+Project Architecture Design Rationale: Hierarchical Intrusion Detection Framework
+This framework adopts a "funnel-style" hierarchical architecture, aiming to balance real-time performance with precision. The following are specific design logic and academic support:
+
+1. Overall Architecture: Hierarchical Filtering Design (Hierarchical Framework)
+Design Basis: Deeply references the hierarchical filtering concept from the original CIC-IDS2017 paper and aligns with the optimization recommendations for large-scale traffic processing in Machine_Learning_in_Network_Anomaly_Detection_A_Survey.pdf.
+
+Academic Logic: In real production environments, benign traffic typically accounts for over 90%. If high-complexity deep learning inference is performed on all data, the system will crash when processing peak traffic.
+
+Design Value: Constructs a "coarse screening first, fine inspection later" pipeline, pushing only suspicious attack traffic to the deep network, greatly reducing the system's computational power consumption and average response latency.
+
+2. Stage 1: Statistical Feature Filtering Layer (Stage 1: Random Forest)
+Core Positioning: Efficient "Gatekeeper"
+
+Technical Advantages: 
+1. Ultra-fast Inference: Random Forest is essentially an ensemble of multiple decision trees, with the inference process involving only basic logical judgments (if-else), computation at the microsecond level, perfectly matching the "massive cleaning" needs of the first layer. 
+2. Robustness and High Recall: This model is insensitive to noisy data. Experiments show that in "binary classification (Normal vs. Attack)" tasks, RF can easily achieve 99% recall, ensuring the false negative rate is minimized. 
+3. Statistical Feature Support: Can effectively utilize key statistical metrics such as Flow IAT Max, conforming to the technical description of "classification based on statistical features" in reference literature.
+
+3. Stage 2: Sequence Modeling Fine Inspection Layer (Stage 2: TransECA-Net)
+Core Positioning: Precise "Diagnostic Expert"
+
+Technical Evolution: After the first layer identifies "anomalies", the system launches TransECA-Net for fine-grained classification (multi-classification).
+
+Core Logic: 
+1. Feature Fusion: Combines CNN's local spatial extraction capability with Transformer's long-range temporal modeling capability. 
+2. Attention Mechanism: Introduces ECA (Efficient Channel Attention), addressing the issue of redundant features in network traffic, achieving adaptive weighting of key features, effectively identifying complex, disguised attack types (such as Infiltration or Botnet).
+
+Stage        | Core Metric             | Expected Target     | Function
+-------------|-------------------------|---------------------|----------------------------------
+Stage 1 (RF) | Throughput              | > 100k packets/s    | Ensure no packet loss, filter background noise
+Stage 2 (DL) | F1-Score                | > 0.95              | Accurately determine specific attack types
