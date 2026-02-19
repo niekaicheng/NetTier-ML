@@ -1,0 +1,630 @@
+{
+    "all_thresholds": [
+        {
+            "threshold": 0.0,
+            "recall": 1.0,
+            "pass_through_rate": 1.0,
+            "precision": 0.08668
+        },
+        {
+            "threshold": 0.01,
+            "recall": 1.0,
+            "pass_through_rate": 0.13702,
+            "precision": 0.6326083783389286
+        },
+        {
+            "threshold": 0.02,
+            "recall": 1.0,
+            "pass_through_rate": 0.1221,
+            "precision": 0.7099099099099099
+        },
+        {
+            "threshold": 0.03,
+            "recall": 1.0,
+            "pass_through_rate": 0.1138,
+            "precision": 0.7616871704745167
+        },
+        {
+            "threshold": 0.04,
+            "recall": 1.0,
+            "pass_through_rate": 0.10726,
+            "precision": 0.8081297781092672
+        },
+        {
+            "threshold": 0.05,
+            "recall": 1.0,
+            "pass_through_rate": 0.10464,
+            "precision": 0.8283639143730887
+        },
+        {
+            "threshold": 0.06,
+            "recall": 1.0,
+            "pass_through_rate": 0.1022,
+            "precision": 0.8481409001956948
+        },
+        {
+            "threshold": 0.07,
+            "recall": 1.0,
+            "pass_through_rate": 0.10136,
+            "precision": 0.8551696921862668
+        },
+        {
+            "threshold": 0.08,
+            "recall": 1.0,
+            "pass_through_rate": 0.09852,
+            "precision": 0.8798213560698336
+        },
+        {
+            "threshold": 0.09,
+            "recall": 1.0,
+            "pass_through_rate": 0.09766,
+            "precision": 0.8875691173458939
+        },
+        {
+            "threshold": 0.1,
+            "recall": 1.0,
+            "pass_through_rate": 0.09622,
+            "precision": 0.9008522136769902
+        },
+        {
+            "threshold": 0.11,
+            "recall": 1.0,
+            "pass_through_rate": 0.09586,
+            "precision": 0.9042353432088462
+        },
+        {
+            "threshold": 0.12,
+            "recall": 1.0,
+            "pass_through_rate": 0.09484,
+            "precision": 0.9139603542808942
+        },
+        {
+            "threshold": 0.13,
+            "recall": 1.0,
+            "pass_through_rate": 0.09404,
+            "precision": 0.9217354317311782
+        },
+        {
+            "threshold": 0.14,
+            "recall": 1.0,
+            "pass_through_rate": 0.0934,
+            "precision": 0.928051391862955
+        },
+        {
+            "threshold": 0.15,
+            "recall": 1.0,
+            "pass_through_rate": 0.09246,
+            "precision": 0.9374864806402768
+        },
+        {
+            "threshold": 0.16,
+            "recall": 1.0,
+            "pass_through_rate": 0.09206,
+            "precision": 0.9415598522702585
+        },
+        {
+            "threshold": 0.17,
+            "recall": 1.0,
+            "pass_through_rate": 0.09124,
+            "precision": 0.950021920210434
+        },
+        {
+            "threshold": 0.18,
+            "recall": 1.0,
+            "pass_through_rate": 0.09094,
+            "precision": 0.9531559269848252
+        },
+        {
+            "threshold": 0.19,
+            "recall": 1.0,
+            "pass_through_rate": 0.09044,
+            "precision": 0.9584254754533392
+        },
+        {
+            "threshold": 0.2,
+            "recall": 1.0,
+            "pass_through_rate": 0.09026,
+            "precision": 0.9603368047861732
+        },
+        {
+            "threshold": 0.21,
+            "recall": 1.0,
+            "pass_through_rate": 0.09002,
+            "precision": 0.9628971339702288
+        },
+        {
+            "threshold": 0.22,
+            "recall": 1.0,
+            "pass_through_rate": 0.08988,
+            "precision": 0.9643969737427681
+        },
+        {
+            "threshold": 0.23,
+            "recall": 1.0,
+            "pass_through_rate": 0.08974,
+            "precision": 0.9659014932025852
+        },
+        {
+            "threshold": 0.24,
+            "recall": 1.0,
+            "pass_through_rate": 0.08968,
+            "precision": 0.9665477252453167
+        },
+        {
+            "threshold": 0.25,
+            "recall": 1.0,
+            "pass_through_rate": 0.08958,
+            "precision": 0.9676267023889261
+        },
+        {
+            "threshold": 0.26,
+            "recall": 1.0,
+            "pass_through_rate": 0.08928,
+            "precision": 0.9708781362007168
+        },
+        {
+            "threshold": 0.27,
+            "recall": 1.0,
+            "pass_through_rate": 0.08912,
+            "precision": 0.97262118491921
+        },
+        {
+            "threshold": 0.28,
+            "recall": 1.0,
+            "pass_through_rate": 0.08898,
+            "precision": 0.9741514947179142
+        },
+        {
+            "threshold": 0.29,
+            "recall": 1.0,
+            "pass_through_rate": 0.08874,
+            "precision": 0.9767861167455488
+        },
+        {
+            "threshold": 0.3,
+            "recall": 1.0,
+            "pass_through_rate": 0.08856,
+            "precision": 0.9787714543812105
+        },
+        {
+            "threshold": 0.31,
+            "recall": 1.0,
+            "pass_through_rate": 0.0885,
+            "precision": 0.9794350282485875
+        },
+        {
+            "threshold": 0.32,
+            "recall": 1.0,
+            "pass_through_rate": 0.08838,
+            "precision": 0.980764878931885
+        },
+        {
+            "threshold": 0.33,
+            "recall": 1.0,
+            "pass_through_rate": 0.08826,
+            "precision": 0.9820983457965103
+        },
+        {
+            "threshold": 0.34,
+            "recall": 1.0,
+            "pass_through_rate": 0.08822,
+            "precision": 0.9825436408977556
+        },
+        {
+            "threshold": 0.35000000000000003,
+            "recall": 1.0,
+            "pass_through_rate": 0.08816,
+            "precision": 0.9832123411978222
+        },
+        {
+            "threshold": 0.36,
+            "recall": 1.0,
+            "pass_through_rate": 0.08792,
+            "precision": 0.9858962693357598
+        },
+        {
+            "threshold": 0.37,
+            "recall": 1.0,
+            "pass_through_rate": 0.08792,
+            "precision": 0.9858962693357598
+        },
+        {
+            "threshold": 0.38,
+            "recall": 1.0,
+            "pass_through_rate": 0.08782,
+            "precision": 0.9870189023001594
+        },
+        {
+            "threshold": 0.39,
+            "recall": 1.0,
+            "pass_through_rate": 0.08782,
+            "precision": 0.9870189023001594
+        },
+        {
+            "threshold": 0.4,
+            "recall": 1.0,
+            "pass_through_rate": 0.0878,
+            "precision": 0.987243735763098
+        },
+        {
+            "threshold": 0.41000000000000003,
+            "recall": 1.0,
+            "pass_through_rate": 0.08778,
+            "precision": 0.9874686716791979
+        },
+        {
+            "threshold": 0.42,
+            "recall": 1.0,
+            "pass_through_rate": 0.08774,
+            "precision": 0.9879188511511283
+        },
+        {
+            "threshold": 0.43,
+            "recall": 1.0,
+            "pass_through_rate": 0.08774,
+            "precision": 0.9879188511511283
+        },
+        {
+            "threshold": 0.44,
+            "recall": 1.0,
+            "pass_through_rate": 0.08772,
+            "precision": 0.9881440948472412
+        },
+        {
+            "threshold": 0.45,
+            "recall": 1.0,
+            "pass_through_rate": 0.08772,
+            "precision": 0.9881440948472412
+        },
+        {
+            "threshold": 0.46,
+            "recall": 1.0,
+            "pass_through_rate": 0.08766,
+            "precision": 0.9888204426192105
+        },
+        {
+            "threshold": 0.47000000000000003,
+            "recall": 1.0,
+            "pass_through_rate": 0.08766,
+            "precision": 0.9888204426192105
+        },
+        {
+            "threshold": 0.48,
+            "recall": 1.0,
+            "pass_through_rate": 0.08766,
+            "precision": 0.9888204426192105
+        },
+        {
+            "threshold": 0.49,
+            "recall": 1.0,
+            "pass_through_rate": 0.08766,
+            "precision": 0.9888204426192105
+        },
+        {
+            "threshold": 0.5,
+            "recall": 1.0,
+            "pass_through_rate": 0.0876,
+            "precision": 0.9894977168949771
+        },
+        {
+            "threshold": 0.51,
+            "recall": 1.0,
+            "pass_through_rate": 0.0876,
+            "precision": 0.9894977168949771
+        },
+        {
+            "threshold": 0.52,
+            "recall": 1.0,
+            "pass_through_rate": 0.0876,
+            "precision": 0.9894977168949771
+        },
+        {
+            "threshold": 0.53,
+            "recall": 1.0,
+            "pass_through_rate": 0.08758,
+            "precision": 0.9897236812057547
+        },
+        {
+            "threshold": 0.54,
+            "recall": 1.0,
+            "pass_through_rate": 0.08756,
+            "precision": 0.9899497487437185
+        },
+        {
+            "threshold": 0.55,
+            "recall": 1.0,
+            "pass_through_rate": 0.08756,
+            "precision": 0.9899497487437185
+        },
+        {
+            "threshold": 0.56,
+            "recall": 1.0,
+            "pass_through_rate": 0.08756,
+            "precision": 0.9899497487437185
+        },
+        {
+            "threshold": 0.5700000000000001,
+            "recall": 0.9997692662667282,
+            "pass_through_rate": 0.08754,
+            "precision": 0.9899474525931004
+        },
+        {
+            "threshold": 0.58,
+            "recall": 0.9995385325334564,
+            "pass_through_rate": 0.08752,
+            "precision": 0.9899451553930531
+        },
+        {
+            "threshold": 0.59,
+            "recall": 0.9995385325334564,
+            "pass_through_rate": 0.08752,
+            "precision": 0.9899451553930531
+        },
+        {
+            "threshold": 0.6,
+            "recall": 0.9993077988001846,
+            "pass_through_rate": 0.0875,
+            "precision": 0.9899428571428571
+        },
+        {
+            "threshold": 0.61,
+            "recall": 0.9990770650669127,
+            "pass_through_rate": 0.08748,
+            "precision": 0.9899405578417924
+        },
+        {
+            "threshold": 0.62,
+            "recall": 0.9986155976003692,
+            "pass_through_rate": 0.08744,
+            "precision": 0.989935956084172
+        },
+        {
+            "threshold": 0.63,
+            "recall": 0.997692662667282,
+            "pass_through_rate": 0.08736,
+            "precision": 0.98992673992674
+        },
+        {
+            "threshold": 0.64,
+            "recall": 0.9972311952007383,
+            "pass_through_rate": 0.08732,
+            "precision": 0.9899221255153459
+        },
+        {
+            "threshold": 0.65,
+            "recall": 0.9967697277341947,
+            "pass_through_rate": 0.08728,
+            "precision": 0.9899175068744271
+        },
+        {
+            "threshold": 0.66,
+            "recall": 0.9951545916012922,
+            "pass_through_rate": 0.08706,
+            "precision": 0.990810934987365
+        },
+        {
+            "threshold": 0.67,
+            "recall": 0.9949238578680203,
+            "pass_through_rate": 0.08704,
+            "precision": 0.9908088235294118
+        },
+        {
+            "threshold": 0.68,
+            "recall": 0.9940009229349331,
+            "pass_through_rate": 0.08694,
+            "precision": 0.9910282953761215
+        },
+        {
+            "threshold": 0.6900000000000001,
+            "recall": 0.9937701892016613,
+            "pass_through_rate": 0.08692,
+            "precision": 0.9910262310170271
+        },
+        {
+            "threshold": 0.7000000000000001,
+            "recall": 0.9933087217351176,
+            "pass_through_rate": 0.08688,
+            "precision": 0.9910220994475138
+        },
+        {
+            "threshold": 0.71,
+            "recall": 0.9928472542685741,
+            "pass_through_rate": 0.08684,
+            "precision": 0.9910179640718563
+        },
+        {
+            "threshold": 0.72,
+            "recall": 0.9926165205353022,
+            "pass_through_rate": 0.08676,
+            "precision": 0.991701244813278
+        },
+        {
+            "threshold": 0.73,
+            "recall": 0.9919243193354869,
+            "pass_through_rate": 0.0867,
+            "precision": 0.9916955017301038
+        },
+        {
+            "threshold": 0.74,
+            "recall": 0.9903091832025842,
+            "pass_through_rate": 0.08656,
+            "precision": 0.9916820702402958
+        },
+        {
+            "threshold": 0.75,
+            "recall": 0.9891555145362252,
+            "pass_through_rate": 0.08646,
+            "precision": 0.9916724496877168
+        },
+        {
+            "threshold": 0.76,
+            "recall": 0.9884633133364098,
+            "pass_through_rate": 0.08638,
+            "precision": 0.9918962722852512
+        },
+        {
+            "threshold": 0.77,
+            "recall": 0.9880018458698662,
+            "pass_through_rate": 0.08634,
+            "precision": 0.9918925179522817
+        },
+        {
+            "threshold": 0.78,
+            "recall": 0.9868481772035071,
+            "pass_through_rate": 0.08618,
+            "precision": 0.9925736829890925
+        },
+        {
+            "threshold": 0.79,
+            "recall": 0.9861559760036918,
+            "pass_through_rate": 0.08612,
+            "precision": 0.9925685090571296
+        },
+        {
+            "threshold": 0.8,
+            "recall": 0.9854637748038764,
+            "pass_through_rate": 0.08598,
+            "precision": 0.9934868574086997
+        },
+        {
+            "threshold": 0.81,
+            "recall": 0.9850023073373327,
+            "pass_through_rate": 0.08594,
+            "precision": 0.993483825925064
+        },
+        {
+            "threshold": 0.8200000000000001,
+            "recall": 0.9847715736040609,
+            "pass_through_rate": 0.08584,
+            "precision": 0.994408201304753
+        },
+        {
+            "threshold": 0.8300000000000001,
+            "recall": 0.9847715736040609,
+            "pass_through_rate": 0.08584,
+            "precision": 0.994408201304753
+        },
+        {
+            "threshold": 0.84,
+            "recall": 0.9845408398707891,
+            "pass_through_rate": 0.0857,
+            "precision": 0.9957992998833138
+        },
+        {
+            "threshold": 0.85,
+            "recall": 0.9840793724042455,
+            "pass_through_rate": 0.08566,
+            "precision": 0.9957973383142658
+        },
+        {
+            "threshold": 0.86,
+            "recall": 0.9824642362713428,
+            "pass_through_rate": 0.08538,
+            "precision": 0.9974232841414852
+        },
+        {
+            "threshold": 0.87,
+            "recall": 0.9808491001384403,
+            "pass_through_rate": 0.08524,
+            "precision": 0.9974190520882215
+        },
+        {
+            "threshold": 0.88,
+            "recall": 0.9790032302722658,
+            "pass_through_rate": 0.08494,
+            "precision": 0.999058158700259
+        },
+        {
+            "threshold": 0.89,
+            "recall": 0.9769266266728196,
+            "pass_through_rate": 0.08476,
+            "precision": 0.999056158565361
+        },
+        {
+            "threshold": 0.9,
+            "recall": 0.9746192893401016,
+            "pass_through_rate": 0.08454,
+            "precision": 0.9992902767920511
+        },
+        {
+            "threshold": 0.91,
+            "recall": 0.972773419473927,
+            "pass_through_rate": 0.08438,
+            "precision": 0.9992889310263096
+        },
+        {
+            "threshold": 0.92,
+            "recall": 0.9683894785417628,
+            "pass_through_rate": 0.08398,
+            "precision": 0.9995236961181234
+        },
+        {
+            "threshold": 0.93,
+            "recall": 0.9640055376095985,
+            "pass_through_rate": 0.0836,
+            "precision": 0.9995215311004785
+        },
+        {
+            "threshold": 0.9400000000000001,
+            "recall": 0.9550069220119981,
+            "pass_through_rate": 0.0828,
+            "precision": 0.9997584541062802
+        },
+        {
+            "threshold": 0.9500000000000001,
+            "recall": 0.9550069220119981,
+            "pass_through_rate": 0.0828,
+            "precision": 0.9997584541062802
+        },
+        {
+            "threshold": 0.96,
+            "recall": 0.9464697738809414,
+            "pass_through_rate": 0.08204,
+            "precision": 1.0
+        },
+        {
+            "threshold": 0.97,
+            "recall": 0.9395477618827872,
+            "pass_through_rate": 0.08144,
+            "precision": 1.0
+        },
+        {
+            "threshold": 0.98,
+            "recall": 0.9270881402861099,
+            "pass_through_rate": 0.08036,
+            "precision": 1.0
+        },
+        {
+            "threshold": 0.99,
+            "recall": 0.9097831102907245,
+            "pass_through_rate": 0.07886,
+            "precision": 1.0
+        },
+        {
+            "threshold": 1.0,
+            "recall": 0.8562528841716659,
+            "pass_through_rate": 0.07422,
+            "precision": 1.0
+        }
+    ],
+    "optimals": [
+        {
+            "threshold": 0.74,
+            "recall": 0.9903091832025842,
+            "pass_through_rate": 0.08656,
+            "precision": 0.9916820702402958
+        },
+        {
+            "threshold": 0.61,
+            "recall": 0.9990770650669127,
+            "pass_through_rate": 0.08748,
+            "precision": 0.9899405578417924
+        },
+        {
+            "threshold": 0.56,
+            "recall": 1.0,
+            "pass_through_rate": 0.08756,
+            "precision": 0.9899497487437185
+        }
+    ]
+}

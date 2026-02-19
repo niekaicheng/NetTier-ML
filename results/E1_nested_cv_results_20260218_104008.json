@@ -1,0 +1,72 @@
+{
+    "mean_f1": 0.7697591150968016,
+    "std_f1": 0.008102187882457595,
+    "folds": [
+        {
+            "fold": 1,
+            "f1_macro": 0.7597308498155634,
+            "precision_macro": 0.756418220147586,
+            "recall_macro": 0.7690164989436533,
+            "best_params": {
+                "rf__class_weight": "balanced",
+                "rf__max_depth": 20,
+                "rf__max_features": "log2",
+                "rf__min_samples_split": 10,
+                "rf__n_estimators": 100
+            }
+        },
+        {
+            "fold": 2,
+            "f1_macro": 0.7787010968499998,
+            "precision_macro": 0.7772894230044752,
+            "recall_macro": 0.7841913067458491,
+            "best_params": {
+                "rf__class_weight": "balanced",
+                "rf__max_depth": 20,
+                "rf__max_features": "sqrt",
+                "rf__min_samples_split": 10,
+                "rf__n_estimators": 100
+            }
+        },
+        {
+            "fold": 3,
+            "f1_macro": 0.77568398988078,
+            "precision_macro": 0.7726243531727272,
+            "recall_macro": 0.7809393470698008,
+            "best_params": {
+                "rf__class_weight": "balanced",
+                "rf__max_depth": null,
+                "rf__max_features": "sqrt",
+                "rf__min_samples_split": 10,
+                "rf__n_estimators": 50
+            }
+        },
+        {
+            "fold": 4,
+            "f1_macro": 0.763141812332803,
+            "precision_macro": 0.7573948460412318,
+            "recall_macro": 0.7737913679090416,
+            "best_params": {
+                "rf__class_weight": "balanced",
+                "rf__max_depth": 20,
+                "rf__max_features": "sqrt",
+                "rf__min_samples_split": 2,
+                "rf__n_estimators": 100
+            }
+        },
+        {
+            "fold": 5,
+            "f1_macro": 0.771537826604862,
+            "precision_macro": 0.7748154251052377,
+            "recall_macro": 0.7714973476288839,
+            "best_params": {
+                "rf__class_weight": "balanced",
+                "rf__max_depth": 20,
+                "rf__max_features": "sqrt",
+                "rf__min_samples_split": 2,
+                "rf__n_estimators": 50
+            }
+        }
+    ],
+    "final_best_params_mode": "{'rf__class_weight': 'balanced', 'rf__max_depth': 20, 'rf__max_features': 'sqrt', 'rf__min_samples_split': 2, 'rf__n_estimators': 50}"
+}

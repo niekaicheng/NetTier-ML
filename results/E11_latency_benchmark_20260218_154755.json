@@ -1,0 +1,38 @@
+[
+    {
+        "batch_size": 1,
+        "latency_us_per_sample": 30948.701305042487,
+        "throughput_samples_per_sec": 32.16164366978791,
+        "cpu_usage_percent": 0
+    },
+    {
+        "batch_size": 32,
+        "latency_us_per_sample": 976.0833109519444,
+        "throughput_samples_per_sec": 1018.2340693631298,
+        "cpu_usage_percent": 0
+    },
+    {
+        "batch_size": 64,
+        "latency_us_per_sample": 490.23380082634316,
+        "throughput_samples_per_sec": 2027.6642915621233,
+        "cpu_usage_percent": 0
+    },
+    {
+        "batch_size": 128,
+        "latency_us_per_sample": 245.79326684497212,
+        "throughput_samples_per_sec": 4044.8403864624233,
+        "cpu_usage_percent": 0
+    },
+    {
+        "batch_size": 1000,
+        "latency_us_per_sample": 31.229652998736128,
+        "throughput_samples_per_sec": 31829.44104917083,
+        "cpu_usage_percent": 0
+    },
+    {
+        "batch_size": 10000,
+        "latency_us_per_sample": 5.439020000048913,
+        "throughput_samples_per_sec": 183244.69177366738,
+        "cpu_usage_percent": 0
+    }
+]
