@@ -1,0 +1,69 @@
+
+# 实验优先级排序 (Updated 2026-02-18)
+
+根据分层框架（Hierarchical Framework）的实施进度和验证需求，以下是最新的实验执行顺序。
+
+## ✅ Phase 1: Stage 1 Foundation (已完成)
+建立高效的第一阶段过滤器，确保高召回率和低延迟。
+
+1.  **E1 (RF Hyperparams) & E16 (Time-aware) [Done]**
+    *   **目标**: 构建高性能 Stage 1 基线。
+    *   **结果**: F1-Macro ~0.796, Recall (Attack) ~0.99 (at low threshold).
+    *   **关键产出**: `stage1_rf_best.pkl` (Pipeline), `loader_stratified.py`.
+
+2.  **E17 (Threshold Tuning) [Done]**
+    *   **目标**: 确定 $\tau$ 阈值，平衡 Leakage (漏报) 和 Overhead (计算量)。
+    *   **结果**: Target Recall 99.9% -> Threshold 0.06, Pass-through 15.25%.
+    *   **结论**: 需要全量数据训练以降低 Pass-through Rate。
+
+3.  **E11 (Latency Benchmarking) [Done]**
+    *   **目标**: 验证分层架构的必要性 (速度优势)。
+    *   **结果**: Stage 1 Latency ~6.12 μs/sample (Target < 10μs). 吞吐量 ~163k/s.
+
+4.  **Stage 1 Training (Full Data) [Done]**
+    *   **目标**: 使用 E1 最佳参数 + 80% 全量数据训练最终模型。
+    *   **关键步骤**: 5-Fold Cross-Validation Mining 生成 Stage 2 训练数据 (`stage2_train_data.parquet`)。
+    *   **产出**: `stage1_rf_stratified.joblib` (Production Model), `data/stage2/{train,val,test}.parquet` (Hard Examples).
+    *   **结果**: Val F1 ~1.00, Test F1 ~1.00. Train ~235k samples for Stage 2.
+
+---
+
+## 🚀 Phase 2: Stage 2 Core (Deep Learning) (当前重点)
+实现和验证核心的深度学习检测器 (TransECA-Net)。
+
+5.  **Stage 2 Training (TransECA-Net) [Must-Do]**
+    *   **目标**: 训练第二阶段模型，处理 Stage 1 的 "Suspicious" 流量。
+    *   **数据**: E1/Train 过程中生成的 `stage2_train_data.parquet` (难例挖掘)。
+
+6.  **E8 (Ablation Study) [Critical]**
+    *   **目标**: 证明 TransECA-Net 架构的有效性。
+    *   **对比**: Full Model vs. No-ECA vs. CNN-Only.
+    *   **回答**: "为什么要引入 Attention 和 Transformer？"
+
+6.  **E15 (Generalization) [Important]**
+    *   **目标**: 验证架构在 UNSW-NB15 上的适用性。
+    *   **回答**: "模型是否过拟合了 CIC-IDS2017？"
+
+---
+
+## � Phase 3: Analysis & Interpretability (分析阶段)
+增强论文的说服力，提供可解释性证据。
+
+7.  **E2 (Feature Importance - SHAP) [High Priority]**
+    *   **目标**: 解释 Stage 1 (RF) 的决策依据。
+    *   **验证**: 模型是否依赖于合理的特征（如 Payload 长度、流持续时间）而非噪声。
+
+8.  **E6 (Confidence Intervals) [Medium]**
+    *   **目标**: 计算 F1-score 的 95% 置信区间，证明性能提升的统计显著性。
+
+9.  **E10 (Interpretability - Integrated Gradients) [Medium]**
+    *   **目标**: 可视化 Stage 2 模型的关注点（Attention Heatmap）。
+
+---
+
+## 🎨 Phase 4: Optional (锦上添花)
+如果有时间再做。
+
+10. **E14 (Adversarial Robustness)**: 测试对抗攻击下的鲁棒性。
+11. **E4 (Bias-Variance)**: 理论误差分析。
+12. **E12 (t-SNE/UMAP)**: 特征空间可视化。

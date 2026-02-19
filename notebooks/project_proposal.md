@@ -6,7 +6,13 @@
 ## Project Description
 With the rapid growth of encrypted traffic and high-speed networks, traditional Intrusion Detection Systems (IDS) face a critical trade-off between detection accuracy and processing throughput. Deep learning models offer high precision but suffer from high latency, while statistical methods are fast but often struggle with complex attack patterns. This project proposes a **Hierarchical Network Intrusion Detection Framework** that integrates statistical machine learning with deep sequence modeling to balance efficiency and accuracy. 
 
-The system utilizes a two-stage "funnel" architecture: **Stage 1** employs a lightweight Random Forest model to rapidly filter out benign traffic (which constitutes the majority of network data) using statistical flow features. **Stage 2** deploys a deep learning model, **TransECA-Net** (combining 1D-CNN, Efficient Channel Attention, and Transformers), to perform fine-grained classification on the suspicious traffic identified by Stage 1. We will implement this framework using Python and PyTorch, training on the real-world **CIC-IDS2017** dataset. The goal is to empirically demonstrate that this hierarchical approach can achieve high throughput (handling >90% of traffic at low cost) while maintaining state-of-the-art detection rates for complex attacks.
+The system utilizes a **Two-Stage Funnel** architecture with a **Stratified Mixed-Supervision** strategy:
+
+1.  **Stage 1 (Fast Filter)**: A lightweight **Random Forest** trained on a **Mixed Benign Baseline** (80% of Monday + Benign samples from Tue-Fri) and **70-80% of Known Attacks** (all types). Its goal is to maximize **Recall** (>99.9%) to filter out >90% of benign traffic, passing any "suspicious" (Not Clearly Benign) traffic to Stage 2.
+2.  **Stage 2 (Deep Analyst)**: A **TransECA-Net** deep learning model trained on the "suspicious" subset of the **Training Set** (Stage 1 Positives). Its goal is to maximize **Precision** in identifying specific attack types (e.g., DoS, BruteForce, Botnet) from the complex traffic that bypassed Stage 1.
+3.  **Evaluation (Stict Isolation)**: The remaining **20-30% of Data** (covering all days and attack types) is reserved as a strict Test Set to verify the framework's generalization on **Known Attack Types** and unseen Benign variations.
+
+We will implement this framework using Python and PyTorch, benchmarking against the **CIC-IDS2017** dataset.
 
 ## Preliminary Literature List (for Review)
 1. **Sharafaldin, I., et al.** (2018). *Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization*. (CIC-IDS2017 Source Paper)

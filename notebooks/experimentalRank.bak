@@ -1,0 +1,22 @@
+根据分层框架（Hierarchical Framework）的核心论点，我将 15 个实验按重要性分为三个优先级。
+
+🔴 优先级 1：核心验证 (Critical / Must-Do)
+如果不做这些，整个分层架构的有效性就无法成立。
+
+E1 (RF Hyperparams) & E13 (Imbalance): 必须先构建一个均横且高性能的 Stage 1 基线。如果 Stage 1 漏报太多（Recall 低），Stage 2 再强也没用。
+E8 (DL Ablation): 证明 Stage 2 (TransECA-Net) 的架构优势。必须回答："为什么要用复杂的 TransECA 而不是简单的 CNN？"
+E11 (Latency Benchmarking): 这是分层架构存在的唯一理由。必须证明 "Stage 1 + Stage 2" 的组合在保持高精度的同时，速度比 "单层 Stage 2" 快得多（目标 >10倍加速）。
+E15 (Generalization): 在 UNSW-NB15 上验证。审稿人最常问的问题是："你的模型是不是只记住了 CIC-IDS2017 的特征？"
+🟡 优先级 2：学术严谨性 (Important)
+增加论文/报告的说服力，防御审稿人的攻击。
+
+E6 (Confidence Intervals): 计算 F1-score 的 95% 置信区间。证明性能提升不是随机误差。
+E2 (Feature Importance - SHAP): 解释性。展示模型关注的是 "Payload 内容" 还是 "时间统计特征"，证明模型学到了真正的攻击模式。
+E10 (Attention Heatmap): 可视化证据。直观展示 TransECA-Net 如何关注恶意流量片段。
+🔵 优先级 3：锦上添花 (Optional / Nice-to-Have)
+如果有时间再做，或者是为了填补篇幅。
+
+E4 (Bias-Variance): 理论深度分析，但在工程应用上不如 E1/E8 直接。
+E3 (Feature Selection): RF 本身自带特征选择能力，独立做此实验收益边际递减。
+E12 (t-SNE/UMAP): 好看的图表，适合做 PPT 展示，但不是性能证明的硬指标。
+E5 (Validation Curve): 大部分结论已被 E1 (Nested CV) 覆盖。
