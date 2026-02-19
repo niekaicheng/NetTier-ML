@@ -23,10 +23,17 @@ ENV/
 *.swo
 
 # Model checkpoints (optional - uncomment if you don't want to track large models)
-# models_chk/
+models_chk/*.pkl
+models_chk/*.pth
+models_chk/*.joblib
+!models_chk/preprocessor.joblib # Keep this small one if needed
+!models_chk/label_encoder_e1.joblib # Keep this small one
 
 # Results (optional - uncomment if you don't want to track results)
 # results/
+
+# Data
+data/
 
 # Jupyter Notebook
 .ipynb_checkpoints
