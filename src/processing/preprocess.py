@@ -65,8 +65,12 @@ class DataPreprocessor:
             try:
                 y_enc = self.label_encoder.transform(y)
             except ValueError:
-                 # Fallback for unseen labels if necessary
-                y_enc = np.zeros(len(y)) - 1 # Invalid
+                # Handle unseen labels per-sample (map known → encoded, unknown → -1)
+                known = set(self.label_encoder.classes_)
+                y_enc = np.array([
+                    self.label_encoder.transform([v])[0] if v in known else -1
+                    for v in y
+                ])
                 
             X = df.drop(columns=[target_col])
         else:

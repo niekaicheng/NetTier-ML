@@ -1,0 +1,37 @@
+{
+  "experiment": "E8_ablation",
+  "epochs": 20,
+  "device": "xpu",
+  "d_model": 128,
+  "nhead": 8,
+  "num_layers": 3,
+  "total_time_minutes": 446.51,
+  "variants": {
+    "Full TransECA-Net": {
+      "params": 301460,
+      "test_accuracy": 89.71,
+      "weighted_f1": 0.9248,
+      "macro_f1": 0.7593,
+      "best_val_accuracy": 89.86
+    },
+    "No-ECA (CNN+Trans)": {
+      "params": 301455,
+      "test_accuracy": 92.05,
+      "weighted_f1": 0.947,
+      "macro_f1": 0.6748,
+      "best_val_accuracy": 91.97
+    },
+    "CNN-Only": {
+      "params": 2703,
+      "test_accuracy": 61.89,
+      "weighted_f1": 0.6677,
+      "macro_f1": 0.235,
+      "best_val_accuracy": 61.99
+    }
+  },
+  "contributions": {
+    "eca_wf1_delta": -0.0222,
+    "transformer_wf1_delta": 0.2793,
+    "combined_wf1_delta": 0.2571
+  }
+}

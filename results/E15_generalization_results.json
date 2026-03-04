@@ -1,0 +1,47 @@
+{
+  "experiment": "E15_generalization",
+  "method": "Architecture Generalization (train from scratch on UNSW-NB15)",
+  "dataset": "UNSW-NB15",
+  "model": "TransECA-Net",
+  "d_model": 128,
+  "nhead": 8,
+  "num_layers": 3,
+  "params": 300815,
+  "epochs": 30,
+  "best_epoch": 30,
+  "batch_size": 512,
+  "device": "xpu",
+  "training_time_minutes": 150.26,
+  "num_features": 186,
+  "num_classes": 10,
+  "class_names": [
+    "Analysis",
+    "Backdoor",
+    "DoS",
+    "Exploits",
+    "Fuzzers",
+    "Generic",
+    "Normal",
+    "Reconnaissance",
+    "Shellcode",
+    "Worms"
+  ],
+  "train_samples": 149039,
+  "val_samples": 26302,
+  "test_samples": 82332,
+  "unsw_results": {
+    "test_accuracy": 63.64,
+    "weighted_f1": 0.7034,
+    "macro_f1": 0.3966,
+    "best_val_accuracy": 70.2
+  },
+  "cic_reference": {
+    "test_accuracy": 93.0,
+    "weighted_f1": 0.95,
+    "macro_f1": 0.8
+  },
+  "performance_gap": {
+    "accuracy": 29.36,
+    "weighted_f1": 0.2466
+  }
+}

@@ -1,0 +1,71 @@
+E15: Architecture Generalization — UNSW-NB15
+======================================================================
+
+Method: Train TransECA-Net from scratch on UNSW-NB15
+Purpose: Verify architecture is not overfit to CIC-IDS2017
+
+Dataset: UNSW-NB15
+  Training set: 149,039 samples
+  Validation:   26,302 samples (15% stratified from train)
+  Test set:     82,332 samples (original testing-set)
+  Features:     186 (after One-hot encoding)
+  Classes:      10 — ['Analysis', 'Backdoor', 'DoS', 'Exploits', 'Fuzzers', 'Generic', 'Normal', 'Reconnaissance', 'Shellcode', 'Worms']
+
+Model: TransECA-Net
+  d_model=128, nhead=8, num_layers=3
+  Parameters: 300,815
+  Epochs: 30 | BS: 512 | Device: xpu
+  Training time: 150.3 min
+  Best model: Epoch 30
+
+======================================================================
+Cross-Dataset Comparison
+======================================================================
+
+Dataset                     Test Acc     W-F1     M-F1
+-------------------------------------------------------
+CIC-IDS2017 (S2)              93.00%   0.9500   0.8000
+UNSW-NB15 (E15)               63.64%   0.7034   0.3966
+
+Performance Gap:
+  Accuracy:    +29.36%
+  Weighted F1: +0.2466
+
+Conclusion: TransECA-Net achieves reasonable performance on UNSW-NB15.
+The architecture demonstrates transferability, though dataset-specific
+tuning may further improve results.
+
+======================================================================
+
+UNSW-NB15 Classification Report:
+----------------------------------------------------------------------
+                precision    recall  f1-score   support
+
+      Analysis     0.0095    0.0414    0.0155       677
+      Backdoor     0.0539    0.5746    0.0985       583
+           DoS     0.2841    0.1930    0.2298      4089
+      Exploits     0.7990    0.4684    0.5906     11132
+       Fuzzers     0.2703    0.6125    0.3750      6062
+       Generic     0.9960    0.9521    0.9736     18871
+        Normal     0.9886    0.5731    0.7255     37000
+Reconnaissance     0.8086    0.7918    0.8001      3496
+     Shellcode     0.0580    0.9365    0.1093       378
+         Worms     0.0251    0.6364    0.0482        44
+
+      accuracy                         0.6364     82332
+     macro avg     0.4293    0.5780    0.3966     82332
+  weighted avg     0.8497    0.6364    0.7034     82332
+
+
+Class Distribution (Training):
+----------------------------------------
+              Analysis:   1,700
+              Backdoor:   1,484
+                   DoS:  10,424
+              Exploits:  28,384
+               Fuzzers:  15,456
+               Generic:  34,000
+                Normal:  47,600
+        Reconnaissance:   8,917
+             Shellcode:     963
+                 Worms:     111

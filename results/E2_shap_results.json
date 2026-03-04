@@ -1,0 +1,155 @@
+{
+  "experiment": "E2_shap",
+  "model": "Stage 1 RF (Binary)",
+  "n_estimators": 50,
+  "n_features": 76,
+  "n_samples": 6068,
+  "shap_time_seconds": 235.1,
+  "total_time_seconds": 239.2,
+  "top_20_features": [
+    {
+      "rank": 1,
+      "feature": "Bwd Packet Length Std",
+      "shap_importance": 0.031994,
+      "rf_importance": 0.060602,
+      "rf_rank": 4
+    },
+    {
+      "rank": 2,
+      "feature": "Init Bwd Win Bytes",
+      "shap_importance": 0.028535,
+      "rf_importance": 0.011535,
+      "rf_rank": 23
+    },
+    {
+      "rank": 3,
+      "feature": "Bwd Packet Length Mean",
+      "shap_importance": 0.027812,
+      "rf_importance": 0.072389,
+      "rf_rank": 3
+    },
+    {
+      "rank": 4,
+      "feature": "Packet Length Variance",
+      "shap_importance": 0.024618,
+      "rf_importance": 0.105389,
+      "rf_rank": 1
+    },
+    {
+      "rank": 5,
+      "feature": "Fwd IAT Min",
+      "shap_importance": 0.023699,
+      "rf_importance": 0.011646,
+      "rf_rank": 22
+    },
+    {
+      "rank": 6,
+      "feature": "Avg Packet Size",
+      "shap_importance": 0.020887,
+      "rf_importance": 0.075228,
+      "rf_rank": 2
+    },
+    {
+      "rank": 7,
+      "feature": "Fwd IAT Total",
+      "shap_importance": 0.020051,
+      "rf_importance": 0.03429,
+      "rf_rank": 8
+    },
+    {
+      "rank": 8,
+      "feature": "Avg Bwd Segment Size",
+      "shap_importance": 0.019977,
+      "rf_importance": 0.056386,
+      "rf_rank": 7
+    },
+    {
+      "rank": 9,
+      "feature": "Bwd Packet Length Max",
+      "shap_importance": 0.018957,
+      "rf_importance": 0.05664,
+      "rf_rank": 6
+    },
+    {
+      "rank": 10,
+      "feature": "Bwd Packets Length Total",
+      "shap_importance": 0.018582,
+      "rf_importance": 0.022153,
+      "rf_rank": 17
+    },
+    {
+      "rank": 11,
+      "feature": "Packet Length Std",
+      "shap_importance": 0.017628,
+      "rf_importance": 0.057113,
+      "rf_rank": 5
+    },
+    {
+      "rank": 12,
+      "feature": "Fwd IAT Max",
+      "shap_importance": 0.01619,
+      "rf_importance": 0.023185,
+      "rf_rank": 15
+    },
+    {
+      "rank": 13,
+      "feature": "Fwd IAT Mean",
+      "shap_importance": 0.015735,
+      "rf_importance": 0.026907,
+      "rf_rank": 12
+    },
+    {
+      "rank": 14,
+      "feature": "Fwd Packet Length Mean",
+      "shap_importance": 0.014912,
+      "rf_importance": 0.015579,
+      "rf_rank": 19
+    },
+    {
+      "rank": 15,
+      "feature": "Fwd IAT Std",
+      "shap_importance": 0.01474,
+      "rf_importance": 0.023046,
+      "rf_rank": 16
+    },
+    {
+      "rank": 16,
+      "feature": "Bwd Packets/s",
+      "shap_importance": 0.01446,
+      "rf_importance": 0.025445,
+      "rf_rank": 13
+    },
+    {
+      "rank": 17,
+      "feature": "Packet Length Mean",
+      "shap_importance": 0.013539,
+      "rf_importance": 0.033216,
+      "rf_rank": 10
+    },
+    {
+      "rank": 18,
+      "feature": "Avg Fwd Segment Size",
+      "shap_importance": 0.013314,
+      "rf_importance": 0.006673,
+      "rf_rank": 32
+    },
+    {
+      "rank": 19,
+      "feature": "Packet Length Max",
+      "shap_importance": 0.013167,
+      "rf_importance": 0.033744,
+      "rf_rank": 9
+    },
+    {
+      "rank": 20,
+      "feature": "Subflow Bwd Bytes",
+      "shap_importance": 0.013062,
+      "rf_importance": 0.030283,
+      "rf_rank": 11
+    }
+  ],
+  "rank_correlation": {
+    "spearman_rho": 0.9444,
+    "p_value": 1.701260973989168e-37
+  }
+}

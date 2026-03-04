@@ -28,6 +28,7 @@
 8. [数据与模型结果可视化](#8-数据与模型结果可视化)
 9. [综合评估框架](#9-综合评估框架)
 10. [实验设计总结表](#10-实验设计总结表)
+11. [Hierarchical Framework 数学推导](#11-hierarchical-framework-数学推导-mathematical-proof)
 
 ---
 
@@ -158,15 +159,17 @@ print(f"Latency: {latency:.2f} μs (Target: < 10 μs)")
     - 优势：比 SE-Net 更轻量，无降维信息损失。
 3.  **Transformer Encoder**: 捕获长距离依赖（如 TCP 的握手-传输-断开全过程）。
 
-#### E7 & E8: 正则化与消融实验
+#### E8: 消融实验 (Ablation Study)
+
+> **注**: 原 E7 (DL 正则化) 与 E8 高度重叠，已合并。正则化参数 (Dropout/L2) 属训练细节，E8 通过组件移除直接验证架构贡献。
 
 为了验证 [Kwon'17] 提出的 "DL 优于 Shallow ML" 以及 [Liu'25] 的架构优势：
 
 | 实验 ID | 模型变体 | 移除组件 | 验证假设 |
 |---|---|---|---|
 | **E8-A** | **TransECA-Net (Full)** | — | **DL SOTA 性能 ([Liu'25] 98.25%)** |
-| **E8-B** | CNN-Only | -Transformer, -ECA | 验证长序列建模的重要性 |
-| **E8-C** | RF (Stage 1 复用) | -All DL | **验证 [Kwon'17]: DL 在复杂分类上优于 ML** |
+| **E8-B** | No-ECA (CNN+Trans) | -ECA | 验证 ECA 通道注意力的贡献 |
+| **E8-C** | CNN-Only | -Transformer, -ECA | 验证长序列建模的重要性 |
 
 ---
 
@@ -177,15 +180,18 @@ print(f"Latency: {latency:.2f} μs (Target: < 10 μs)")
 ### 4.1 方案选择
 RF 不提供 p-value，采用以下替代方案：
 
-1.  **SHAP Values (推荐)**: [Abu Al-Haija'22] 验证了其在流量检测中的有效性。能给出特征对预测结果的正负贡献方向。
-2.  **Permutation Importance**: 通过打乱特征值观察精度下降，可计算 statistical significance (p-value)。
+1.  **SHAP TreeExplainer (实际采用)**: [Abu Al-Haija'22] 验证了其在流量检测中的有效性。能给出特征对预测结果的正负贡献方向。利用树结构计算精确 Shapley 值。
+2.  **SHAP vs RF Importance 对比**: 通过 Spearman 秩相关比较 SHAP 与 RF 内置 Gini 重要性排名的一致性。
 
 ```python
-# E2: Permutation Importance 显著性检验
-from sklearn.inspection import permutation_importance
-result = permutation_importance(rf, X_test, y_test, n_repeats=30)
-# 对每个特征计算 p-value (H0: 特征不重要)
+# E2: SHAP TreeExplainer 特征重要性分析
+import shap
+explainer = shap.TreeExplainer(rf_model)
+shap_values = explainer.shap_values(X_sample)  # 分层抽样 6068 samples
+# 输出: Summary Plot, Bar Plot, SHAP vs RF Comparison, Spearman ρ
 ```
+
+> **E3 (Feature Selection) 不单独执行**: RF 自带特征重要性排序，且 E2 SHAP 已提供更深入的特征贡献分析，边际收益极低。
 
 ---
 
@@ -195,7 +201,10 @@ result = permutation_importance(rf, X_test, y_test, n_repeats=30)
 - **Stage 1 (RF)**: 低 Bias（强分类器），低 Variance（Bagging 机制 [Abu Al-Haija'22]）。
 - **Stage 2 (DL)**: 低 Bias（深层网络 [Kwon'17]），高 Variance（参数多，易过拟合）。
 
-### 5.2 实验 E4: Bias-Variance 分解 (Advanced)
+### 5.2 实验 E4: Bias-Variance 分解 (Optional)
+
+> **优先级**: Optional。理论深度分析，但在工程应用上不如 E1/E8 直接。
+> **E5 (Validation Curve) 不单独执行**: E1 Nested CV 的网格搜索已包含超参数 vs 性能曲线信息，结论被完全覆盖。
 
 不局限于简单的 Bootstrap，采用更严谨的分析：
 
@@ -274,26 +283,36 @@ result = permutation_importance(rf, X_test, y_test, n_repeats=30)
 
 ---
 
-## 10. 实验设计总结表
+## 10. 实验设计总结表 (Updated 2026-03-03)
 
-| # | 实验名称 | 方法 | 输出 | 核心文献支撑 |
-|---|---|---|---|---|
-| **E1** | RF 超参调优 | Nested CV + GridSearch | 最优参数 | [Doula'25] |
-| **E2** | 特征重要性 | Permutation + SHAP | p-value替代 | **[Abu Al-Haija'22]** |
-| **E3** | 特征选择 | Information Gain | Top-K 特征 | [Doula'25] |
-| **E4** | Bias-Variance | **Curve Analysis** | B/V Trade-off | [Abu Al-Haija'22] |
-| **E5** | 复杂度曲线 | Validation Curve | U型图 | — |
-| **E6** | 性能 CI | 1000次 Bootstrap | 95% 置信区间 | **[Kaur'21]** |
-| **E7** | DL 正则化 | Dropout/L2/Smoothing | 性能增益 | [Liu'25] |
-| **E8** | **DL 消融实验** | -ECA, -Transformer | 模块贡献 | **[Liu'25], [Kwon'17]** |
-| **E10**| **可解释性** | **Integrated Gradients** | Attention Map | — |
-| **E11**| **资源与速度** | **Throughput/Energy** | Metric Trade-off | **[Abu Al-Haija'22]** |
-| **E12**| 特征类别分析 | 按 [Sharafaldin'18] 分组 | 类别重要性 | **[Sharafaldin'18]** |
-| **E13**| **不平衡处理**| SMOTE vs ClassWeight | F1-Macro | [Doula'25], [Ring'19] |
-| **E14**| **对抗鲁棒性** | FGSM Attack | Accuracy Drop | — |
-| **E15**| **跨库验证** | Test on UNSW-NB15 | 泛化分数 | **[Moustafa'15]** |
-| **E16**| **时间切分控制**| Time-aware Split | 泛化 Gap | — |
-| **E17**| **阈值优化** | Threshold Tuning | $\alpha$ vs Recall | — |
+### 10.1 实际执行顺序
+
+| 执行顺序 | # | 实验名称 | 方法 | 状态 | 核心文献支撑 |
+|:---:|---|---|---|:---:|---|
+| 1 | **E1+E16** | RF 超参调优 + 时间切分 | Nested CV + Time-aware Split | Done | [Doula'25] |
+| 2 | **E17** | 阈值优化 | Threshold Tuning ($\alpha$ vs Recall) | Done | — |
+| 3 | **E11** | 资源与速度 | Throughput/Latency Benchmark | Done | **[Abu Al-Haija'22]** |
+| 4 | — | Stage 1 全量训练 | 5-Fold CV Mining → S2 数据 | Done | — |
+| 5 | — | Stage 2 训练 | TransECA-Net (30 epochs, XPU) | Done | **[Liu'25]** |
+| 6 | **E8** | DL 消融实验 | -ECA, -Transformer | Done | **[Liu'25], [Kwon'17]** |
+| 7 | **E15** | 跨库验证 | Architecture Generalization on UNSW-NB15 | Done | **[Moustafa'15]** |
+| 8 | **E2** | 特征重要性 | SHAP TreeExplainer | Done | **[Abu Al-Haija'22]** |
+| 9 | **E6** | 性能 CI | 1000次 Bootstrap | Done | **[Kaur'21]** |
+| 10 | **E10** | 可解释性 | Integrated Gradients / Attention | Done | — |
+| 11 | **E14** | 对抗鲁棒性 | FGSM/PGD Attack | Done | FGSM ε=0.01 Acc=0.7573, PGD ε=0.01 Acc=0.4728, RF ε=0.001→Acc=0.47 |
+| 12 | **E4** | Bias-Variance | OOB+Gap+Complexity+LC | Done | RF OOB@50=0.0017, DL gap=+0.006, LC gap@full=0.0016 |
+| 13 | **E12** | 特征空间可视化 | t-SNE / UMAP | Done | **[Sharafaldin'18]** |
+
+### 10.2 不执行的实验及原因
+
+| # | 原实验名称 | 原方法 | 不执行原因 |
+|---|---|---|---|
+| **E3** | 特征选择 (Top-K) | Information Gain | RF 自带特征重要性排序；E2 (SHAP) 已提供更深入的特征贡献分析，独立做 Top-K 选择**边际收益极低** |
+| **E5** | 复杂度曲线 | Validation Curve | E1 (Nested CV) 的网格搜索过程已包含超参数 vs 性能的完整曲线信息，**结论被 E1 完全覆盖** |
+| **E7** | DL 正则化 | Dropout/L2/Smoothing | E8 (Ablation) 已通过组件移除验证了架构贡献；正则化调优属训练细节而非架构验证，**与 E8 高度重叠** |
+| **E13** | 不平衡处理 | SMOTE vs ClassWeight | 已在 E1 超参搜索中将 `class_weight` 纳入搜索空间，**合并入 E1 执行** |
+
+> **注**: 原始设计中无 E9 编号（E8 后直接为 E10）。
 
 ### 项目展讲解逻辑
 1.  **数据选型 ([Ring'19])**: 为什么不用 KDD99？因为 Ring 的评估标准指向 CIC-IDS2017。

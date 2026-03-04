@@ -1,0 +1,95 @@
+E8: TransECA-Net Ablation Study
+======================================================================
+
+Variants: Full TransECA-Net | No-ECA (CNN+Transformer) | CNN-Only
+Epochs: 20 | BS: 512 | Device: xpu
+d_model=128, nhead=8, num_layers=3
+Total training time: 446.5 min
+
+Variant                  Params   Test Acc     W-F1     M-F1   Best Val
+----------------------------------------------------------------------
+Full TransECA-Net       301,460     89.71%   0.9248   0.7593     89.86%
+No-ECA (CNN+Trans)      301,455     92.05%   0.9470   0.6748     91.97%
+CNN-Only                  2,703     61.89%   0.6677   0.2350     61.99%
+
+Component Contributions (Weighted F1):
+  ECA:         -0.0222
+  Transformer: +0.2793
+  Combined:    +0.2571
+
+======================================================================
+
+Full TransECA-Net — Classification Report:
+----------------------------------------------------------------------
+                            precision    recall  f1-score   support
+
+                    Benign     0.0425    0.7133    0.0802       279
+                       Bot     0.9853    0.5852    0.7342       229
+                      DDoS     0.9725    0.9135    0.9421     25593
+             DoS GoldenEye     0.9327    0.9807    0.9561      2022
+                  DoS Hulk     0.9651    0.8774    0.9192     34448
+          DoS Slowhttptest     0.9315    0.9860    0.9580      1075
+             DoS slowloris     0.9336    0.9634    0.9483      1094
+               FTP-Patator     0.9785    0.9983    0.9883      1187
+                Heartbleed     1.0000    1.0000    1.0000         3
+              Infiltration     0.4545    1.0000    0.6250         5
+                  PortScan     0.6593    0.9471    0.7774       378
+               SSH-Patator     1.0000    0.9541    0.9765       610
+  Web Attack � Brute Force     0.6498    0.7539    0.6980       256
+Web Attack � Sql Injection     0.3333    1.0000    0.5000         1
+          Web Attack � XSS     0.3400    0.2482    0.2869       137
+
+                  accuracy                         0.8971     67317
+                 macro avg     0.7452    0.8614    0.7593     67317
+              weighted avg     0.9585    0.8971    0.9248     67317
+
+
+No-ECA (CNN+Trans) — Classification Report:
+----------------------------------------------------------------------
+                            precision    recall  f1-score   support
+
+                    Benign     0.0467    0.7563    0.0879       279
+                       Bot     0.9781    0.5852    0.7322       229
+                      DDoS     0.9908    0.9557    0.9729     25593
+             DoS GoldenEye     0.9829    0.9683    0.9756      2022
+                  DoS Hulk     0.9925    0.8947    0.9410     34448
+          DoS Slowhttptest     0.9125    0.9898    0.9496      1075
+             DoS slowloris     0.9609    0.9671    0.9640      1094
+               FTP-Patator     0.9818    1.0000    0.9908      1187
+                Heartbleed     0.3750    1.0000    0.5455         3
+              Infiltration     0.2778    1.0000    0.4348         5
+                  PortScan     0.7718    0.8677    0.8169       378
+               SSH-Patator     1.0000    0.9557    0.9774       610
+  Web Attack � Brute Force     1.0000    0.0664    0.1245       256
+Web Attack � Sql Injection     0.0385    1.0000    0.0741         1
+          Web Attack � XSS     0.3653    1.0000    0.5352       137
+
+                  accuracy                         0.9205     67317
+                 macro avg     0.7116    0.8671    0.6748     67317
+              weighted avg     0.9831    0.9205    0.9470     67317
+
+
+CNN-Only — Classification Report:
+----------------------------------------------------------------------
+                            precision    recall  f1-score   support
+
+                    Benign     0.0008    0.0036    0.0013       279
+                       Bot     0.0208    0.9520    0.0407       229
+                      DDoS     0.9216    0.3883    0.5464     25593
+             DoS GoldenEye     0.2631    0.6602    0.3762      2022
+                  DoS Hulk     0.8536    0.8113    0.8319     34448
+          DoS Slowhttptest     0.1154    0.0028    0.0054      1075
+             DoS slowloris     0.1077    0.2413    0.1489      1094
+               FTP-Patator     0.7075    0.9983    0.8281      1187
+                Heartbleed     0.0000    0.0000    0.0000         3
+              Infiltration     0.0000    0.0000    0.0000         5
+                  PortScan     0.2115    0.4947    0.2964       378
+               SSH-Patator     0.2941    0.9557    0.4498       610
+  Web Attack � Brute Force     0.0000    0.0000    0.0000       256
+Web Attack � Sql Injection     0.0000    0.0000    0.0000         1
+          Web Attack � XSS     0.0000    0.0000    0.0000       137
+
+                  accuracy                         0.6189     67317
+                 macro avg     0.2331    0.3672    0.2350     67317
+              weighted avg     0.8151    0.6189    0.6677     67317
+

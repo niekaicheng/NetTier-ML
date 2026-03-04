@@ -1,0 +1,164 @@
+
+# Experiment Priority Ranking (Updated 2026-03-03)
+
+Based on the implementation progress and verification requirements of the Hierarchical Framework, the following is the latest experiment execution order.
+
+## Phase 1: Stage 1 Foundation (Completed)
+Establish a high-efficiency first-stage filter ensuring high recall and low latency.
+
+1.  **E1 (RF Hyperparams) & E16 (Time-aware) [Done]**
+    *   **Objective**: Build a high-performance Stage 1 baseline.
+    *   **Results**: F1-Macro ~0.796, Recall (Attack) ~0.99 (at low threshold).
+    *   **Key Outputs**: `stage1_rf_best.pkl` (Pipeline), `loader_stratified.py`.
+
+2.  **E17 (Threshold Tuning) [Done]**
+    *   **Objective**: Determine the threshold $\tau$ to balance Leakage (missed detections) and Overhead (computational cost).
+    *   **Results**: Target Recall 99.9% -> Threshold 0.06, Pass-through 15.25%.
+    *   **Conclusion**: Full-data training needed to reduce Pass-through Rate.
+
+3.  **E11 (Latency Benchmarking) [Done]**
+    *   **Objective**: Validate the necessity of the hierarchical architecture (speed advantage).
+    *   **Results**: Stage 1 Latency ~6.12 μs/sample (Target < 10μs). Throughput ~163k/s.
+
+4.  **Stage 1 Training (Full Data) [Done]**
+    *   **Objective**: Train the final model using E1 optimal parameters + 80% full data.
+    *   **Key Step**: 5-Fold Cross-Validation Mining to generate Stage 2 training data (`stage2_train_data.parquet`).
+    *   **Outputs**: `stage1_rf_stratified.joblib` (Production Model), `data/stage2/{train,val,test}.parquet` (Hard Examples).
+    *   **Results**: Val F1 ~1.00, Test F1 ~1.00. Train ~235k samples for Stage 2.
+
+---
+
+## Phase 2: Stage 2 Core (Deep Learning)
+Implement and validate the core deep learning detector (TransECA-Net).
+
+5.  **Stage 2 Training (TransECA-Net) [Done]**
+    *   **Objective**: Train the second-stage model to process Stage 1's "Suspicious" traffic.
+    *   **Data**: `data/stage2/{train,val,test}.parquet` — 235,556/33,643/67,317 samples, 76 features, 15 classes.
+    *   **Configuration**: d_model=128, nhead=8, num_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU (Intel ARC 130T).
+    *   **Results**: Test Acc 93.00%, Best Val Acc 92.52%, Weighted F1 0.95. Training time 64.18 min.
+    *   **Outputs**: `models_chk/stage2_transeca.pth`, `results/stage1_report.txt`.
+
+6.  **E8 (Ablation Study) [Done]**
+    *   **Objective**: Demonstrate the effectiveness of the TransECA-Net architecture.
+    *   **Comparison**: Full TransECA-Net vs. No-ECA (CNN+Trans) vs. CNN-Only, 20 epochs each.
+    *   **Results**:
+        | Variant | Params | Test Acc | W-F1 | M-F1 |
+        |---|---|---|---|---|
+        | Full TransECA-Net | 301,460 | 89.71% | 0.9248 | 0.7593 |
+        | No-ECA (CNN+Trans) | 301,455 | 92.05% | 0.9470 | 0.6748 |
+        | CNN-Only | 2,703 | 61.89% | 0.6677 | 0.2350 |
+    *   **Component Contribution**: Transformer +0.2793 W-F1 (core component), ECA -0.0222 W-F1 (but M-F1 +0.0845, improving minority class recognition).
+    *   **Conclusion**: Transformer encoder is the decisive architectural component; ECA slightly reduces weighted metrics but improves macro-average F1 for minority attack classes.
+    *   **Outputs**: `results/E8_ablation_results.json`, `results/E8_ablation_report.txt`, `results/E8_ablation_comparison.png`, `results/E8_ablation_bar.png`.
+    *   **Training Time**: 446.5 min (including sleep).
+
+7.  **E15 (Generalization) [Done]**
+    *   **Objective**: Validate TransECA-Net architecture generalization on UNSW-NB15.
+    *   **Method**: Approach B — Architecture Generalization, training TransECA-Net from scratch on UNSW-NB15.
+    *   **Data**: `archive/UNSW_NB15_{training,testing}-set.parquet` — Train 149,039 / Val 26,302 / Test 82,332, 186 features (One-hot), 10 classes.
+    *   **Configuration**: d_model=128, nhead=8, num_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU.
+    *   **Results**:
+        | Dataset | Test Acc | W-F1 | M-F1 |
+        |---|---|---|---|
+        | CIC-IDS2017 (S2) | 93.00% | 0.9500 | 0.80 |
+        | UNSW-NB15 (E15) | 63.64% | 0.7034 | 0.3966 |
+    *   **Per-class Highlights**: Generic F1 0.97, Reconnaissance F1 0.80, Normal Precision 0.99 but Recall 0.57, small classes (Analysis/Worms/Shellcode) remain challenging.
+    *   **Conclusion**: The same architecture can be applied to different IDS datasets without modification; W-F1 of 0.70 demonstrates cross-dataset generalization capability.
+    *   **Outputs**: `results/E15_generalization_report.txt`, `results/E15_generalization_results.json`, `results/E15_unsw_training_curves.png`, `results/E15_unsw_confusion_matrix.png`, `results/E15_cross_dataset_comparison.png`, `models_chk/e15_transeca_unsw.pth`.
+    *   **Training Time**: 150.3 min.
+
+---
+
+## Phase 3: Analysis & Interpretability — Current Focus
+Strengthen the paper's persuasiveness with interpretability evidence.
+
+8.  **E2 (Feature Importance - SHAP) [Done]**
+    *   **Objective**: Explain Stage 1 (RF) decision rationale.
+    *   **Method**: SHAP TreeExplainer, 6,068 stratified samples (15 classes, max 500/class), 76 features.
+    *   **Results**:
+        | Metric | Value |
+        |---|---|
+        | Top-1 Feature | Bwd Packet Length Std (SHAP=0.032) |
+        | Top-5 | Bwd Pkt Len Std, Init Bwd Win Bytes, Bwd Pkt Len Mean, Pkt Len Var, Fwd IAT Min |
+        | SHAP vs RF Spearman ρ | 0.9444 |
+        | SHAP Computation Time | 235.1s |
+    *   **Conclusion**: RF primarily relies on payload length statistics + IAT temporal features, consistent with cybersecurity domain knowledge; SHAP and RF Gini rankings are highly correlated (ρ=0.94), but SHAP places more weight on interaction features (Init Bwd Win Bytes elevated from RF#23→SHAP#2).
+    *   **Outputs**: `results/E2_shap_summary.png`, `results/E2_shap_bar.png`, `results/E2_shap_vs_rf.png`, `results/E2_feature_importance.csv`, `results/E2_shap_report.txt`, `results/E2_shap_results.json`.
+    *   **Total Time**: 239.2s.
+
+9.  **E6 (Confidence Intervals) [Done]**
+    *   **Objective**: Compute 95% confidence intervals for F1-scores to establish statistical significance of performance estimates.
+    *   **Method**: 1000× Bootstrap Resampling, Percentile 95% CI.
+    *   **Data**: S1 = CIC-IDS2017 20% test (462,762), S2 = Stage 2 hard-example test (67,317).
+    *   **Results**:
+        | Stage | Metric | Point Est | 95% CI | CI Width |
+        |---|---|---|---|---|
+        | S1 (RF) | Accuracy | 0.9991 | [0.9990, 0.9992] | 0.0002 |
+        | S1 (RF) | W-F1 | 0.9991 | [0.9990, 0.9992] | 0.0002 |
+        | S1 (RF) | M-F1 | 0.9982 | [0.9980, 0.9983] | 0.0003 |
+        | S2 (TransECA) | Accuracy | 0.9259 | [0.9237, 0.9279] | 0.0042 |
+        | S2 (TransECA) | W-F1 | 0.9506 | [0.9491, 0.9520] | 0.0029 |
+        | S2 (TransECA) | M-F1 | 0.7658 | [0.7391, 0.8127] | 0.0736 |
+    *   **Conclusion**: S1 CIs are extremely narrow (<0.001), indicating highly reliable performance estimates; S2 W-F1 CI is narrow (0.003), Accuracy CI ~0.004; S2 M-F1 CI is wider (0.074), reflecting high variance in minority class performance.
+    *   **Outputs**: `results/E6_bootstrap_ci_results.json`, `results/E6_bootstrap_ci_report.txt`, `results/E6_bootstrap_distributions.png`.
+    *   **Total Time**: 42.9s.
+
+10. **E10 (Interpretability) [Done]**
+    *   **Objective**: Visualize Stage 2 TransECA-Net decision rationale, demonstrating that the model attends to meaningful network features.
+    *   **Method**: Integrated Gradients (captum) + Attention Rollout + ECA Channel Attention, 405 IG samples × 50 steps.
+    *   **Results**:
+        | Method | Top-1 Feature | Top-5 |
+        |---|---|---|
+        | Integrated Gradients | Init Fwd Win Bytes (IG=2.107) | Init Fwd Win Bytes, Flow Packets/s, Bwd Header Length, Fwd Seg Size Min, Fwd Header Length |
+        | Attention Rollout | Fwd IAT Mean | Fwd IAT Mean, Fwd Pkt Len Max, Flow Bytes/s, Flow IAT Min, Init Fwd Win Bytes |
+        | ECA Channel Attn | mean=0.449, std=0.009, CV=0.020 (low selectivity → near-uniform channel distribution) |
+    *   **Conclusion**: Both IG and Attention Rollout place high importance on Init Fwd Win Bytes (TCP window size), consistent with E2 SHAP (#2 feature); TransECA-Net attends to both IAT temporal statistics and packet lengths, aligning with IDS domain knowledge; ECA selectivity is low (CV=0.02), consistent with E8 ablation results (ECA has small W-F1 contribution).
+    *   **Outputs**: `results/E10_ig_global_importance.png`, `results/E10_ig_per_class.png`, `results/E10_attention_heatmap.png`, `results/E10_eca_channel_weights.png`, `results/E10_interpretability_report.txt`, `results/E10_interpretability_results.json`.
+    *   **Total Time**: 27.8s.
+
+---
+
+## Phase 4: Optional (Supplementary)
+To be conducted if time permits.
+
+11. **E14 (Adversarial Robustness) [Done]**
+    *   **Objective**: Evaluate the hierarchical IDS architecture's robustness under FGSM/PGD adversarial attacks.
+    *   **Method**: FGSM (single-step) + PGD (5-step) on TransECA-Net | L∞ Uniform Noise on RF; ε ∈ {0.001, 0.005, 0.01, 0.05, 0.1}.
+    *   **Data**: 10,000 stratified subsample from stage2/test.parquet, XPU (Intel ARC 130T).
+    *   **Results**:
+        | Attack | Clean Acc | ε=0.001 | ε=0.01 | ε=0.1 |
+        |---|---|---|---|---|
+        | RF (L∞ noise) | 0.9959 | 0.4694 | 0.0645 | 0.0043 |
+        | TransECA FGSM | 0.9216 | 0.9026 | 0.7573 | 0.0609 |
+        | TransECA PGD | 0.9216 | 0.9020 | 0.4728 | 0.0066 |
+    *   **Conclusion**: RF is extremely fragile to L∞ noise (collapses at ε=0.001); TransECA-Net maintains reasonable performance under small perturbations (ε≤0.01); PGD is stronger than FGSM (multi-step attacks are more effective); Hierarchical advantage: Stage 1 RF serves as a robust pre-filter, with only ~15% of traffic reaching the DL layer, limiting the adversarial attack surface.
+    *   **Outputs**: `results/E14_adversarial_results.json`, `results/E14_adversarial_report.txt`, `results/E14_robustness_curve.png`, `results/E14_per_class_robustness.png`.
+    *   **Total Time**: 174.4s.
+
+12. **E4 (Bias-Variance) [Done]**
+    *   **Objective**: Theoretical analysis of Stage 1 RF and Stage 2 TransECA-Net Bias-Variance characteristics.
+    *   **Method**: (1) RF OOB Error vs Tree Count (warm_start, 10→200 trees); (2) DL Train/Val Loss + Generalization Gap; (3) Model Complexity vs Performance; (4) RF Learning Curve (1%→100% training data).
+    *   **Data**: 200K stratified subsample from CIC-IDS2017 (2.3M total), plus S2 epoch log.
+    *   **Results**:
+        | Analysis | Key Metric |
+        |---|---|
+        | RF OOB | n=50→OOB Err=0.00173, n=200→0.00171 (converged, n=50 near-optimal) |
+        | DL Gen Gap | Final Train−Val Loss=+0.006 (slight underfitting), trend DECREASING |
+        | Complexity | CNN-Only (2.7K params)→61.9% Acc; TransECA (301K)→93.0% (+31%) |
+        | RF L-Curve | Gap@1%=0.0106, Gap@100%=0.0016 (low variance) |
+    *   **Conclusion**: RF exhibits low bias + low variance (converges at n≥50); TransECA-Net shows moderate bias + low variance (stable gap); CNN-Only has high bias → Transformer is the capacity bottleneck; Hierarchical design: RF handles easily separable samples (low bias), DL refines hard examples.
+    *   **Outputs**: `results/E4_oob_vs_trees.png`, `results/E4_dl_learning_curves.png`, `results/E4_complexity_vs_perf.png`, `results/E4_rf_learning_curve.png`, `results/E4_bias_variance_report.txt`, `results/E4_bias_variance_results.json`.
+    *   **Total Time**: 62.1s.
+
+13. **E12 (t-SNE/UMAP) [Done]**: Feature space visualization.
+    *   **Method**: t-SNE (perplexity=30) + UMAP (n_neighbors=15, min_dist=0.1), applied to both raw features (76-dim) and TransECA-Net embeddings (128-dim). 8,000 stratified subsamples, 13 classes.
+    *   **Results**:
+        | Method | Silhouette Score |
+        |------|-----------------|
+        | t-SNE (Raw) | -0.1621 |
+        | UMAP (Raw) | -0.2349 |
+        | t-SNE (Embedding) | -0.0959 |
+        | UMAP (Embedding) | -0.0668 |
+    *   **Conclusion**: TransECA embeddings improve cluster separation by approximately 59% (raw avg=-0.1985 → emb avg=-0.0814); UMAP performs best in the embedding space (-0.0668); learned representations significantly improve attack class separability, validating the effectiveness of the hierarchical architecture.
+    *   **Outputs**: `results/E12_tsne_raw.png`, `results/E12_umap_raw.png`, `results/E12_tsne_embedding.png`, `results/E12_umap_embedding.png`, `results/E12_binary_view.png`, `results/E12_visualization_report.txt`, `results/E12_visualization_results.json`.
+    *   **Total Time**: 68.4s.

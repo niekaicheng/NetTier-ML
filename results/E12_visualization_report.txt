@@ -1,0 +1,26 @@
+================================================================================
+  E12: Feature Space Visualization (t-SNE / UMAP)
+  Raw Features vs TransECA-Net Embeddings
+================================================================================
+
+  Samples: 8,000
+  Classes: 13
+
+── Silhouette Scores (higher = better separation) ──
+  Method                         Silhouette
+  ------------------------------------------
+  t-SNE (Raw)                       -0.1621
+  UMAP (Raw)                        -0.2349
+  t-SNE (Embedding)                 -0.0959
+  UMAP (Embedding)                  -0.0668
+
+  → TransECA embeddings improve cluster separation by 59.0%
+     (avg silhouette: raw=-0.1985 → embedding=-0.0814)
+
+── Key Observations ──
+  1. t-SNE preserves local neighborhood structure (good for cluster shape)
+  2. UMAP preserves global topology (good for cluster relationships)
+  3. TransECA embeddings compress 76 features → 128-dim learned representation
+  4. Binary view shows how well the hierarchical design separates Benign/Attack
+
+Total time: 68.4s

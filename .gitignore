@@ -22,18 +22,22 @@ ENV/
 *.swp
 *.swo
 
-# Model checkpoints (optional - uncomment if you don't want to track large models)
+# Word temp/lock files
+~$*.docx
+
+# Model checkpoints (large binary files)
 models_chk/*.pkl
 models_chk/*.pth
 models_chk/*.joblib
-!models_chk/preprocessor.joblib # Keep this small one if needed
-!models_chk/label_encoder_e1.joblib # Keep this small one
-
-# Results (optional - uncomment if you don't want to track results)
-# results/
+!models_chk/preprocessor.joblib
+!models_chk/label_encoder_e1.joblib
 
 # Data
 data/
+archive/
+
+# Lecture PDFs
+lecture/
 
 # Jupyter Notebook
 .ipynb_checkpoints

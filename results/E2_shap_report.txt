@@ -1,0 +1,150 @@
+E2: Feature Importance Analysis — SHAP
+======================================================================
+
+Model: Stage 1 Random Forest (50 trees, 76 features)
+Task: Binary classification (Benign vs Attack)
+Data: CIC-IDS2017 stratified sample (6068 samples)
+Method: SHAP TreeExplainer
+SHAP computation time: 235.1s
+Total time: 239.2s
+
+Top-20 Features (by SHAP importance):
+Rank  Feature                              SHAP (mean|abs|)  RF Importance   RF Rank
+------------------------------------------------------------------------------------
+1     Bwd Packet Length Std                        0.031994       0.060602         4
+2     Init Bwd Win Bytes                           0.028535       0.011535        23
+3     Bwd Packet Length Mean                       0.027812       0.072389         3
+4     Packet Length Variance                       0.024618       0.105389         1
+5     Fwd IAT Min                                  0.023699       0.011646        22
+6     Avg Packet Size                              0.020887       0.075228         2
+7     Fwd IAT Total                                0.020051       0.034290         8
+8     Avg Bwd Segment Size                         0.019977       0.056386         7
+9     Bwd Packet Length Max                        0.018957       0.056640         6
+10    Bwd Packets Length Total                     0.018582       0.022153        17
+11    Packet Length Std                            0.017628       0.057113         5
+12    Fwd IAT Max                                  0.016190       0.023185        15
+13    Fwd IAT Mean                                 0.015735       0.026907        12
+14    Fwd Packet Length Mean                       0.014912       0.015579        19
+15    Fwd IAT Std                                  0.014740       0.023046        16
+16    Bwd Packets/s                                0.014460       0.025445        13
+17    Packet Length Mean                           0.013539       0.033216        10
+18    Avg Fwd Segment Size                         0.013314       0.006673        32
+19    Packet Length Max                            0.013167       0.033744         9
+20    Subflow Bwd Bytes                            0.013062       0.030283        11
+
+======================================================================
+Top-5 Feature Interpretation:
+
+  1. Bwd Packet Length Std
+     SHAP: 0.031994 (Rank #1)
+     RF:   0.060602 (Rank #4)
+
+  2. Init Bwd Win Bytes
+     SHAP: 0.028535 (Rank #2)
+     RF:   0.011535 (Rank #23)
+
+  3. Bwd Packet Length Mean
+     SHAP: 0.027812 (Rank #3)
+     RF:   0.072389 (Rank #3)
+
+  4. Packet Length Variance
+     SHAP: 0.024618 (Rank #4)
+     RF:   0.105389 (Rank #1)
+
+  5. Fwd IAT Min
+     SHAP: 0.023699 (Rank #5)
+     RF:   0.011646 (Rank #22)
+
+
+SHAP vs RF Rank Correlation:
+  Spearman ρ = 0.9444 (p = 1.70e-37)
+  → Strong agreement between SHAP and RF importance.
+
+======================================================================
+
+Conclusion:
+The Stage 1 RF model primarily relies on network flow statistics
+(packet lengths, inter-arrival times, byte counts) to distinguish
+benign from attack traffic, which aligns with domain knowledge.
+
+======================================================================
+
+Full Feature Ranking (all 76 features):
+Rank  Feature                                    SHAP          RF
+-----------------------------------------------------------------
+1     Bwd Packet Length Std                  0.031994    0.060602
+2     Init Bwd Win Bytes                     0.028535    0.011535
+3     Bwd Packet Length Mean                 0.027812    0.072389
+4     Packet Length Variance                 0.024618    0.105389
+5     Fwd IAT Min                            0.023699    0.011646
+6     Avg Packet Size                        0.020887    0.075228
+7     Fwd IAT Total                          0.020051    0.034290
+8     Avg Bwd Segment Size                   0.019977    0.056386
+9     Bwd Packet Length Max                  0.018957    0.056640
+10    Bwd Packets Length Total               0.018582    0.022153
+11    Packet Length Std                      0.017628    0.057113
+12    Fwd IAT Max                            0.016190    0.023185
+13    Fwd IAT Mean                           0.015735    0.026907
+14    Fwd Packet Length Mean                 0.014912    0.015579
+15    Fwd IAT Std                            0.014740    0.023046
+16    Bwd Packets/s                          0.014460    0.025445
+17    Packet Length Mean                     0.013539    0.033216
+18    Avg Fwd Segment Size                   0.013314    0.006673
+19    Packet Length Max                      0.013167    0.033744
+20    Subflow Bwd Bytes                      0.013062    0.030283
+21    Fwd Packet Length Max                  0.012465    0.011534
+22    Total Backward Packets                 0.012297    0.023284
+23    Subflow Fwd Bytes                      0.011707    0.007135
+24    Subflow Fwd Packets                    0.011371    0.021840
+25    Init Fwd Win Bytes                     0.010873    0.009849
+26    PSH Flag Count                         0.010125    0.001994
+27    Flow Duration                          0.009631    0.010999
+28    Packet Length Min                      0.009344    0.007699
+29    Fwd Packets Length Total               0.009056    0.007446
+30    Flow IAT Std                           0.008691    0.012480
+31    Fwd Seg Size Min                       0.008681    0.002612
+32    Total Fwd Packets                      0.008534    0.015003
+33    Flow IAT Mean                          0.008141    0.007464
+34    Bwd IAT Std                            0.008131    0.001791
+35    Flow Bytes/s                           0.007158    0.003567
+36    Subflow Bwd Packets                    0.006985    0.011291
+37    Flow IAT Max                           0.006745    0.005140
+38    Flow IAT Min                           0.006616    0.003832
+39    Bwd IAT Max                            0.006564    0.004541
+40    Idle Max                               0.006469    0.003993
+41    Bwd IAT Total                          0.006445    0.002396
+42    Bwd Header Length                      0.005949    0.003325
+43    Bwd Packet Length Min                  0.005703    0.001135
+44    Flow Packets/s                         0.005630    0.004356
+45    Fwd Packet Length Min                  0.005107    0.002488
+46    Fwd Packets/s                          0.004860    0.005020
+47    Fwd Act Data Packets                   0.004226    0.003149
+48    ACK Flag Count                         0.004136    0.001059
+49    Idle Mean                              0.003944    0.001715
+50    Active Min                             0.003795    0.002036
+51    Active Mean                            0.003661    0.002064
+52    Bwd IAT Mean                           0.003436    0.001173
+53    Bwd IAT Min                            0.003101    0.001776
+54    Fwd Packet Length Std                  0.002919    0.003237
+55    Down/Up Ratio                          0.002572    0.002102
+56    Idle Min                               0.002514    0.001316
+57    Active Max                             0.002053    0.001191
+58    FIN Flag Count                         0.001713    0.002567
+59    SYN Flag Count                         0.001205    0.000568
+60    URG Flag Count                         0.001173    0.001217
+61    Active Std                             0.000834    0.000674
+62    Fwd PSH Flags                          0.000625    0.000225
+63    Idle Std                               0.000573    0.000183
+64    Fwd Header Length                      0.000199    0.000084
+65    CWE Flag Count                         0.000000    0.000000
+66    Fwd URG Flags                          0.000000    0.000000
+67    ECE Flag Count                         0.000000    0.000000
+68    RST Flag Count                         0.000000    0.000000
+69    Bwd PSH Flags                          0.000000    0.000000
+70    Bwd URG Flags                          0.000000    0.000000
+71    Bwd Avg Bulk Rate                      0.000000    0.000000
+72    Bwd Avg Packets/Bulk                   0.000000    0.000000
+73    Fwd Avg Packets/Bulk                   0.000000    0.000000
+74    Fwd Avg Bytes/Bulk                     0.000000    0.000000
+75    Bwd Avg Bytes/Bulk                     0.000000    0.000000
+76    Fwd Avg Bulk Rate                      0.000000    0.000000

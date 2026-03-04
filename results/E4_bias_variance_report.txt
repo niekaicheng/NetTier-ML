@@ -1,0 +1,48 @@
+================================================================================
+  E4: Bias-Variance Decomposition Analysis
+  Stage 1 RF + Stage 2 TransECA-Net
+================================================================================
+
+── 1. RF OOB Error vs Ensemble Size ──
+  Trees range: 10 to 200
+  OOB Error @ n=5:   0.003610
+  OOB Error @ n=50:  0.001730 (production)
+  OOB Error @ n=200: 0.001710
+  Total OOB improvement: 0.001900 (52.6%)
+  Last 4 points range: 0.000040 (converged)
+  Interpretation: OOB error decreases monotonically → variance reduction via bagging.
+  → n=50 is near-optimal; additional trees provide diminishing returns.
+
+── 2. TransECA-Net Generalization Gap ──
+  Epochs: 30 (CosineAnnealingWarmRestarts)
+  Train−Val Loss gap: final=0.0056, max=0.5291, min=-0.1529
+  → Final gap positive: train_loss > val_loss (slight underfitting)
+     This is common with strong regularization + class-weighted loss
+  → Gap trend: DECREASING (slope=-0.0067) — still learning
+
+── 3. Model Complexity Analysis ──
+  CNN-Only (2,703 params):     Acc=61.89%, W-F1=0.668, M-F1=0.235 → HIGH BIAS
+  Full TransECA (301,460):     Acc=89.71%, W-F1=0.925, M-F1=0.759
+  No-ECA (301,455):            Acc=92.05%, W-F1=0.947, M-F1=0.675
+  TransECA Prod (301,460):     Acc=93.00%, W-F1=0.950, M-F1=0.800
+  → 111× parameter increase (CNN→TransECA): +31% Accuracy, +0.28 W-F1
+  → Diminishing returns: No-ECA vs TransECA ≈ same params, similar perf
+  → Longer training (20→30 ep): +3.3% Acc improvement (addressing underfitting)
+
+── 4. RF Learning Curve (Sample Size) ──
+     1% (     2,000): Train=1.0000, Test=0.9894, Gap=+0.0106
+     2% (     4,000): Train=0.9999, Test=0.9921, Gap=+0.0078
+     5% (    10,000): Train=0.9999, Test=0.9948, Gap=+0.0050
+    10% (    20,000): Train=1.0000, Test=0.9962, Gap=+0.0037
+    20% (    40,000): Train=1.0000, Test=0.9971, Gap=+0.0029
+    50% (   100,000): Train=0.9999, Test=0.9977, Gap=+0.0022
+   100% (   200,000): Train=0.9997, Test=0.9981, Gap=+0.0016
+  → Full data gap: +0.0016 (low variance)
+
+── Summary ──
+  • Stage 1 RF: Low bias, low variance at n≥50 trees — excellent B-V tradeoff.
+  • Stage 2 TransECA-Net: Moderate bias (93% < ideal), low variance (stable gap).
+  • CNN-Only baseline shows high bias — Transformer is essential for capacity.
+  • Hierarchical design: RF handles easy cases (low bias), DL refines hard cases.
+
+Total time: 62.1s

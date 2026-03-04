@@ -14,8 +14,16 @@ sys.path.append(os.path.join(os.getcwd(), 'src'))
 from processing.loader_stratified import load_stratified_mixed_split
 from processing.preprocess import DataPreprocessor
 from models.stage1_rf import Stage1Filter
+from utils.training_logger import TrainingLogger
 
 def main():
+    # 初始化训练记录器
+    logger = TrainingLogger(
+        experiment_name="stage1_training",
+        description="Stage 1 RF binary classifier (Benign vs Attack) with stratified mixed split"
+    )
+    logger.start()
+    
     data_dir = "archive"
     
     # 1. Load Data using Stratified Mixed Split (User Request)
@@ -53,6 +61,7 @@ def main():
         
     except Exception as e:
         print(f"Error loading data: {e}")
+        logger.finish(status="failed")
         return
 
     # 2. Preprocess
@@ -95,10 +104,38 @@ def main():
     
     print(f"Train Class Dist (Binary): 0={sum(y_train_binary==0)}, 1={sum(y_train_binary==1)}")
     
+    # 记录数据信息
+    logger.set_data_info(
+        dataset="CIC-IDS2017",
+        data_path=data_dir,
+        total_samples=len(df_train) + len(df_val) + len(df_test),
+        train_samples=len(df_train),
+        val_samples=len(df_val),
+        test_samples=len(df_test),
+        num_features=X_train_scaled.shape[1],
+        num_classes=2,
+        class_distribution={"benign": int(sum(y_train_binary==0)), "attack": int(sum(y_train_binary==1))},
+        split_method="Stratified Mixed Split",
+        split_ratios="70% Train / 10% Val / 20% Test"
+    )
+    
     # 4. Train Stage 1 Model (Random Forest)
     # Use Best Params from E1 if available, otherwise default
     print("Training Stage 1 RF (Binary) on 70% Train Set...")
-    model = Stage1Filter(n_estimators=50, max_depth=20, class_weight='balanced') 
+    model = Stage1Filter(n_estimators=50, max_depth=20, class_weight='balanced')
+    
+    # 记录模型信息
+    logger.set_model_info(
+        model_type="RandomForest",
+        model_name="Stage1Filter (Binary)",
+        framework="scikit-learn",
+        hyperparams={
+            "n_estimators": 50,
+            "max_depth": 20,
+            "class_weight": "balanced"
+        }
+    )
+    logger.set_training_config(device="CPU") 
     model.train(X_train_scaled, y_train_binary)
     
     # 5. Evaluate
@@ -115,6 +152,11 @@ def main():
     joblib.dump(preprocessor.label_encoder, "models_chk/label_encoder_e1.joblib") # Useful for E17
     
     print("Model and Preprocessor saved to models_chk/ (suffixed _stratified)")
+    
+    # 记录产物
+    logger.add_artifact("models_chk/stage1_rf_stratified.joblib", "model", "Stage 1 RF model (stratified)")
+    logger.add_artifact("models_chk/preprocessor_stratified.joblib", "preprocessor", "Data preprocessor")
+    logger.add_artifact("models_chk/label_encoder_e1.joblib", "encoder", "Label encoder")
     
     # 7. GENERATE STAGE 2 DATA (For All Splits)
     print("\n=== Generating Stage 2 Data for All Splits ===")
@@ -157,6 +199,19 @@ def main():
         print("- Warning: No Suspicious samples found in Test!")
         
     print("Stage 2 Data Generation Complete.")
+    
+    # 记录 Stage 2 数据产物
+    logger.add_artifact("data/stage2/train.parquet", "data", "Stage 2 training data (hard examples)")
+    logger.add_artifact("data/stage2/val.parquet", "data", "Stage 2 validation data")
+    logger.add_artifact("data/stage2/test.parquet", "data", "Stage 2 test data")
+    
+    # 记录结果并完成
+    logger.set_results(
+        stage2_train_samples=int(sum(mask_train)) if mask_train.any() else 0,
+        stage2_val_samples=int(sum(mask_val)) if mask_val.any() else 0,
+        stage2_test_samples=int(sum(mask_test)) if mask_test.any() else 0,
+    )
+    logger.finish()
 
 if __name__ == "__main__":
     main()

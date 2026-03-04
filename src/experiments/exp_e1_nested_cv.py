@@ -25,13 +25,21 @@ sys.path.append(os.path.join(os.getcwd(), 'src'))
 
 from processing.loader import load_data
 from processing.pipeline_utils import FeatureCleaner, FeatureScaler
+from utils.training_logger import TrainingLogger
 
 def main():
     start_time = datetime.now()
     print(f"Experiment E1 Started at: {start_time}")
     
+    # 初始化训练记录器
+    logger = TrainingLogger(
+        experiment_name="E1_nested_cv",
+        description="RF hyperparameter tuning via Nested 5-Fold CV with GridSearch. Ref: [Doula'25], [Kaur'21]"
+    )
+    logger.start()
+    
     # ==================== 1. 数据加载 ====================
-    print("[1/5] Loading CIC-IDS2017 data (Stratified for E1)...")
+    print("[1/5] Loading CIC-IDS2017 data (Stratified for E1)...") 
     data_dir = "archive"
     
     from processing.loader_stratified import load_stratified_mixed_split
@@ -47,6 +55,7 @@ def main():
                                            attack_ratio=0.1)
     except Exception as e:
         print(f"Error loading data: {e}")
+        logger.finish(status="failed")
         return
         
     print(f"Data Shape: {df.shape}")
@@ -71,6 +80,16 @@ def main():
     joblib.dump(le, "models_chk/label_encoder_e1.joblib")
     
     print(f"Classes: {le.classes_}")
+    
+    # 记录数据信息
+    logger.set_data_info(
+        dataset="CIC-IDS2017",
+        data_path="archive",
+        total_samples=len(df),
+        num_features=X.shape[1],
+        num_classes=len(le.classes_),
+        split_method="Stratified Mixed Split (10% sample for tuning speed)",
+    )
 
     # Define Pipeline (Leak-free)
     # 1. Clean
@@ -101,6 +120,19 @@ def main():
         'rf__min_samples_split': [2, 10],
         'rf__class_weight': ['balanced', None]
     }
+    
+    # 记录模型和训练配置
+    logger.set_model_info(
+        model_type="RandomForest",
+        model_name="Stage 1 RF (Nested CV)",
+        framework="scikit-learn",
+        hyperparams={"param_grid": param_grid},
+    )
+    logger.set_training_config(
+        cv_folds=5,
+        device="CPU",
+        inner_cv_folds=3,
+    )
     
     # Scorers
     scorers = {
@@ -154,6 +186,13 @@ def main():
         
         print(f"  Fold Score: F1={scores['f1_macro']:.4f}")
         print(f"  Best Params: {best_params}")
+        
+        # 记录到 logger
+        logger.log_cv_fold(
+            fold=fold,
+            metrics={"f1_macro": scores['f1_macro'], "precision_macro": scores['precision_macro'], "recall_macro": scores['recall_macro']},
+            best_params=best_params,
+        )
         
         fold += 1
 
@@ -216,6 +255,17 @@ def main():
     with open(res_path, 'w') as f:
         json.dump(results_json, f, indent=4, default=str)
     print(f"Updated results JSON with timestamps.")
+    
+    # 记录结果并完成
+    logger.set_results(
+        mean_f1_macro=mean_f1,
+        std_f1_macro=std_f1,
+        final_best_params=str(best_params_list[-1]),
+    )
+    logger.add_artifact(res_path, "results", "Nested CV results JSON")
+    logger.add_artifact("models_chk/stage1_rf_best.pkl", "model", "Final RF model (best config)")
+    logger.add_artifact("models_chk/label_encoder_e1.joblib", "encoder", "Label encoder")
+    logger.finish()
 
 if __name__ == "__main__":
     main()

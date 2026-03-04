@@ -1,0 +1,46 @@
+================================================================================
+  E6: Bootstrap Confidence Interval Analysis
+  Method: 1000× Bootstrap Resampling, 95% Percentile CI
+  Reference: [Kaur'21]
+================================================================================
+
+── Stage 1 (RF) ──
+  Description: Stage 1 RF (Binary: Benign vs Attack)
+  Test samples: 462,762
+  Bootstrap iterations: 1000
+
+  Metric                     Point Est       Mean        Std   95% CI Lower   95% CI Upper
+  -----------------------------------------------------------------------------------
+  Accuracy                      0.9991     0.9991     0.0000         0.9990         0.9992
+  Weighted F1                   0.9991     0.9991     0.0000         0.9990         0.9992
+  Macro F1                      0.9982     0.9982     0.0001         0.9980         0.9983
+  Precision (Weighted)          0.9991     0.9991     0.0000         0.9990         0.9992
+  Recall (Weighted)             0.9991     0.9991     0.0000         0.9990         0.9992
+
+  CI Width (Accuracy): 0.0002
+  CI Width (W-F1): 0.0002
+  CI Width (M-F1): 0.0003
+
+── Stage 2 (TransECA-Net) ──
+  Description: Stage 2 TransECA-Net (15-class multiclass)
+  Test samples: 67,317
+  Bootstrap iterations: 1000
+
+  Metric                     Point Est       Mean        Std   95% CI Lower   95% CI Upper
+  -----------------------------------------------------------------------------------
+  Accuracy                      0.9259     0.9258     0.0010         0.9237         0.9279
+  Weighted F1                   0.9506     0.9506     0.0007         0.9491         0.9520
+  Macro F1                      0.7658     0.7775     0.0190         0.7391         0.8127
+  Precision (Weighted)          0.9816     0.9817     0.0005         0.9805         0.9827
+  Recall (Weighted)             0.9259     0.9258     0.0010         0.9237         0.9279
+
+  CI Width (Accuracy): 0.0042
+  CI Width (W-F1): 0.0029
+  CI Width (M-F1): 0.0736
+
+Total time: 42.9s
+
+Interpretation:
+  - Narrow CIs (width < 0.01) indicate highly stable performance estimates.
+  - CI not overlapping between stages/variants → statistically significant difference.
+  - Point estimate within CI → consistent with bootstrap distribution (no overfitting to single split).

@@ -1,0 +1,1432 @@
+[
+  {
+    "run_id": "E1_nested_cv_20260218",
+    "experiment_name": "E1_nested_cv",
+    "description": "RF hyperparameter tuning via Nested 5-Fold CV. Ref: [Doula'25], [Kaur'21]",
+    "status": "completed",
+    "created_at": "2026-03-02T21:45:05.419772",
+    "data": {
+      "dataset": "CIC-IDS2017",
+      "data_path": "archive",
+      "total_samples": 0,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 15,
+      "class_distribution": {},
+      "split_method": "Stratified Mixed Split (10% sample for tuning speed)",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "RandomForest",
+      "model_name": "Stage 1 RF (Nested CV)",
+      "architecture": "",
+      "hyperparams": {
+        "param_grid": {
+          "n_estimators": [
+            50,
+            100
+          ],
+          "max_depth": [
+            10,
+            20,
+            null
+          ],
+          "max_features": [
+            "sqrt",
+            "log2"
+          ],
+          "min_samples_split": [
+            2,
+            10
+          ],
+          "class_weight": [
+            "balanced",
+            null
+          ]
+        }
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "scikit-learn"
+    },
+    "training_config": {
+      "epochs": 0,
+      "batch_size": 0,
+      "learning_rate": 0.0,
+      "optimizer": "",
+      "scheduler": "",
+      "loss_function": "",
+      "device": "CPU",
+      "early_stopping": false,
+      "early_stopping_patience": 0,
+      "cv_folds": 5,
+      "inner_cv_folds": 3
+    },
+    "epoch_log": [
+      {
+        "fold": 1,
+        "metrics": {
+          "f1_macro": 0.8080792920975489,
+          "precision_macro": 0.8296415581967396,
+          "recall_macro": 0.7984908984210807
+        },
+        "best_params": {
+          "rf__class_weight": null,
+          "rf__max_depth": 20,
+          "rf__max_features": "sqrt",
+          "rf__min_samples_split": 2,
+          "rf__n_estimators": 100
+        },
+        "timestamp": "2026-03-02T21:45:05.419772"
+      },
+      {
+        "fold": 2,
+        "metrics": {
+          "f1_macro": 0.7482813222712704,
+          "precision_macro": 0.7729600534422938,
+          "recall_macro": 0.733106752653215
+        },
+        "best_params": {
+          "rf__class_weight": null,
+          "rf__max_depth": 20,
+          "rf__max_features": "log2",
+          "rf__min_samples_split": 2,
+          "rf__n_estimators": 100
+        },
+        "timestamp": "2026-03-02T21:45:05.419772"
+      },
+      {
+        "fold": 3,
+        "metrics": {
+          "f1_macro": 0.8060458638231195,
+          "precision_macro": 0.8226187146945236,
+          "recall_macro": 0.7983420783231515
+        },
+        "best_params": {
+          "rf__class_weight": null,
+          "rf__max_depth": null,
+          "rf__max_features": "sqrt",
+          "rf__min_samples_split": 2,
+          "rf__n_estimators": 100
+        },
+        "timestamp": "2026-03-02T21:45:05.419772"
+      },
+      {
+        "fold": 4,
+        "metrics": {
+          "f1_macro": 0.8055418074132216,
+          "precision_macro": 0.8288688859952635,
+          "recall_macro": 0.7935339249861044
+        },
+        "best_params": {
+          "rf__class_weight": null,
+          "rf__max_depth": 20,
+          "rf__max_features": "log2",
+          "rf__min_samples_split": 2,
+          "rf__n_estimators": 100
+        },
+        "timestamp": "2026-03-02T21:45:05.419772"
+      },
+      {
+        "fold": 5,
+        "metrics": {
+          "f1_macro": 0.8120699905723939,
+          "precision_macro": 0.8216092220736045,
+          "recall_macro": 0.8059159380569572
+        },
+        "best_params": {
+          "rf__class_weight": null,
+          "rf__max_depth": null,
+          "rf__max_features": "sqrt",
+          "rf__min_samples_split": 2,
+          "rf__n_estimators": 50
+        },
+        "timestamp": "2026-03-02T21:45:05.419772"
+      }
+    ],
+    "results": {
+      "mean_f1_macro": 0.7960036552355109,
+      "std_f1_macro": 0.026801079738571296,
+      "final_best_params": "{'rf__class_weight': None, 'rf__max_depth': None, 'rf__max_features': 'sqrt', 'rf__min_samples_split': 2, 'rf__n_estimators': 50}"
+    },
+    "timing": {
+      "start_time": "2026-02-18 19:47:21.367478",
+      "end_time": "2026-02-18 20:12:19.148761",
+      "duration_seconds": 1497.781283,
+      "duration_human": "24m 57.8s",
+      "total_epochs_completed": 5
+    },
+    "artifacts": [
+      {
+        "path": "results/E1_nested_cv_results_20260218_201215.json",
+        "type": "results",
+        "description": "Nested CV results JSON"
+      },
+      {
+        "path": "models_chk/stage1_rf_best.pkl",
+        "type": "model",
+        "description": "Final RF model (best config)"
+      },
+      {
+        "path": "models_chk/label_encoder_e1.joblib",
+        "type": "encoder",
+        "description": "Label encoder"
+      }
+    ]
+  },
+  {
+    "run_id": "E11_latency_benchmark_20260218",
+    "experiment_name": "E11_latency_benchmark",
+    "description": "Inference latency and throughput benchmark for Stage 1 RF. Ref: [Abu Al-Haija'22]",
+    "status": "completed",
+    "created_at": "2026-03-02T21:45:05.420784",
+    "data": {
+      "dataset": "CIC-IDS2017",
+      "data_path": "",
+      "total_samples": 100000,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "RandomForest (Pipeline)",
+      "model_name": "stage1_rf_best.pkl",
+      "architecture": "",
+      "hyperparams": {},
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "scikit-learn"
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "bs1_latency_us": 5210.42,
+      "bs1_throughput": 190.25,
+      "bs32_latency_us": 163.51,
+      "bs32_throughput": 6065.39,
+      "bs64_latency_us": 89.17,
+      "bs64_throughput": 11122.87,
+      "bs128_latency_us": 44.75,
+      "bs128_throughput": 22152.34,
+      "bs1000_latency_us": 9.12,
+      "bs1000_throughput": 108889.51,
+      "bs10000_latency_us": 6.12,
+      "bs10000_throughput": 163086.14
+    },
+    "timing": {
+      "start_time": "2026-02-18T20:19:00",
+      "end_time": "2026-02-18T20:19:57",
+      "duration_seconds": 57,
+      "duration_human": "~1m"
+    },
+    "artifacts": [
+      {
+        "path": "results/E11_latency_benchmark_20260218_201957.json",
+        "type": "results",
+        "description": "Latency benchmark JSON"
+      }
+    ]
+  },
+  {
+    "run_id": "E17_threshold_tuning_20260218",
+    "experiment_name": "E17_threshold_tuning",
+    "description": "Stage 1 threshold tuning: find optimal tau balancing recall and pass-through rate",
+    "status": "completed",
+    "created_at": "2026-03-02T21:45:05.420784",
+    "data": {
+      "dataset": "CIC-IDS2017",
+      "data_path": "",
+      "total_samples": 0,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "Stratified Mixed Split (20% test)",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "RandomForest (Pipeline)",
+      "model_name": "stage1_rf_best.pkl",
+      "architecture": "",
+      "hyperparams": {},
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "scikit-learn"
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "target_0.99_threshold": 0.63,
+      "target_0.99_recall": 0.9904,
+      "target_0.99_pass_through": 0.1444,
+      "target_0.99_precision": 0.9977,
+      "target_0.999_threshold": 0.06,
+      "target_0.999_recall": 0.9992,
+      "target_0.999_pass_through": 0.1525,
+      "target_0.999_precision": 0.953,
+      "target_0.9999_threshold": 0.0,
+      "target_0.9999_recall": 1.0,
+      "target_0.9999_pass_through": 1.0,
+      "target_0.9999_precision": 0.1454
+    },
+    "timing": {
+      "start_time": "2026-02-18T20:12:00",
+      "end_time": "2026-02-18T20:21:57",
+      "duration_seconds": 597,
+      "duration_human": "~10m"
+    },
+    "artifacts": [
+      {
+        "path": "results/E17_threshold_tuning_20260218_202157.json",
+        "type": "results",
+        "description": "Threshold tuning JSON"
+      }
+    ]
+  },
+  {
+    "run_id": "stage1_training_20260218",
+    "experiment_name": "stage1_training",
+    "description": "Stage 1 RF binary classifier (full data) with stratified mixed split + Stage 2 data generation",
+    "status": "completed",
+    "created_at": "2026-03-02T21:45:05.423431",
+    "data": {
+      "dataset": "CIC-IDS2017",
+      "data_path": "archive",
+      "total_samples": 0,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 2,
+      "class_distribution": {},
+      "split_method": "Stratified Mixed Split",
+      "split_ratios": "70% Train / 10% Val / 20% Test"
+    },
+    "model": {
+      "model_type": "RandomForest",
+      "model_name": "Stage1Filter (Binary)",
+      "architecture": "",
+      "hyperparams": {
+        "n_estimators": 50,
+        "max_depth": 20,
+        "class_weight": "balanced"
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "scikit-learn"
+    },
+    "training_config": {
+      "epochs": 0,
+      "batch_size": 0,
+      "learning_rate": 0.0,
+      "optimizer": "",
+      "scheduler": "",
+      "loss_function": "",
+      "device": "CPU",
+      "early_stopping": false,
+      "early_stopping_patience": 0,
+      "cv_folds": 0
+    },
+    "epoch_log": [],
+    "results": {
+      "val_f1": "~1.00",
+      "test_f1": "~1.00",
+      "note": "Binary classification (Benign vs Attack). Stage 2 data generated via CV mining."
+    },
+    "timing": {
+      "start_time": "2026-02-18",
+      "end_time": "2026-02-18",
+      "duration_human": "N/A (manual record)"
+    },
+    "artifacts": [
+      {
+        "path": "models_chk/stage1_rf_stratified.joblib",
+        "type": "model",
+        "description": "Stage 1 RF model (stratified)"
+      },
+      {
+        "path": "models_chk/preprocessor_stratified.joblib",
+        "type": "preprocessor",
+        "description": "Data preprocessor"
+      },
+      {
+        "path": "models_chk/label_encoder_e1.joblib",
+        "type": "encoder",
+        "description": "Label encoder"
+      },
+      {
+        "path": "data/stage2/train.parquet",
+        "type": "data",
+        "description": "Stage 2 training data (hard examples)"
+      },
+      {
+        "path": "data/stage2/val.parquet",
+        "type": "data",
+        "description": "Stage 2 validation data"
+      },
+      {
+        "path": "data/stage2/test.parquet",
+        "type": "data",
+        "description": "Stage 2 test data"
+      }
+    ]
+  },
+  {
+    "run_id": "stage2_transeca_optimized_20260302_222329",
+    "experiment_name": "stage2_transeca_optimized",
+    "description": "Stage 2 TransECA-Net multiclass classifier, optimized training with LR scheduler, early stopping, AMP",
+    "status": "completed",
+    "created_at": "2026-03-02T22:23:29.336436",
+    "data": {
+      "dataset": "CIC-IDS2017 (Stage 2 Hard Examples)",
+      "data_path": "data/stage2/",
+      "total_samples": 336516,
+      "train_samples": 235556,
+      "val_samples": 33643,
+      "test_samples": 67317,
+      "num_features": 76,
+      "num_classes": 15,
+      "class_distribution": {
+        "Benign": 1021,
+        "Bot": 789,
+        "DDoS": 89554,
+        "DoS GoldenEye": 7208,
+        "DoS Hulk": 120593,
+        "DoS Slowhttptest": 3610,
+        "DoS slowloris": 3738,
+        "FTP-Patator": 4131,
+        "Heartbleed": 5,
+        "Infiltration": 16,
+        "PortScan": 1324,
+        "SSH-Patator": 2175,
+        "Web Attack � Brute Force": 963,
+        "Web Attack � Sql Injection": 6,
+        "Web Attack � XSS": 423
+      },
+      "split_method": "Stage 1 CV Mining + Prediction",
+      "split_ratios": "Pre-split from Stage 1 (70/10/20)"
+    },
+    "model": {
+      "model_type": "TransECA-Net",
+      "model_name": "Stage 2 Multiclass Classifier",
+      "architecture": "1D-CNN + ECA Attention + Transformer Encoder",
+      "hyperparams": {
+        "d_model": 128,
+        "nhead": 8,
+        "num_layers": 3
+      },
+      "total_params": 301460,
+      "trainable_params": 301460,
+      "framework": "PyTorch"
+    },
+    "training_config": {
+      "epochs": 30,
+      "batch_size": 512,
+      "learning_rate": 0.001,
+      "optimizer": "AdamW (weight_decay=1e-4)",
+      "scheduler": "CosineAnnealingWarmRestarts (T_0=10, T_mult=2)",
+      "loss_function": "CrossEntropyLoss (class-weighted)",
+      "device": "xpu",
+      "early_stopping": true,
+      "early_stopping_patience": 10,
+      "cv_folds": 0
+    },
+    "epoch_log": [
+      {
+        "epoch": 1,
+        "train_loss": 1.4624,
+        "val_loss": 0.9333,
+        "train_acc": 54.56,
+        "val_acc": 72.48,
+        "learning_rate": 0.001,
+        "timestamp": "2026-03-02T22:25:45.172633"
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.8911,
+        "val_loss": 0.7212,
+        "train_acc": 73.13,
+        "val_acc": 82.84,
+        "learning_rate": 0.0009755282581475768,
+        "timestamp": "2026-03-02T22:27:54.680126"
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.6818,
+        "val_loss": 0.5301,
+        "train_acc": 80.72,
+        "val_acc": 81.57,
+        "learning_rate": 0.0009045084971874737,
+        "timestamp": "2026-03-02T22:30:04.272334"
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.6262,
+        "val_loss": 0.4869,
+        "train_acc": 82.99,
+        "val_acc": 85.36,
+        "learning_rate": 0.0007938926261462366,
+        "timestamp": "2026-03-02T22:32:21.177681"
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.5102,
+        "val_loss": 0.4103,
+        "train_acc": 85.32,
+        "val_acc": 86.54,
+        "learning_rate": 0.0006545084971874737,
+        "timestamp": "2026-03-02T22:34:28.305436"
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.4172,
+        "val_loss": 0.3805,
+        "train_acc": 87.2,
+        "val_acc": 87.56,
+        "learning_rate": 0.0005,
+        "timestamp": "2026-03-02T22:36:36.627411"
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.3867,
+        "val_loss": 0.3406,
+        "train_acc": 87.98,
+        "val_acc": 87.85,
+        "learning_rate": 0.00034549150281252633,
+        "timestamp": "2026-03-02T22:38:45.166734"
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.3572,
+        "val_loss": 0.3341,
+        "train_acc": 88.72,
+        "val_acc": 88.66,
+        "learning_rate": 0.00020610737385376348,
+        "timestamp": "2026-03-02T22:40:56.188923"
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.3304,
+        "val_loss": 0.3272,
+        "train_acc": 89.35,
+        "val_acc": 89.73,
+        "learning_rate": 9.549150281252633e-05,
+        "timestamp": "2026-03-02T22:43:06.634702"
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.3221,
+        "val_loss": 0.3225,
+        "train_acc": 89.61,
+        "val_acc": 89.72,
+        "learning_rate": 2.4471741852423235e-05,
+        "timestamp": "2026-03-02T22:45:15.607742"
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.8387,
+        "val_loss": 0.8934,
+        "train_acc": 74.43,
+        "val_acc": 75.02,
+        "learning_rate": 0.001,
+        "timestamp": "2026-03-02T22:47:20.700918"
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.6198,
+        "val_loss": 0.5237,
+        "train_acc": 81.27,
+        "val_acc": 85.16,
+        "learning_rate": 0.0009938441702975688,
+        "timestamp": "2026-03-02T22:49:24.078011"
+      },
+      {
+        "epoch": 13,
+        "train_loss": 0.5583,
+        "val_loss": 0.4288,
+        "train_acc": 81.84,
+        "val_acc": 86.91,
+        "learning_rate": 0.0009755282581475768,
+        "timestamp": "2026-03-02T22:51:27.418063"
+      },
+      {
+        "epoch": 14,
+        "train_loss": 0.5531,
+        "val_loss": 0.3895,
+        "train_acc": 83.68,
+        "val_acc": 87.16,
+        "learning_rate": 0.0009455032620941839,
+        "timestamp": "2026-03-02T22:53:30.783409"
+      },
+      {
+        "epoch": 15,
+        "train_loss": 0.4375,
+        "val_loss": 0.3793,
+        "train_acc": 86.25,
+        "val_acc": 87.73,
+        "learning_rate": 0.0009045084971874737,
+        "timestamp": "2026-03-02T22:55:34.430620"
+      },
+      {
+        "epoch": 16,
+        "train_loss": 0.4012,
+        "val_loss": 0.3804,
+        "train_acc": 87.19,
+        "val_acc": 88.2,
+        "learning_rate": 0.0008535533905932737,
+        "timestamp": "2026-03-02T22:57:37.804492"
+      },
+      {
+        "epoch": 17,
+        "train_loss": 0.4815,
+        "val_loss": 0.3848,
+        "train_acc": 85.78,
+        "val_acc": 87.6,
+        "learning_rate": 0.0007938926261462366,
+        "timestamp": "2026-03-02T22:59:42.705811"
+      },
+      {
+        "epoch": 18,
+        "train_loss": 0.3816,
+        "val_loss": 0.349,
+        "train_acc": 87.8,
+        "val_acc": 89.31,
+        "learning_rate": 0.0007269952498697733,
+        "timestamp": "2026-03-02T23:01:52.248830"
+      },
+      {
+        "epoch": 19,
+        "train_loss": 0.3771,
+        "val_loss": 0.3148,
+        "train_acc": 88.14,
+        "val_acc": 90.05,
+        "learning_rate": 0.0006545084971874737,
+        "timestamp": "2026-03-02T23:04:04.934607"
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.3623,
+        "val_loss": 0.3427,
+        "train_acc": 88.65,
+        "val_acc": 90.41,
+        "learning_rate": 0.0005782172325201155,
+        "timestamp": "2026-03-02T23:06:17.239854"
+      },
+      {
+        "epoch": 21,
+        "train_loss": 0.3621,
+        "val_loss": 0.515,
+        "train_acc": 88.86,
+        "val_acc": 87.9,
+        "learning_rate": 0.0005,
+        "timestamp": "2026-03-02T23:08:28.953239"
+      },
+      {
+        "epoch": 22,
+        "train_loss": 0.3651,
+        "val_loss": 0.3042,
+        "train_acc": 88.78,
+        "val_acc": 90.27,
+        "learning_rate": 0.0004217827674798847,
+        "timestamp": "2026-03-02T23:10:37.189882"
+      },
+      {
+        "epoch": 23,
+        "train_loss": 0.312,
+        "val_loss": 0.2937,
+        "train_acc": 90.24,
+        "val_acc": 91.39,
+        "learning_rate": 0.00034549150281252633,
+        "timestamp": "2026-03-02T23:12:44.037669"
+      },
+      {
+        "epoch": 24,
+        "train_loss": 0.3069,
+        "val_loss": 0.2898,
+        "train_acc": 90.46,
+        "val_acc": 91.7,
+        "learning_rate": 0.00027300475013022663,
+        "timestamp": "2026-03-02T23:14:49.661808"
+      },
+      {
+        "epoch": 25,
+        "train_loss": 0.2989,
+        "val_loss": 0.2777,
+        "train_acc": 90.97,
+        "val_acc": 92.06,
+        "learning_rate": 0.00020610737385376348,
+        "timestamp": "2026-03-02T23:16:55.167016"
+      },
+      {
+        "epoch": 26,
+        "train_loss": 0.2917,
+        "val_loss": 0.284,
+        "train_acc": 91.08,
+        "val_acc": 91.77,
+        "learning_rate": 0.00014644660940672628,
+        "timestamp": "2026-03-02T23:19:04.458287"
+      },
+      {
+        "epoch": 27,
+        "train_loss": 0.286,
+        "val_loss": 0.2707,
+        "train_acc": 91.45,
+        "val_acc": 92.32,
+        "learning_rate": 9.549150281252633e-05,
+        "timestamp": "2026-03-02T23:21:13.720441"
+      },
+      {
+        "epoch": 28,
+        "train_loss": 0.2797,
+        "val_loss": 0.2721,
+        "train_acc": 91.75,
+        "val_acc": 92.36,
+        "learning_rate": 5.449673790581611e-05,
+        "timestamp": "2026-03-02T23:23:23.172305"
+      },
+      {
+        "epoch": 29,
+        "train_loss": 0.2774,
+        "val_loss": 0.2683,
+        "train_acc": 91.84,
+        "val_acc": 92.52,
+        "learning_rate": 2.4471741852423235e-05,
+        "timestamp": "2026-03-02T23:25:32.296962"
+      },
+      {
+        "epoch": 30,
+        "train_loss": 0.2751,
+        "val_loss": 0.2695,
+        "train_acc": 92.01,
+        "val_acc": 92.48,
+        "learning_rate": 6.15582970243117e-06,
+        "timestamp": "2026-03-02T23:27:41.498660"
+      }
+    ],
+    "results": {
+      "best_val_accuracy": 92.52147549267306,
+      "training_time_minutes": 64.18,
+      "total_epochs_run": 30,
+      "classification_report": "                            precision    recall  f1-score   support\n\n                    Benign       0.05      0.75      0.09       279\n                       Bot       1.00      0.59      0.74       229\n                      DDoS       0.99      0.96      0.98     25593\n             DoS GoldenEye       0.98      0.97      0.98      2022\n                  DoS Hulk       0.99      0.90      0.94     34448\n          DoS Slowhttptest       0.93      0.98      0.96      1075\n             DoS slowloris       0.97      0.97      0.97      1094\n               FTP-Patator       0.98      1.00      0.99      1187\n                Heartbleed       0.75      1.00      0.86         3\n              Infiltration       0.42      1.00      0.59         5\n                  PortScan       0.82      0.91      0.86       378\n               SSH-Patator       0.89      0.99      0.94       610\n  Web Attack � Brute Force       0.80      0.42      0.55       256\nWeb Attack � Sql Injection       0.33      1.00      0.50         1\n          Web Attack � XSS       0.42      0.80      0.55       137\n\n                  accuracy                           0.93     67317\n                 macro avg       0.76      0.88      0.77     67317\n              weighted avg       0.98      0.93      0.95     67317\n"
+    },
+    "timing": {
+      "start_time": "2026-03-02T22:23:29.336436",
+      "end_time": "2026-03-02T23:27:52.799275",
+      "duration_seconds": 3863.46,
+      "duration_human": "1h 4m 23.5s",
+      "total_epochs_completed": 30
+    },
+    "artifacts": [
+      {
+        "path": "models_chk/stage2_transeca_best.pth",
+        "type": "model",
+        "description": "Best model (early stopping)"
+      },
+      {
+        "path": "models_chk/stage2_transeca.pth",
+        "type": "model",
+        "description": "Final model"
+      },
+      {
+        "path": "results/stage2_optimized_report.txt",
+        "type": "report",
+        "description": "Classification report"
+      },
+      {
+        "path": "results/stage2_training_history.png",
+        "type": "plot",
+        "description": "Training curves"
+      },
+      {
+        "path": "results/stage2_confusion_matrix.png",
+        "type": "plot",
+        "description": "Confusion matrix"
+      }
+    ]
+  },
+  {
+    "run_id": "E8_ablation_20260303_002931",
+    "experiment_name": "E8_ablation",
+    "description": "Ablation study: Full TransECA-Net vs No-ECA vs CNN-Only. Validates ECA and Transformer contributions.",
+    "status": "completed",
+    "created_at": "2026-03-03T00:29:31.215435",
+    "data": {
+      "dataset": "CIC-IDS2017 (Stage 2 Hard Examples)",
+      "data_path": "data/stage2/",
+      "total_samples": 336516,
+      "train_samples": 235556,
+      "val_samples": 33643,
+      "test_samples": 67317,
+      "num_features": 76,
+      "num_classes": 15,
+      "class_distribution": {},
+      "split_method": "Stage 1 CV Mining + Prediction",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "TransECA-Net (Ablation)",
+      "model_name": "E8 Ablation — Full vs No-ECA vs CNN-Only",
+      "architecture": "1D-CNN + ECA + Transformer (ablated)",
+      "hyperparams": {
+        "d_model": 128,
+        "nhead": 8,
+        "num_layers": 3,
+        "variants": 3
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "PyTorch"
+    },
+    "training_config": {
+      "epochs": 20,
+      "batch_size": 512,
+      "learning_rate": 0.001,
+      "optimizer": "AdamW (weight_decay=1e-4)",
+      "scheduler": "CosineAnnealingWarmRestarts (T_0=10, T_mult=2)",
+      "loss_function": "CrossEntropyLoss (class-weighted)",
+      "device": "xpu",
+      "early_stopping": false,
+      "early_stopping_patience": 0,
+      "cv_folds": 0
+    },
+    "epoch_log": [],
+    "results": {
+      "full_test_accuracy": 89.71,
+      "full_weighted_f1": 0.9248,
+      "noeca_test_accuracy": 92.05,
+      "noeca_weighted_f1": 0.947,
+      "cnn_test_accuracy": 61.89,
+      "cnn_weighted_f1": 0.6677,
+      "eca_contribution_wf1": -0.0222,
+      "transformer_contribution_wf1": 0.2793,
+      "total_time_minutes": 446.51
+    },
+    "timing": {
+      "start_time": "2026-03-03T00:29:31.215435",
+      "end_time": "2026-03-03T07:56:03.103666",
+      "duration_seconds": 26791.89,
+      "duration_human": "7h 26m 31.9s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E8_ablation_report.txt",
+        "type": "report",
+        "description": "Ablation study report"
+      },
+      {
+        "path": "results/E8_ablation_results.json",
+        "type": "data",
+        "description": "Ablation results JSON"
+      },
+      {
+        "path": "results/E8_ablation_comparison.png",
+        "type": "plot",
+        "description": "Training curves comparison"
+      },
+      {
+        "path": "results/E8_ablation_bar.png",
+        "type": "plot",
+        "description": "Bar chart comparison"
+      }
+    ]
+  },
+  {
+    "run_id": "E15_generalization_20260303_101821",
+    "experiment_name": "E15_generalization",
+    "description": "Architecture generalization: Train TransECA-Net from scratch on UNSW-NB15 to verify architecture is not overfit to CIC-IDS2017.",
+    "status": "completed",
+    "created_at": "2026-03-03T10:18:21.297612",
+    "data": {
+      "dataset": "UNSW-NB15 (Architecture Generalization)",
+      "data_path": "archive/UNSW_NB15_*.parquet",
+      "total_samples": 257673,
+      "train_samples": 149039,
+      "val_samples": 26302,
+      "test_samples": 82332,
+      "num_features": 186,
+      "num_classes": 10,
+      "class_distribution": {
+        "Analysis": 1700,
+        "Backdoor": 1484,
+        "DoS": 10424,
+        "Exploits": 28384,
+        "Fuzzers": 15456,
+        "Generic": 34000,
+        "Normal": 47600,
+        "Reconnaissance": 8917,
+        "Shellcode": 963,
+        "Worms": 111
+      },
+      "split_method": "Original train/test split + 15% val from train (stratified)",
+      "split_ratios": "Train 85% / Val 15% of training-set, Test = testing-set"
+    },
+    "model": {
+      "model_type": "TransECA-Net",
+      "model_name": "TransECA-Net on UNSW-NB15",
+      "architecture": "1D-CNN + ECA + Transformer Encoder",
+      "hyperparams": {
+        "d_model": 128,
+        "nhead": 8,
+        "num_layers": 3,
+        "n_params": 300815
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "PyTorch"
+    },
+    "training_config": {
+      "epochs": 30,
+      "batch_size": 512,
+      "learning_rate": 0.001,
+      "optimizer": "AdamW (weight_decay=1e-4)",
+      "scheduler": "CosineAnnealingWarmRestarts (T_0=10, T_mult=2)",
+      "loss_function": "CrossEntropyLoss (class-weighted)",
+      "device": "xpu",
+      "early_stopping": false,
+      "early_stopping_patience": 0,
+      "cv_folds": 0
+    },
+    "epoch_log": [],
+    "results": {
+      "unsw_test_accuracy": 63.64,
+      "unsw_weighted_f1": 0.7034,
+      "unsw_macro_f1": 0.3966,
+      "unsw_best_val_accuracy": 70.2,
+      "best_epoch": 30,
+      "training_time_minutes": 150.26,
+      "params": 300815,
+      "cic_test_accuracy_ref": 93.0,
+      "cic_weighted_f1_ref": 0.95,
+      "gap_accuracy": 29.36,
+      "gap_weighted_f1": 0.2466
+    },
+    "timing": {
+      "start_time": "2026-03-03T10:18:21.297612",
+      "end_time": "2026-03-03T12:49:24.027443",
+      "duration_seconds": 9062.73,
+      "duration_human": "2h 31m 2.7s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E15_generalization_report.txt",
+        "type": "report",
+        "description": "E15 generalization report"
+      },
+      {
+        "path": "results/E15_generalization_results.json",
+        "type": "data",
+        "description": "E15 results JSON"
+      },
+      {
+        "path": "results/E15_unsw_training_curves.png",
+        "type": "plot",
+        "description": "Training curves"
+      },
+      {
+        "path": "results/E15_unsw_confusion_matrix.png",
+        "type": "plot",
+        "description": "Confusion matrix"
+      },
+      {
+        "path": "results/E15_cross_dataset_comparison.png",
+        "type": "plot",
+        "description": "Cross-dataset comparison"
+      },
+      {
+        "path": "models_chk/e15_transeca_unsw.pth",
+        "type": "model",
+        "description": "TransECA-Net trained on UNSW-NB15"
+      }
+    ]
+  },
+  {
+    "run_id": "E2_shap_20260303_195026",
+    "experiment_name": "E2_shap",
+    "description": "SHAP feature importance analysis for Stage 1 RF model. Explains which network flow features drive attack detection.",
+    "status": "completed",
+    "created_at": "2026-03-03T19:50:26.717811",
+    "data": {
+      "dataset": "CIC-IDS2017 (Stratified Sample)",
+      "data_path": "archive/*.parquet",
+      "total_samples": 6068,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 76,
+      "num_classes": 15,
+      "class_distribution": {},
+      "split_method": "Stratified sampling (500/class max)",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "RandomForest",
+      "model_name": "Stage 1 RF (Binary)",
+      "architecture": "RF 50 trees",
+      "hyperparams": {
+        "n_estimators": 50,
+        "n_features": 76
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": "scikit-learn"
+    },
+    "training_config": {
+      "epochs": 0,
+      "batch_size": 0,
+      "learning_rate": 0,
+      "optimizer": "N/A (analysis experiment)",
+      "scheduler": "",
+      "loss_function": "",
+      "device": "CPU",
+      "early_stopping": false,
+      "early_stopping_patience": 0,
+      "cv_folds": 0
+    },
+    "epoch_log": [],
+    "results": {
+      "top1_feature": "Bwd Packet Length Std",
+      "top1_shap": 0.031994,
+      "shap_time_seconds": 235.1,
+      "spearman_rho": 0.9444,
+      "n_samples": 6068
+    },
+    "timing": {
+      "start_time": "2026-03-03T19:50:26.717811",
+      "end_time": "2026-03-03T19:54:25.957292",
+      "duration_seconds": 239.24,
+      "duration_human": "3m 59.2s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E2_shap_summary.png",
+        "type": "plot",
+        "description": "SHAP beeswarm summary"
+      },
+      {
+        "path": "results/E2_shap_bar.png",
+        "type": "plot",
+        "description": "SHAP bar chart"
+      },
+      {
+        "path": "results/E2_shap_vs_rf.png",
+        "type": "plot",
+        "description": "SHAP vs RF comparison"
+      },
+      {
+        "path": "results/E2_feature_importance.csv",
+        "type": "data",
+        "description": "Feature importance CSV"
+      },
+      {
+        "path": "results/E2_shap_report.txt",
+        "type": "report",
+        "description": "E2 SHAP report"
+      },
+      {
+        "path": "results/E2_shap_results.json",
+        "type": "data",
+        "description": "E2 results JSON"
+      }
+    ]
+  },
+  {
+    "run_id": "E6_bootstrap_ci_20260303_200445",
+    "experiment_name": "E6_bootstrap_ci",
+    "description": "1000× Bootstrap CI for Stage 1 RF and Stage 2 TransECA-Net. Ref: [Kaur'21]",
+    "status": "completed",
+    "created_at": "2026-03-03T20:04:45.306959",
+    "data": {
+      "dataset": "CIC-IDS2017 (S1 test) + Stage 2 hard examples (S2 test)",
+      "data_path": "",
+      "total_samples": 530079,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "Bootstrap CI Analysis",
+      "model_name": "",
+      "architecture": "",
+      "hyperparams": {
+        "n_bootstrap": 1000,
+        "confidence": 0.95
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": ""
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "stage1_accuracy_ci": "[0.9990, 0.9992]",
+      "stage1_wf1_ci": "[0.9990, 0.9992]",
+      "stage2_accuracy_ci": "[0.9237, 0.9279]",
+      "stage2_wf1_ci": "[0.9491, 0.9520]"
+    },
+    "timing": {
+      "start_time": "2026-03-03T20:04:45.306959",
+      "end_time": "2026-03-03T20:05:28.216538",
+      "duration_seconds": 42.91,
+      "duration_human": "42.9s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E6_bootstrap_ci_results.json",
+        "type": "data",
+        "description": "Bootstrap CI results"
+      },
+      {
+        "path": "results/E6_bootstrap_ci_report.txt",
+        "type": "report",
+        "description": "Human-readable report"
+      },
+      {
+        "path": "results/E6_bootstrap_distributions.png",
+        "type": "plot",
+        "description": "Bootstrap distributions"
+      }
+    ]
+  },
+  {
+    "run_id": "E10_interpretability_20260303_201821",
+    "experiment_name": "E10_interpretability",
+    "description": "TransECA-Net interpretability: IG, Attention Rollout, ECA weights.",
+    "status": "completed",
+    "created_at": "2026-03-03T20:18:21.867959",
+    "data": {
+      "dataset": "Stage 2 test (data/stage2/test.parquet)",
+      "data_path": "",
+      "total_samples": 67317,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "TransECA-Net Interpretability",
+      "model_name": "",
+      "architecture": "",
+      "hyperparams": {
+        "ig_samples": 500,
+        "ig_steps": 50,
+        "attn_samples": 200,
+        "eca_samples": 500
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": ""
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "ig_top1": "Init Fwd Win Bytes",
+      "ig_top1_value": 2.1067938804626465,
+      "ig_time": 19.731133460998535,
+      "attn_time": 0.22830462455749512,
+      "eca_time": 0.1655118465423584
+    },
+    "timing": {
+      "start_time": "2026-03-03T20:18:21.867959",
+      "end_time": "2026-03-03T20:18:49.642649",
+      "duration_seconds": 27.77,
+      "duration_human": "27.8s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E10_ig_global_importance.png",
+        "type": "plot",
+        "description": "IG global feature importance"
+      },
+      {
+        "path": "results/E10_ig_per_class.png",
+        "type": "plot",
+        "description": "IG per-class heatmap"
+      },
+      {
+        "path": "results/E10_attention_heatmap.png",
+        "type": "plot",
+        "description": "Attention rollout heatmap"
+      },
+      {
+        "path": "results/E10_eca_channel_weights.png",
+        "type": "plot",
+        "description": "ECA channel weights"
+      },
+      {
+        "path": "results/E10_interpretability_report.txt",
+        "type": "report",
+        "description": "Analysis report"
+      },
+      {
+        "path": "results/E10_interpretability_results.json",
+        "type": "data",
+        "description": "JSON results"
+      }
+    ]
+  },
+  {
+    "run_id": "E14_adversarial_robustness_20260303_205702",
+    "experiment_name": "E14_adversarial_robustness",
+    "description": "Adversarial robustness: FGSM/PGD on Stage 2 + noise on Stage 1",
+    "status": "completed",
+    "created_at": "2026-03-03T20:57:02.773930",
+    "data": {
+      "dataset": "Stage 2 test (data/stage2/test.parquet)",
+      "data_path": "",
+      "total_samples": 10000,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "Adversarial Robustness (FGSM/PGD)",
+      "model_name": "",
+      "architecture": "",
+      "hyperparams": {
+        "epsilons": [
+          0.001,
+          0.005,
+          0.01,
+          0.05,
+          0.1
+        ],
+        "pgd_steps": 5,
+        "subsample": 10000
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": ""
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "rf_clean_acc": 0.9959,
+      "transeca_clean_acc": 0.9216,
+      "fgsm_eps01_acc": 0.0609,
+      "pgd_eps01_acc": 0.0066,
+      "rf_eps01_acc": 0.0043
+    },
+    "timing": {
+      "start_time": "2026-03-03T20:57:02.773930",
+      "end_time": "2026-03-03T20:59:57.836192",
+      "duration_seconds": 175.06,
+      "duration_human": "2m 55.1s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E14_adversarial_results.json",
+        "type": "data",
+        "description": "Adversarial results"
+      },
+      {
+        "path": "results/E14_adversarial_report.txt",
+        "type": "report",
+        "description": "Analysis report"
+      },
+      {
+        "path": "results/E14_robustness_curve.png",
+        "type": "plot",
+        "description": "Robustness curves"
+      },
+      {
+        "path": "results/E14_per_class_robustness.png",
+        "type": "plot",
+        "description": "Per-class heatmap"
+      }
+    ]
+  },
+  {
+    "run_id": "E4_bias_variance_20260303_211146",
+    "experiment_name": "E4_bias_variance",
+    "description": "Bias-Variance decomposition: OOB curve, DL gap, complexity analysis",
+    "status": "completed",
+    "created_at": "2026-03-03T21:11:46.384063",
+    "data": {
+      "dataset": "CIC-IDS2017 (full)",
+      "data_path": "",
+      "total_samples": 2313810,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "Bias-Variance Analysis",
+      "model_name": "",
+      "architecture": "",
+      "hyperparams": {
+        "rf_max_trees": 200,
+        "lc_fractions": 7
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": ""
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "oob_error_at_50": 0.0017300000000000093,
+      "oob_error_at_200": 0.0017099999999999893,
+      "dl_final_gen_gap": 0.005599999999999994,
+      "rf_full_train_acc": 0.9997,
+      "rf_full_test_acc": 0.99806
+    },
+    "timing": {
+      "start_time": "2026-03-03T21:11:46.384063",
+      "end_time": "2026-03-03T21:12:48.438972",
+      "duration_seconds": 62.05,
+      "duration_human": "1m 2.1s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E4_oob_vs_trees.png",
+        "type": "plot",
+        "description": "OOB Error vs Trees"
+      },
+      {
+        "path": "results/E4_dl_learning_curves.png",
+        "type": "plot",
+        "description": "DL Learning Curves"
+      },
+      {
+        "path": "results/E4_complexity_vs_perf.png",
+        "type": "plot",
+        "description": "Complexity Analysis"
+      },
+      {
+        "path": "results/E4_rf_learning_curve.png",
+        "type": "plot",
+        "description": "RF Learning Curve"
+      },
+      {
+        "path": "results/E4_bias_variance_report.txt",
+        "type": "report",
+        "description": "Analysis Report"
+      },
+      {
+        "path": "results/E4_bias_variance_results.json",
+        "type": "data",
+        "description": "Full Results"
+      }
+    ]
+  },
+  {
+    "run_id": "E12_visualization_20260303_212509",
+    "experiment_name": "E12_visualization",
+    "description": "t-SNE/UMAP on raw features and TransECA-Net embeddings",
+    "status": "completed",
+    "created_at": "2026-03-03T21:25:09.939931",
+    "data": {
+      "dataset": "Stage 2 test (data/stage2/test.parquet)",
+      "data_path": "",
+      "total_samples": 8000,
+      "train_samples": 0,
+      "val_samples": 0,
+      "test_samples": 0,
+      "num_features": 0,
+      "num_classes": 0,
+      "class_distribution": {},
+      "split_method": "",
+      "split_ratios": ""
+    },
+    "model": {
+      "model_type": "t-SNE/UMAP Visualization",
+      "model_name": "",
+      "architecture": "",
+      "hyperparams": {
+        "tsne_perplexity": 30,
+        "umap_n_neighbors": 15,
+        "max_samples": 8000
+      },
+      "total_params": 0,
+      "trainable_params": 0,
+      "framework": ""
+    },
+    "training_config": {},
+    "epoch_log": [],
+    "results": {
+      "t-SNE_Raw": -0.16212661564350128,
+      "UMAP_Raw": -0.23491983115673065,
+      "t-SNE_Embedding": -0.09592121094465256,
+      "UMAP_Embedding": -0.06679461896419525
+    },
+    "timing": {
+      "start_time": "2026-03-03T21:25:09.939931",
+      "end_time": "2026-03-03T21:26:18.379227",
+      "duration_seconds": 68.44,
+      "duration_human": "1m 8.4s",
+      "total_epochs_completed": 0
+    },
+    "artifacts": [
+      {
+        "path": "results/E12_tsne_raw.png",
+        "type": "plot",
+        "description": "t-SNE raw features"
+      },
+      {
+        "path": "results/E12_umap_raw.png",
+        "type": "plot",
+        "description": "UMAP raw features"
+      },
+      {
+        "path": "results/E12_tsne_embedding.png",
+        "type": "plot",
+        "description": "t-SNE embeddings"
+      },
+      {
+        "path": "results/E12_umap_embedding.png",
+        "type": "plot",
+        "description": "UMAP embeddings"
+      },
+      {
+        "path": "results/E12_binary_view.png",
+        "type": "plot",
+        "description": "Binary view comparison"
+      },
+      {
+        "path": "results/E12_visualization_report.txt",
+        "type": "report",
+        "description": "Analysis report"
+      },
+      {
+        "path": "results/E12_visualization_results.json",
+        "type": "data",
+        "description": "Full results"
+      }
+    ]
+  }
+]

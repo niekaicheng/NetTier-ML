@@ -1,0 +1,39 @@
+Stage 2 (TransECA-Net) — Optimized Training Report
+================================================================================
+
+Data: Stage 1 Hard Examples (data/stage2/*.parquet)
+  Train: 235,556 | Val: 33,643 | Test: 67,317
+  Features: 76 | Classes: 15
+
+Model: TransECA-Net (d=128, h=8, L=3)
+  Parameters: 301,460
+
+Training: 30/30 epochs, BS=512
+  Time: 64.18 min
+  Best Val Acc: 92.52%
+
+================================================================================
+Test Classification Report
+================================================================================
+
+                            precision    recall  f1-score   support
+
+                    Benign       0.05      0.75      0.09       279
+                       Bot       1.00      0.59      0.74       229
+                      DDoS       0.99      0.96      0.98     25593
+             DoS GoldenEye       0.98      0.97      0.98      2022
+                  DoS Hulk       0.99      0.90      0.94     34448
+          DoS Slowhttptest       0.93      0.98      0.96      1075
+             DoS slowloris       0.97      0.97      0.97      1094
+               FTP-Patator       0.98      1.00      0.99      1187
+                Heartbleed       0.75      1.00      0.86         3
+              Infiltration       0.42      1.00      0.59         5
+                  PortScan       0.82      0.91      0.86       378
+               SSH-Patator       0.89      0.99      0.94       610
+  Web Attack � Brute Force       0.80      0.42      0.55       256
+Web Attack � Sql Injection       0.33      1.00      0.50         1
+          Web Attack � XSS       0.42      0.80      0.55       137
+
+                  accuracy                           0.93     67317
+                 macro avg       0.76      0.88      0.77     67317
+              weighted avg       0.98      0.93      0.95     67317

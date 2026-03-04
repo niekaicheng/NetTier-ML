@@ -1,0 +1,23 @@
+{
+  "experiment": "E12_visualization",
+  "total_time_s": 68.43827724456787,
+  "n_samples": 8000,
+  "n_classes": 13,
+  "raw_features_dim": 76,
+  "embedding_dim": 128,
+  "silhouette_scores": {
+    "t-SNE (Raw)": -0.16212661564350128,
+    "UMAP (Raw)": -0.23491983115673065,
+    "t-SNE (Embedding)": -0.09592121094465256,
+    "UMAP (Embedding)": -0.06679461896419525
+  },
+  "tsne_config": {
+    "perplexity": 30,
+    "max_iter": 1000,
+    "init": "pca"
+  },
+  "umap_config": {
+    "n_neighbors": 15,
+    "min_dist": 0.1
+  }
+}

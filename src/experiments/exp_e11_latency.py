@@ -20,8 +20,16 @@ sys.stdout.reconfigure(encoding='utf-8')
 # Add src
 sys.path.append(os.path.join(os.getcwd(), 'src'))
 from processing.loader import load_data
+from utils.training_logger import TrainingLogger
 
 def main():
+    # 初始化训练记录器
+    logger = TrainingLogger(
+        experiment_name="E11_latency_benchmark",
+        description="Inference latency and throughput benchmark for Stage 1 RF. Ref: [Abu Al-Haija'22]"
+    )
+    logger.start()
+    
     print("[1/4] Loading Test Data...", flush=True)
     
     # Load a substantial amount of data to get stable metrics (e.g. 100k samples)
@@ -44,6 +52,7 @@ def main():
         dfs.append(df2)
     except:
         print("Data loading failed (files missing?)", flush=True)
+        logger.finish(status="failed")
         return
     
     print("Done Loading. Concatenating...", flush=True)
@@ -65,8 +74,7 @@ def main():
     model_path = "models_chk/stage1_rf_best.pkl"
     if not os.path.exists(model_path):
         print(f"Model not found at {model_path}. Please run E1 first or train a dummy model.")
-        # Train a dummy for structure verification?
-        # Better to exit than mislead with dummy performance.
+        logger.finish(status="failed")
         return
         
     print(f"[2/4] Loading Model from {model_path}...", flush=True)
@@ -150,6 +158,27 @@ def main():
         json.dump(results, f, indent=4)
         
     print(f"\n[4/4] Results saved to {res_path}", flush=True)
+    
+    # 记录到 logger
+    logger.set_data_info(
+        dataset="CIC-IDS2017",
+        total_samples=len(X),
+        num_features=X.shape[1],
+    )
+    logger.set_model_info(
+        model_type="RandomForest (Pipeline)",
+        model_name="stage1_rf_best.pkl",
+        framework="scikit-learn",
+    )
+    # 记录所有 batch size 结果
+    result_summary = {}
+    for r in results:
+        bs = r['batch_size']
+        result_summary[f"bs{bs}_latency_us"] = round(r['latency_us_per_sample'], 2)
+        result_summary[f"bs{bs}_throughput"] = round(r['throughput_samples_per_sec'], 2)
+    logger.set_results(**result_summary)
+    logger.add_artifact(res_path, "results", "Latency benchmark JSON")
+    logger.finish()
 
 if __name__ == "__main__":
     main()

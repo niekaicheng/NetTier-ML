@@ -1,0 +1,152 @@
+建议一：你缺少一个“数据泄露控制实验”
+
+这是 IDS 论文最常见的致命问题。
+
+CIC-IDS2017 是按“天”分布的。
+
+如果你随机切分 train/test：
+
+模型可能只是学到了：
+
+Monday 正常
+
+Tuesday 有攻击
+
+而不是攻击模式。
+
+ 建议增加一个实验：
+E16: Time-aware Split
+
+Train: Monday–Wednesday
+
+Test: Thursday–Friday
+
+或
+
+Train: 前70%时间
+
+Test: 后30%
+
+这样可以验证：
+
+模型是否真正学习攻击模式，而不是时间分布。
+
+如果 Time-aware 性能大幅下降：
+
+说明模型有时间偏差。
+
+这是非常高级的控制实验。
+
+ 建议二：Stage 1 → Stage 2 阈值需要系统优化
+
+你现在默认：
+
+confidence > 0.3 → Suspicious
+
+这其实是一个关键参数。
+
+建议加一个实验：
+
+E17: Pass-through Rate α 调节曲线
+
+横轴：Stage 1 阈值
+纵轴：
+
+总系统 F1
+
+总系统延迟
+
+α
+
+画出：
+
+Accuracy–Latency tradeoff 曲线
+
+这会非常漂亮。
+
+你甚至可以定义：
+
+
+Utility=F1−λ×Latency
+
+然后找到最优阈值。
+
+建议三：Bias-Variance 分解可以更严谨
+
+你现在用 Bootstrap 做近似。
+
+可以更强一点：
+
+对 RF：
+
+用 OOB error 曲线分析 variance
+
+对 DL：
+
+画：
+
+Train loss
+
+Val loss
+
+Generalization gap
+
+做一个：
+
+Complexity vs Variance 曲线
+
+这会让你的 Bias-Variance 分析真正可视化。
+
+为了进一步完善该框架，建议在以下四个关键维度补充实验或细化方法：
+建议 1：Stage 1 与 Stage 2 的“阈值耦合”实验 (The -Threshold Optimization)
+现状：文档中假设 Stage 1 输出 
+ 硬分类。
+问题：Stage 1 (RF) 的目标不是追求最高的 Accuracy，而是追求 Recall 
+（宁可错杀，不可放过）。
+建议：增加实验 E1-B: Stage 1 决策阈值权衡 (Threshold Tuning)。
+• 方法：绘制 Recall-Efficiency 曲线。
+• 变量：RF 的预测概率阈值  (e.g.,  则判定为 Suspicious)。
+• 目标：找到最优 ，使得  的前提下， (传递给 Stage 2 的比例) 最小化。
+• 数学表达
+：
+建议 2：对抗性鲁棒性测试 (Adversarial Robustness)
+现状
+：当前设计主要针对自然流量。
+问题
+：现代 IDS 必须应对对抗样本（Adversarial Examples）。[Liu'25] 的 Transformer 结构可能对微小的扰动敏感。
+建议：增加 E14: 对抗攻击敏感度分析。
+• 方法：使用 FGSM (Fast Gradient Sign Method) 或 DeepFool 生成对抗样本。
+• 对比：比较 Stage 1 (RF) 和 Stage 2 (TransECA-Net) 在面对特征微扰时的性能下降幅度。
+• 预期结论：RF 可能对特征空间的离散扰动更鲁棒，而 DL 可能需要对抗训练来防御，这进一步论证了分层防御的必要性（RF 作为第一道防线可以过滤掉简单的对抗噪声）。
+建议 3：计算资源的异构量化 (Heterogeneous Resource Profiling)
+现状
+：实验 E11 测量了 Latency。
+问题：Stage 1 通常运行在 CPU，Stage 2 运行在 GPU/NPU。单纯对比 
+ 可能忽略了硬件成本。
+建议：细化 E11 的评估指标。
+• 指标 1：Throughput (pps - packets per second)。
+• 指标 2：Energy Consumption (Joules/sample)。
+• 目的：论证框架不仅“快”，而且“省电/低碳”，符合边缘计算（Edge AI）趋势。
+建议 4：Stage 2 的可解释性可视化升级
+现状
+：使用 SHAP 解释 RF。
+问题
+：对于 Stage 2 (TransECA-Net)，SHAP 计算量巨大且难以直观展示 1D-CNN/Transformer 的时序关注点。
+建议：在 E10 中引入 Integrated Gradients 或 Attention Rollout。
+• 展示 TransECA-Net 在判定一个恶意流时，究竟是关注 TCP 握手阶段（Head），还是数据传输阶段（Payload）。这能直接验证 [Liu'25] 中 Transformer 捕获长距离依赖的假设。
+￼
+第三部分：数学推导的补充 (Refinement on Mathematical Proof)
+在第 11.2 节的贝叶斯证明中，建议引入 代价敏感损失 (Cost-Sensitive Loss) 的概念，以增强商业/实际应用的说服力。
+定义总风险 
+ 为误报和漏报的加权和：
+
+其中：
+• : 漏报代价（极高，导致入侵成功）。
+• : 误报代价（中等，导致管理员疲劳）。
+• : 计算资源单价。
+推导修正
+：
+分层架构的优势在于，它允许我们使用廉价的 
+ (Stage 1) 来压低 ，仅对少量样本支付昂贵的  (Stage 2) 来压低 。这将证明该框架是 风险-成本收益 (Risk-Cost Utility) 的全局最优解。
+总结
+这份设计文档已经具备了顶会论文（Data-Method-Experiment-Proof）的标准骨架。建议在执行阶段，重点关注 Stage 1 到 Stage 2 的“阈值传递策略”，这既是工程实现的难点，也是提升整体系统效率的关键数学变量。

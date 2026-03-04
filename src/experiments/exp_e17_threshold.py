@@ -18,8 +18,16 @@ from datetime import datetime
 # Add src
 sys.path.append(os.path.join(os.getcwd(), 'src'))
 from processing.loader import load_data
+from utils.training_logger import TrainingLogger
 
 def main():
+    
+    # 初始化训练记录器
+    logger = TrainingLogger(
+        experiment_name="E17_threshold_tuning",
+        description="Stage 1 threshold tuning: find optimal tau balancing recall and pass-through rate"
+    )
+    logger.start()
     
     # Use Stratified Loader to get the Strict Test Set
     from processing.loader_stratified import load_stratified_mixed_split
@@ -37,6 +45,7 @@ def main():
                                            attack_ratio=0.8)
     except Exception as e:
         print(f"Error loading data: {e}")
+        logger.finish(status="failed")
         return
         
     print(f"Validation Data Shape: {df.shape}")
@@ -52,6 +61,7 @@ def main():
     
     if not os.path.exists(model_path) or not os.path.exists(le_path):
         print(f"Model ({model_path}) or LabelEncoder ({le_path}) missing.")
+        logger.finish(status="failed")
         return
         
     print(f"[2/4] Predicting Probabilities using {model_path}...")
@@ -95,6 +105,7 @@ def main():
         y_proba_all = model.predict_proba(X_test)
     except Exception as e:
         print(f"Inference Error: {e}")
+        logger.finish(status="failed")
         return
 
     # Proba of Attack
@@ -175,6 +186,30 @@ def main():
     plt.grid(True)
     plt.savefig(res_path.replace('.json', '.png'))
     print("Plot saved.")
+    
+    # 记录到 logger
+    logger.set_data_info(
+        dataset="CIC-IDS2017",
+        total_samples=len(df),
+        num_features=X_test.shape[1],
+        split_method="Stratified Mixed Split (20% test)",
+    )
+    logger.set_model_info(
+        model_type="RandomForest (Pipeline)",
+        model_name="stage1_rf_best.pkl",
+        framework="scikit-learn",
+    )
+    # 记录最优阈值
+    optimal_results = {}
+    for i, opt in enumerate(optimals):
+        optimal_results[f"target_{target_recalls[i]}_threshold"] = opt.get('threshold', None)
+        optimal_results[f"target_{target_recalls[i]}_recall"] = round(opt.get('recall', 0), 4)
+        optimal_results[f"target_{target_recalls[i]}_pass_through"] = round(opt.get('pass_through_rate', 0), 4)
+        optimal_results[f"target_{target_recalls[i]}_precision"] = round(opt.get('precision', 0), 4)
+    logger.set_results(**optimal_results)
+    logger.add_artifact(res_path, "results", "Threshold tuning JSON")
+    logger.add_artifact(res_path.replace('.json', '.png'), "plot", "Threshold vs Recall/Pass-through plot")
+    logger.finish()
 
 if __name__ == "__main__":
     main()
