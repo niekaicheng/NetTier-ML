@@ -101,6 +101,8 @@ $C_1 = 6.12\mu s$ → 吞吐量 163K samples/s，超越 [Abu Al-Haija'22] 基准
 | CNN + Transformer (No-ECA) | 301,455 | 92.05% | 0.947 | 0.675 |
 | **Full TransECA-Net** | 301,460 | 89.71% | 0.925 | **0.759** |
 
+### 3.1 深层 vs 浅层: 为什么深度更好 (E8 + E4)
+
 **Transformer 的作用** — CNN-Only 仅 61.89%，引入 Transformer 后跃升至 92.05% (+30pp)。
 
 理论解释: CNN (2,703 params) 模型容量极度不足，只能捕获局部特征模式。流量分类需要关联远距离特征 (如 TCP 窗口大小 ↔ IAT 时间统计)，这正是 Self-Attention 的能力 —— 它对所有特征位置对计算相似度权重:
@@ -114,6 +116,35 @@ E10 的 Attention Rollout 结果验证了这一点: Top-1 关注 `Fwd IAT Mean` 
 为什么全局看 "没用"，对少数类却有益？E10 测量到 ECA 通道权重 CV = **0.02** (近均匀分布)，说明 CNN 提取的通道信息**已经较均衡**，ECA 仅做边际微调——这解释了 W-F1 降幅 0.022 与 CV = 0.02 在量级上的精确对应。
 
 但少数类 (如 Heartbleed) 的特征分布与多数类差异大，ECA 对这些类别的**条件通道权重**有效 CV 实际远高于全局 CV，提供了差异化表征 —— 因此 M-F1 (等权各类) 提升显著。在 IDS 场景中，少数类 = 罕见攻击 = 最需要检测的目标，ECA 的价值正在于此。
+
+### 3.2 激活函数的作用与选择
+
+TransECA-Net 使用了 **3 种激活函数**，各司其职:
+
+| 位置 | 激活函数 | 作用 | 选择理由 |
+|------|---------|------|----------|
+| CNN 后 (`self.relu`) | **ReLU** | 引入非线性 | 计算高效、无正区间梯度消失，CNN 标配 |
+| ECA 模块 (`self.sigmoid`) | **Sigmoid** | 通道权重门控至 $[0,1]$ | 语义为 "通道重要性概率"，与乘性门控一致 |
+| Transformer FFN 内部 | **GELU** (PyTorch 默认) | FFN 非线性 | 更平滑的近似 ReLU，Transformer 论文标配 |
+
+**为什么必须有激活函数？** 若去掉所有激活，`Conv1d → BN → Transformer → FC` 全为线性变换，整个网络退化为单线性模型 ($W_1 W_2 \cdots W_n x = W_{eq} x$)，无法学习攻击流量的复杂非线性决策边界。E8 消融已证明: CNN-Only (61.89%) 的有限非线性不足以表达 15 类分类所需的复杂边界。
+
+### 3.3 输出层 + 损失函数搭配
+
+本项目采用:
+
+```
+fc(x) → raw logits → nn.CrossEntropyLoss(weight=class_weights)
+                     ╰─ 内部: LogSoftmax + NLLLoss
+```
+
+| 组件 | 选择 | 理由 |
+|------|------|------|
+| **输出层** | `nn.Linear(d_model, 15)` → 原始 logits (无激活) | PyTorch CE Loss 要求输入为 logits |
+| **损失函数** | `CrossEntropyLoss(weight=...)` | 15 类互斥分类标准选择；Softmax 假设类别互斥且穷尽，IDS 中每条流量恰属一类 |
+| **类别权重** | `class_weights_tensor` | 缓解 Heartbleed ($n$=11) vs DoS (万级) 的极端不平衡 |
+
+推理时 `torch.max(outputs, 1)` 取 argmax — 由于 Softmax 为单调递增函数，argmax(logits) = argmax(softmax(logits))，结果等价且避免了不必要的指数运算。
 
 ---
 
@@ -171,7 +202,28 @@ E1 采用 5×3 Nested CV (外层评估、内层调参, 搜索 1,296 组合)，�
 
 该预测的前提是数据量不足或正则化不足。本实验中 AdamW weight decay + CosineAnnealing 提供了有效正则化，使 TransECA-Net 处于**中等 Bias + 低 Variance** 的操作点。
 
-**容量跃迁**: CNN-Only (2.7K params, 62% Acc) → TransECA (301K params, 93% Acc), 跃升 31pp。这说明 15 类攻击分类所需的**模型容量**远超简单 CNN 能提供的范围。
+**容量跃迁 (深层 vs 浅层)**: CNN-Only (2.7K params, 62% Acc) → TransECA (301K params, 93% Acc), 跃升 31pp。这说明 15 类攻击分类所需的**模型容量**远超简单 CNN 能提供的范围 — 浅层网络 (1 层 CNN + FC) 的函数空间 $\mathcal{F}_{shallow}$ 无法表达 15 类攻击间的复杂边界，而深层网络 (CNN + 3 层 Transformer) 通过逐层非线性变换建立了足够丰富的函数空间 $\mathcal{F}_{deep} \supset \mathcal{F}_{shallow}$。
+
+### 6.1 反向传播与链式法则
+
+上述 Bias-Variance 特性是**反向传播训练**的直接结果。TransECA-Net 的梯度链路:
+
+$$\frac{\partial \mathcal{L}}{\partial \theta} = \frac{\partial \mathcal{L}}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial h_{FC}} \cdot \frac{\partial h_{FC}}{\partial h_{Pool}} \cdot \frac{\partial h_{Pool}}{\partial h_{Trans}} \cdot \frac{\partial h_{Trans}}{\partial h_{ECA}} \cdot \frac{\partial h_{ECA}}{\partial h_{CNN}} \cdot \frac{\partial h_{CNN}}{\partial \theta}$$
+
+训练代码中的体现:
+
+| 代码 | 反向传播步骤 | 理论对应 |
+|------|-----------|----------|
+| `loss = criterion(outputs, labels)` | 计算 $\mathcal{L}$ (CrossEntropy) | 损失函数定义 |
+| `loss.backward()` | autograd 执行链式法则 | $\partial \mathcal{L}/\partial \theta$ 逐层传递 |
+| `optimizer.step()` | AdamW 更新: $\theta \leftarrow \theta - \eta \cdot \hat{m}/(\sqrt{\hat{v}} + \epsilon) - \lambda\theta$ | 参数优化 |
+| `scaler.scale(loss).backward()` | AMP 梯度缩放 | 防止 FP16 梯度下溢 |
+
+**为什么反向传播在这里重要？**
+
+1. **Gen Gap = 0.006** (E4): 说明反向传播 + AdamW weight decay 在 301K 参数空间中找到了良好泛化解，未过拟合。
+2. **E14 对抗攻击是反向传播的对偶应用**: FGSM/PGD 利用 $\nabla_x \mathcal{L}$ (对**输入**求梯度) 而非 $\nabla_\theta \mathcal{L}$ (对**参数**求梯度) 来生成对抗样本。RF 对梯度攻击免疫正是因为它不基于反向传播 ($\nabla h_1 = 0$，分段常数函数)。
+3. **IG 归因 (E10)**: Integrated Gradients 沿输入路径积分 $\nabla_x F$，本质也是链式法则的应用 — 证明反向传播不仅用于训练，也支撑了可解释性分析。
 
 ---
 

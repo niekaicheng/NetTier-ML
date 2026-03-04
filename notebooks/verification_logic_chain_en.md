@@ -101,6 +101,8 @@ $C_1 = 6.12\mu s$ → throughput 163K samples/s, surpassing [Abu Al-Haija'22]'s 
 | CNN + Transformer (No-ECA) | 301,455 | 92.05% | 0.947 | 0.675 |
 | **Full TransECA-Net** | 301,460 | 89.71% | 0.925 | **0.759** |
 
+### 3.1 Deep vs Shallow: Why Depth Matters (E8 + E4)
+
 **Transformer's Role** — CNN-Only achieves only 61.89%; introducing Transformer raises it to 92.05% (+30pp).
 
 Theoretical explanation: The CNN (2,703 params) has extremely insufficient model capacity, capturing only local feature patterns. Traffic classification requires correlating distant features (e.g., TCP window size ↔ IAT time statistics), which is precisely Self-Attention's capability — it computes similarity weights across all feature position pairs:
@@ -114,6 +116,35 @@ E10's Attention Rollout results validate this: Top-1 attends to `Fwd IAT Mean` (
 Why does it appear "useless" globally yet beneficial for minority classes? E10 measures ECA channel weight CV = **0.02** (near-uniform distribution), indicating that CNN-extracted channel information is **already well-balanced**, with ECA providing only marginal tuning — this explains the precise correspondence in magnitude between the W-F1 drop of 0.022 and CV = 0.02.
 
 However, minority classes (e.g., Heartbleed) have feature distributions that differ significantly from majority classes. ECA's **conditional channel weights** for these classes have effective CV far exceeding the global CV, providing differentiated representation — hence M-F1 (equally weighting all classes) improves significantly. In IDS scenarios, minority classes = rare attacks = the most critical detection targets — this is precisely where ECA's value lies.
+
+### 3.2 Role and Selection of Activation Functions
+
+TransECA-Net employs **3 distinct activation functions**, each serving a specific purpose:
+
+| Location | Activation | Role | Rationale |
+|----------|-----------|------|-----------|
+| After CNN (`self.relu`) | **ReLU** | Introduce non-linearity | Computationally efficient, no gradient vanishing in positive region, CNN standard |
+| ECA module (`self.sigmoid`) | **Sigmoid** | Gate channel weights to $[0,1]$ | Semantics: "channel importance probability", consistent with multiplicative gating |
+| Transformer FFN internal | **GELU** (PyTorch default) | FFN non-linearity | Smoother ReLU approximation, Transformer paper standard |
+
+**Why are activation functions essential?** Without activations, `Conv1d → BN → Transformer → FC` are all linear transforms, collapsing the entire network into a single linear model ($W_1 W_2 \cdots W_n x = W_{eq} x$), unable to learn the complex non-linear decision boundaries of attack traffic. E8 ablation confirms: CNN-Only (61.89%) has insufficient non-linearity to express the complex boundaries required for 15-class classification.
+
+### 3.3 Output Layer + Loss Function Pairing
+
+This project uses:
+
+```
+fc(x) → raw logits → nn.CrossEntropyLoss(weight=class_weights)
+                     ╰─ Internal: LogSoftmax + NLLLoss
+```
+
+| Component | Choice | Rationale |
+|-----------|--------|-----------|
+| **Output layer** | `nn.Linear(d_model, 15)` → raw logits (no activation) | PyTorch CE Loss expects logit inputs |
+| **Loss function** | `CrossEntropyLoss(weight=...)` | Standard for 15-class mutually exclusive classification; Softmax assumes classes are mutually exclusive and exhaustive, matching IDS where each flow belongs to exactly one class |
+| **Class weights** | `class_weights_tensor` | Mitigates extreme imbalance: Heartbleed ($n$=11) vs DoS (tens of thousands) |
+
+At inference, `torch.max(outputs, 1)` takes argmax — since Softmax is monotonically increasing, argmax(logits) = argmax(softmax(logits)), yielding equivalent results while avoiding unnecessary exponential computation.
 
 ---
 
@@ -171,7 +202,28 @@ E1 employs 5×3 Nested CV (outer loop for evaluation, inner loop for tuning, sea
 
 The prediction's premise is insufficient data or inadequate regularization. In this experiment, AdamW weight decay + CosineAnnealing provide effective regularization, placing TransECA-Net at a **moderate Bias + low Variance** operating point.
 
-**Capacity Transition**: CNN-Only (2.7K params, 62% Acc) → TransECA (301K params, 93% Acc), a 31pp leap. This indicates that the **model capacity** required for 15-class attack classification far exceeds what a simple CNN can provide.
+**Capacity Transition (Deep vs Shallow)**: CNN-Only (2.7K params, 62% Acc) → TransECA (301K params, 93% Acc), a 31pp leap. This indicates that the **model capacity** required for 15-class attack classification far exceeds what a simple CNN can provide — the shallow network's function space $\mathcal{F}_{shallow}$ (1-layer CNN + FC) cannot express the complex boundaries among 15 attack classes, while the deep network (CNN + 3-layer Transformer) builds a sufficiently rich function space $\mathcal{F}_{deep} \supset \mathcal{F}_{shallow}$ through layer-wise non-linear transformations.
+
+### 6.1 Backpropagation and the Chain Rule
+
+The Bias-Variance characteristics above are a direct consequence of **backpropagation training**. TransECA-Net's gradient chain:
+
+$$\frac{\partial \mathcal{L}}{\partial \theta} = \frac{\partial \mathcal{L}}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial h_{FC}} \cdot \frac{\partial h_{FC}}{\partial h_{Pool}} \cdot \frac{\partial h_{Pool}}{\partial h_{Trans}} \cdot \frac{\partial h_{Trans}}{\partial h_{ECA}} \cdot \frac{\partial h_{ECA}}{\partial h_{CNN}} \cdot \frac{\partial h_{CNN}}{\partial \theta}$$
+
+Manifestation in training code:
+
+| Code | Backpropagation Step | Theoretical Correspondence |
+|------|---------------------|---------------------------|
+| `loss = criterion(outputs, labels)` | Compute $\mathcal{L}$ (CrossEntropy) | Loss function definition |
+| `loss.backward()` | autograd executes chain rule | $\partial \mathcal{L}/\partial \theta$ propagated layer by layer |
+| `optimizer.step()` | AdamW update: $\theta \leftarrow \theta - \eta \cdot \hat{m}/(\sqrt{\hat{v}} + \epsilon) - \lambda\theta$ | Parameter optimization |
+| `scaler.scale(loss).backward()` | AMP gradient scaling | Prevents FP16 gradient underflow |
+
+**Why does backpropagation matter here?**
+
+1. **Gen Gap = 0.006** (E4): Demonstrates that backpropagation + AdamW weight decay found a well-generalizing solution in the 301K parameter space without overfitting.
+2. **E14 adversarial attacks are the dual application of backpropagation**: FGSM/PGD use $\nabla_x \mathcal{L}$ (gradients w.r.t. **input**) rather than $\nabla_\theta \mathcal{L}$ (gradients w.r.t. **parameters**) to generate adversarial examples. RF's immunity to gradient attacks is precisely because it doesn't rely on backpropagation ($\nabla h_1 = 0$, piecewise constant function).
+3. **IG attribution (E10)**: Integrated Gradients integrates $\nabla_x F$ along the input path — fundamentally another application of the chain rule — proving that backpropagation supports not only training but also interpretability analysis.
 
 ---
 
