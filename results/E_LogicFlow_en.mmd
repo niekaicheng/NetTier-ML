@@ -1,0 +1,50 @@
+flowchart LR
+    classDef stage1 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef stage2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef merge fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef stat fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+
+    subgraph SG1 ["[Stage 1] Efficiency Pre-filter"]
+        direction TB
+        E1["E1: Nested CV<br>(Statistical Unbiased Estimation)"]
+        E16["E16: Time-aware<br>(Full Data Baseline Validation)"]
+        E4_1["E4: OOB Analysis<br>(Confirm Ultra-low Variance)"]
+        E11["E11: Latency Test<br>(6.12μs Real-time Throughput)"]
+        E17["E17: Threshold Optimization<br>(τ=0.06, α=15.25%)"]
+        E1 ~~~ E16 ~~~ E4_1 ~~~ E11 ~~~ E17
+    end
+
+    subgraph SG2 ["[Stage 2] Deep Feature Extraction"]
+        direction TB
+        E8["E8: Core Ablation<br>(Transformer Core + ECA)"]
+        E10_C["E10: Channel Weight Analysis<br>(Cross-validated with ECA)"]
+        E12["E12: Manifold Visualization<br>(t-SNE +59% Inter-class Distance)"]
+        E15["E15: Cross-dataset Generalization<br>(UNSW-NB15 Transfer)"]
+        E2_E10["E2+E10: XAI Closed Loop<br>(SHAP & IG Triangulation)"]
+        E8 -.-> E10_C
+        E10_C ~~~ E12 ~~~ E15 ~~~ E2_E10
+    end
+
+    subgraph SG3 ["[System Integration] Core Theoretical Closure"]
+        direction TB
+        I1["Efficiency Math Derivation<br>Expected Cost E[C]=82μs <br><b>(6.07× Speedup)</b>"]
+        I2["Proactive Security Defense<br>Orthogonal Weakness Truncation<br><b>(Evasion Rate 8.04%)</b>"]
+        I3["High-confidence Global Metrics<br><b>Recall 92.9% / FPR 0.007%</b>"]
+        I1 ~~~ I2 ~~~ I3
+    end
+
+    subgraph SG4 ["[Statistical Foundation] Final Guarantee"]
+        direction TB
+        G1["E6: Bootstrap CI<br>(Ultra-narrow Confidence Bound)"]
+        G2["E1+E4: Double Overfitting Test<br>for Unknown Distributions"]
+        G1 ~~~ G2
+    end
+
+    SG1 -->|Time for S2| SG3
+    SG2 -->|Accurate Backstop for S1| SG3
+    SG3 -->|Logic Built on| SG4
+
+    class SG1,E1,E16,E4_1,E11,E17 stage1
+    class SG2,E8,E10_C,E12,E15,E2_E10 stage2
+    class SG3,I1,I2,I3 merge
+    class SG4,G1,G2 stat
