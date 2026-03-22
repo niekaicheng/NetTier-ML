@@ -117,10 +117,10 @@ Dataset selection is based on [16]'s 15 evaluation criteria. CIC-IDS2017 outperf
 
 **Method**: Throughput/Latency Benchmark, multiple sampling runs averaged.
 
-| Metric          | Result                | Target    |
-| --------------- | --------------------- | --------- |
-| Stage 1 Latency | **6.12 μs/sample**    | < 10 μs    |
-| Throughput      | **163,399 samples/s** | > 100K     |
+| Metric          | Result                | Target  |
+| --------------- | --------------------- | ------- |
+| Stage 1 Latency | **6.12 μs/sample**    | < 10 μs |
+| Throughput      | **163,399 samples/s** | > 100K  |
 
 **Analysis**: The experimental peak of 6.12μs perfectly corroborates the previously theorized **time complexity axiom $\mathcal{O}(B \cdot D)$ [3]**. By rigidly constraining the ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation necessitates at most 1,000 parallel scalar conditionals, compressing the execution latency squarely into minimal L1-cache clock cycles. This mathematically proves that exceeding the [7] baseline by 33% stems primarily from precise theoretical variance-scale truncations, rather than hardware over-provisioning. Consequently, for a typical 50K pps load, the system utilization ratio bounds safely at merely $\rho = 50000/163399 = 0.31$ (abundant overhead margin).
 
@@ -647,11 +647,11 @@ Consolidating the empirical observations and stringent theoretical projections d
 
 **Theoretical Predictions vs Experimental Results**:
 
-| Prediction       | Theoretical Source                     | Experimental Result         | Verified?        |
-| ---------------- | -------------------------------------- | --------------------------- | ---------------- |
-| RF Low Variance  | [13]: Bagging $\uparrow B$ reduces Var | OOB 50→200 nearly unchanged | Verified         |
-| RF Low Bias      | Decision trees are strong learners     | L-Curve Gap@100% = 0.0016   | Verified         |
-| DL High Variance | [5]                                    | Gen Gap = +0.006 (low)      | **Overturned**   |
+| Prediction       | Theoretical Source                     | Experimental Result         | Verified?      |
+| ---------------- | -------------------------------------- | --------------------------- | -------------- |
+| RF Low Variance  | [13]: Bagging $\uparrow B$ reduces Var | OOB 50→200 nearly unchanged | Verified       |
+| RF Low Bias      | Decision trees are strong learners     | L-Curve Gap@100% = 0.0016   | Verified       |
+| DL High Variance | [5]                                    | Gen Gap = +0.006 (low)      | **Overturned** |
 
 **[5]'s "DL High Variance" prediction is overturned**: The prediction's premise is insufficient data or inadequate regularization. In this experiment, AdamW weight decay + CosineAnnealing provide effective regularization, placing TransECA-Net at a **moderate Bias + low Variance** operating point.
 
@@ -751,12 +751,11 @@ The core objective of this project is to resolve the efficiency vs. accuracy tra
 Synthesizing results across all experiments, the hierarchical architecture's system-level metrics are:
 
 **Figure 22**
-
-*The "Impossible Trinity" of Defense Structures*
+*The Defense Structures*
 
 ![IDS Impossible Trinity](../results/E14_impossible_trinity_concept.png)
 
-*Note*: Traditional monolithic detection models often struggle to achieve **High Efficiency (Low Latency)**, **High Accuracy**, and **High Robustness** simultaneously. For example, Random Forests (RF) are extremely fast but fragile to adversarial noise; Deep Learning (DL) is accurate but computationally expensive and susceptible to gradient-based attacks. The hierarchical architecture breaks this triangle by leveraging the orthogonal weaknesses of different model families to achieve a systemic balance across all three dimensions.
+*Note*: Traditional monolithic detection models often struggle to maintain full-spectrum robustness across the dimensions of **Payload** preservation, **Uniform Noise** resistance, and **Gradient Perturbation** immunity. For instance, Random Forests (RF) are exceptionally fast and immune to gradients but highly fragile to random noise; Deep Learning (DL) is accurate and robust against noise but susceptible to precise gradient-based manipulations. The hierarchical architecture leverages these orthogonal weaknesses to bridge the gap across all three attack vectors, achieving a resilient systemic defense.
 
 | Dimension          | Metric                                       | Value     | Supporting Experiment |
 | ------------------ | -------------------------------------------- | --------- | --------------------- |
@@ -872,14 +871,14 @@ The figure above comprehensively illustrates the rigorous logical chain carrying
 
 #### 6.5.1 Detailed Metric Dimension Definitions
 
-| Evaluation Dimension | Core Metrics | Technical Explanation & Physical Meaning |
-| :--- | :--- | :--- |
-| **Accuracy** | System Recall (92.9%), FPR (0.007%) | Measures the discriminant effectiveness across all 15 attack categories. The hierarchical design ensures high-precision capture of difficult samples after filtering 84.75% of total traffic. |
-| **Efficiency** | Inference Latency (82μs), Speedup (6.07×) | Measures real-time throughput. Based on the $L_{sys} = L_1 + \alpha L_2$ theoretical derivation, Stage 1's high-speed filtering is proven critical for industrial-scale deployment. |
-| **Interpretability (XAI)** | SHAP Importance, IG Attribution, Attention Heatmaps | Measures decision transparency. Triangulation via SHAP ↔ IG proves that the model's decision logic aligns precisely with security domain knowledge like TCP Windows and IAT. |
-| **Generalization (Gen)** | UNSW-NB15 W-F1 (0.70), Silhouette Coeff (+59%) | Measures adaptability to unseen domains. E15 cross-dataset experiments prove that TransECA learns attack feature representations with fundamental universality. |
-| **Robustness** | PGD Evasion Rate (8.04%), Orthogonal Dissent | Measures adversarial resilience. Leverages the "orthogonal weaknesses" of non-differentiable trees and deep self-attention to mathematically reduce the adversarial evasion risk of the joint system. |
-| **Statistical Reliability (SR)** | Bootstrap CI (±0.003), Nested CV Gap (0.006) | Measures the certainty of evaluation conclusions. Narrow confidence intervals prove that results are systematic and robust, not isolated random coincidences. |
+| Evaluation Dimension             | Core Metrics                                        | Technical Explanation & Physical Meaning                                                                                                                                                              |
+| :------------------------------- | :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Accuracy**                     | System Recall (92.9%), FPR (0.007%)                 | Measures the discriminant effectiveness across all 15 attack categories. The hierarchical design ensures high-precision capture of difficult samples after filtering 84.75% of total traffic.         |
+| **Efficiency**                   | Inference Latency (82μs), Speedup (6.07×)           | Measures real-time throughput. Based on the $L_{sys} = L_1 + \alpha L_2$ theoretical derivation, Stage 1's high-speed filtering is proven critical for industrial-scale deployment.                   |
+| **Interpretability (XAI)**       | SHAP Importance, IG Attribution, Attention Heatmaps | Measures decision transparency. Triangulation via SHAP ↔ IG proves that the model's decision logic aligns precisely with security domain knowledge like TCP Windows and IAT.                          |
+| **Generalization (Gen)**         | UNSW-NB15 W-F1 (0.70), Silhouette Coeff (+59%)      | Measures adaptability to unseen domains. E15 cross-dataset experiments prove that TransECA learns attack feature representations with fundamental universality.                                       |
+| **Robustness**                   | PGD Evasion Rate (8.04%), Orthogonal Dissent        | Measures adversarial resilience. Leverages the "orthogonal weaknesses" of non-differentiable trees and deep self-attention to mathematically reduce the adversarial evasion risk of the joint system. |
+| **Statistical Reliability (SR)** | Bootstrap CI (±0.003), Nested CV Gap (0.006)        | Measures the certainty of evaluation conclusions. Narrow confidence intervals prove that results are systematic and robust, not isolated random coincidences.                                         |
 
 ---
 
@@ -908,18 +907,18 @@ This experiment report comprehensively validates the hierarchical IDS framework 
 
 ### 8.1 Summary of Core Quantitative Metrics
 
-| Evaluation Domain | Specific Metric | Performance Value | Supporting Experiment |
-| :--- | :--- | :--- | :--- |
-| **Detection Accuracy** | System-Level Global Recall | **92.9%** (15-class) | E17, S2 |
-| **Detection Accuracy** | System-Level False Positive Rate | **0.007%** | E17, S2 |
-| **Processing Performance** | Avg. Inference Latency per Sample | **82.37 μs** | E11, E17 |
-| **Processing Performance** | Relative Speedup (vs Monolithic DL) | **6.07×** | E11, E17 |
-| **Adversarial Resilience** | System Evasion Rate under Strongest PGD | **8.04%** | E14, E17 |
-| **Base Capability (S1)** | Stage 1 Filter Recall (Binary) | **99.9%** | E16, E1 |
-| **Base Capability (S2)** | Stage 2 Multiclass Weighted F1 | **0.957** | E8 |
-| **Generalization Ability** | UNSW-NB15 Cross-Dataset W-F1 | **0.703** | E15 |
-| **Rep. Learning** | Silhouette Coeff. Gain in UMAP Space | **+59%** | E12 |
-| **Statistical Confidence** | W-F1 95% Confidence Interval (CI) Width | **0.003** | E6 |
+| Evaluation Domain          | Specific Metric                         | Performance Value    | Supporting Experiment |
+| :------------------------- | :-------------------------------------- | :------------------- | :-------------------- |
+| **Detection Accuracy**     | System-Level Global Recall              | **92.9%** (15-class) | E17, S2               |
+| **Detection Accuracy**     | System-Level False Positive Rate        | **0.007%**           | E17, S2               |
+| **Processing Performance** | Avg. Inference Latency per Sample       | **82.37 μs**         | E11, E17              |
+| **Processing Performance** | Relative Speedup (vs Monolithic DL)     | **6.07×**            | E11, E17              |
+| **Adversarial Resilience** | System Evasion Rate under Strongest PGD | **8.04%**            | E14, E17              |
+| **Base Capability (S1)**   | Stage 1 Filter Recall (Binary)          | **99.9%**            | E16, E1               |
+| **Base Capability (S2)**   | Stage 2 Multiclass Weighted F1          | **0.957**            | E8                    |
+| **Generalization Ability** | UNSW-NB15 Cross-Dataset W-F1            | **0.703**            | E15                   |
+| **Rep. Learning**          | Silhouette Coeff. Gain in UMAP Space    | **+59%**             | E12                   |
+| **Statistical Confidence** | W-F1 95% Confidence Interval (CI) Width | **0.003**            | E6                    |
 
 ---
 
