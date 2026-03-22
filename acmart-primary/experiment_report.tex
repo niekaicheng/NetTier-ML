@@ -232,7 +232,7 @@ Stage 2 Training Samples & 235,556 \\
 \midrule
 Test Accuracy & \textbf{93.00\%} \\
 Best Val Accuracy & 92.52\% \\
-Weighted F1 & \textbf{0.95} \\
+Weighted F1 & \textbf{0.950} \\
 Training Time & 64.18 min \\
 \bottomrule
 \end{tabular}
@@ -240,7 +240,7 @@ Training Time & 64.18 min \\
 
 \noindent Table~\ref{tab:s2_results} summarizes the Stage 2 training outcomes.
 
-\textbf{Analysis}: W-F1 = 0.95 indicates excellent model performance on most classes (sample-weighted). \cite{5} points out that DL can automatically learn high-order feature representations from raw data (Representation Learning). Stage 2's classification results validate that on hard examples filtered by Stage 1, DL methods significantly outperform traditional ML.
+\textbf{Analysis}: W-F1 = 0.950 indicates excellent model performance on most classes (sample-weighted). \cite{5} points out that DL can automatically learn high-order feature representations from raw data (Representation Learning). Stage 2's classification results validate that on hard examples filtered by Stage 1, DL methods significantly outperform traditional ML.
 
 \subsection{E8 --- Ablation Study}
 \textbf{Logic Chain Deduction}: The high classification accuracy of Stage 2 requires explicit mechanistic attribution rather than being treated as a black-box metric. This ablation study decomposes the TransECA-Net architecture to demonstrate that its ability to process the hard examples from Stage 1 does not stem from simple parameter scaling. Instead, it relies specifically on the Transformer's capacity for long-range feature correlation and the ECA module's enhancement of minority-class channels. Validating the necessity of these structural components provides the essential architectural foundation for the subsequent visualization and generalization experiments (E12, E15).
@@ -378,7 +378,7 @@ UNSW-NB15 & 63.64\% & \textbf{0.703} & 0.397 \\
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: Architecture Generalization --- same architecture, zero modifications, trained from scratch on UNSW-NB15 (149K/26K/82K, 186 features, 10 classes). Performance across datasets is reported in Table~\ref{tab:cross_gen}.
+\textbf{Method}: Architecture Generalization --- same architecture, zero modifications, trained from scratch on UNSW-NB15 (149K/26K/82K, 186 features, 10 classes). This experiment evaluates \emph{architecture generalization} (i.e., whether the TransECA-Net structure can learn effectively on a new dataset), not zero-shot transfer or fine-tuning --- no weights are carried over from the CIC-IDS2017-trained model. Performance across datasets is reported in Table~\ref{tab:cross_gen}.
 
 
 \begin{table*}[!t]
@@ -409,7 +409,7 @@ Analysis / Worms / Shellcode & < 0.30 & Very few samples, remains challenging \\
 \includegraphics[width=\columnwidth]{../results/E15_unsw_training_curves.png}
 \end{figure}
 
-\textit{Note (Figure 4 --- Training Evolution).} The curves confirm the architecture's zero-shot structural adaptability on the entirely new topological dataset UNSW-NB15. The loss continuously converges, ultimately yielding a Test Acc = 63.64\% (W-F1 = 0.703), where the performance degradation aligns with Ben-David's domain adaptation theory \cite{2}. Achieving Generic F1 = 0.97 and Reconnaissance F1 = 0.80 proves the architecture learned universally applicable attack feature representations rather than memorizing source domain statistical noise. The low performance in rare categories (Analysis/Worms/Shellcode, F1 < 0.30) originates from extreme sample imbalance, constituting an irreducible error term that does not alter the overall assessment of the architecture's generalization capability.
+\textit{Note (Figure 4 --- Training Evolution).} The curves confirm the architecture's structural adaptability when trained from scratch on the entirely new topological dataset UNSW-NB15 (note: this validates \emph{architecture generalization}, not zero-shot or transfer learning --- the model is re-trained from scratch on UNSW-NB15 with no weights transferred from CIC-IDS2017). The loss continuously converges, ultimately yielding a Test Acc = 63.64\% (W-F1 = 0.703), where the performance degradation aligns with Ben-David's domain adaptation theory \cite{2}. Achieving Generic F1 = 0.97 and Reconnaissance F1 = 0.80 proves the architecture learned universally applicable attack feature representations rather than memorizing source domain statistical noise. The low performance in rare categories (Analysis/Worms/Shellcode, F1 < 0.30) originates from extreme sample imbalance, constituting an irreducible error term that does not alter the overall assessment of the architecture's generalization capability.
 
 
 \begin{figure}[H]
@@ -431,7 +431,7 @@ Analysis / Worms / Shellcode & < 0.30 & Very few samples, remains challenging \\
 \end{figure}
 
 
-\textit{Note (Figure 6 --- Cross-Dataset Degradation).} The bar chart quantifies the structural performance degradation of the architecture's cross-domain migration across three metric dimensions. Test Accuracy dropped from 93.0\% on CIC-IDS2017 to 63.6\% on UNSW-NB15, an absolute decrease of 29.4 percentage points; Weighted F1 fell from 0.95 to 0.703, a decay amplitude of approximately 26\%; Macro F1 experienced the most significant drop, plunging from 0.80 to 0.397, achieving a 50\% decay magnitude. This inconsistency in decay rates across the three metrics inherently carries diagnostic significance: the parallel decay of W-F1 and Accuracy indicates that cross-domain recognition capabilities for major classes (Generic, Normal) remain fundamentally preserved. Conversely, the halving of Macro F1 directly reflects that rare classes (Analysis, Worms, Shellcode, F1 < 0.30) almost entirely lost discriminable boundaries within the new domain. This structural disparity adheres strictly to Ben-David's domain adaptation theory \cite{2}: the error induced by inter-domain distribution distances acts as a severe multiplier on sparse sample categories, rather than distributing uniformly across all classes.
+\textit{Note (Figure 6 --- Cross-Dataset Degradation).} The bar chart quantifies the structural performance degradation of the architecture's cross-domain migration across three metric dimensions. Test Accuracy dropped from 93.0\% on CIC-IDS2017 to 63.6\% on UNSW-NB15, an absolute decrease of 29.4 percentage points; Weighted F1 fell from 0.950 to 0.703, a decay amplitude of approximately 26\%; Macro F1 experienced the most significant drop, plunging from 0.80 to 0.397, achieving a 50\% decay magnitude. This inconsistency in decay rates across the three metrics inherently carries diagnostic significance: the parallel decay of W-F1 and Accuracy indicates that cross-domain recognition capabilities for major classes (Generic, Normal) remain fundamentally preserved. Conversely, the halving of Macro F1 directly reflects that rare classes (Analysis, Worms, Shellcode, F1 < 0.30) almost entirely lost discriminable boundaries within the new domain. This structural disparity adheres strictly to Ben-David's domain adaptation theory \cite{2}: the error induced by inter-domain distribution distances acts as a severe multiplier on sparse sample categories, rather than distributing uniformly across all classes.
 
 
 
@@ -670,7 +670,7 @@ TransECA PGD & 92.16\% & 90.20\% & \textbf{47.28\%} & 0.66\% \\
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: FGSM \cite{24} (single-step) + PGD \cite{13} (5 steps) on TransECA-Net; L$\infty$ Uniform Noise on RF; $\varepsilon \in \{0.001, 0.005, 0.01, 0.05, 0.1\}$, 10,000 stratified subsamples. Table~\ref{tab:adversarial} summarizes accuracy under adversarial attacks.
+\textbf{Method}: FGSM \cite{24} (single-step) + PGD \cite{13} (5 steps) on TransECA-Net; L$\infty$ Uniform Noise on RF; $\varepsilon \in \{0.001, 0.005, 0.01, 0.05, 0.1\}$, 10,000 stratified subsamples. Note: the clean accuracy baseline in this experiment (92.16\%) is measured on this 10,000-sample stratified subset and differs slightly from the full test-set result (93.00\% in S2 Training) due to subset sampling; all adversarial comparisons are made against the same subset baseline. Table~\ref{tab:adversarial} summarizes accuracy under adversarial attacks.
 
 \textbf{Three Key Findings}:
 
@@ -701,7 +701,7 @@ Even under the strong PGD attack at $\varepsilon = 0.01$, the system-level evasi
 \begin{enumerate}
 \item \textbf{Robust Anchors}: Heartbleed emerges as the strongest resilient class globally (sustaining a flawless 1.00 even at $\varepsilon=0.05$). Paired with E10's IG extrema analysis (\texttt{Bwd Header Length} IG=5.250), it empirically proves that classes with hyper-concentrated feature signatures possess decision boundaries inherently resistant to localized gradient perturbations.
 \item \textbf{Vulnerability Tiers}: ``Early-collapse'' modalities like Benign and the Web Attack family completely destabilize under microscopic perturbations (at $\varepsilon=0.001$, Web Attack plummets to 0.18, Benign to 0.68). These constitute the most severe structural breach points for evasion tactics.
-\item \textbf{Non-Monotonic Anomalies (Theoretical Inference)}: Classes such as Bot, DDoS, and DoS Slowhttpstest exhibit paradoxical accuracy rebounds at higher perturbations (e.g., Slowhttpstest spiking to 0.83 at $\varepsilon=0.1$). It is theoretically postulated that severe perturbations violently project these samples into the dense decision sub-regions of adjacent attack categories, generating ``false positive hits'' rather than true defensive resilience.
+\item \textbf{Non-Monotonic Anomalies (Unverified Hypothesis)}: Classes such as Bot, DDoS, and DoS Slowhttpstest exhibit paradoxical accuracy rebounds at higher perturbations (e.g., Slowhttpstest spiking to 0.83 at $\varepsilon=0.1$). One possible explanation is that severe perturbations project these samples into the dense decision sub-regions of adjacent attack categories, generating ``false positive hits'' rather than true defensive resilience. However, this hypothesis has not been verified with per-class confusion matrix analysis under adversarial conditions and is flagged as a direction for future investigation.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -910,7 +910,7 @@ The core objective of this project is to resolve the efficiency vs.\ accuracy tr
 \textbf{In-Depth Logic Deduction}:
 
 \textbf{1. Expected Inference Cost ($E[C]$)}: By the Law of Total Probability, expected time per sample is: $E[C] = C_1 + \alpha(\tau) \cdot C_2$.
-Substituting measured Stage 1 cost $C_1 = 6.12\,\mu s$ (E11), estimated DL cost $C_2 \approx 500\,\mu s$, and the pass-through rate at optimal tuning $\alpha(\tau=0.06) = 15.25\%$ (E17):
+Substituting measured Stage 1 cost $C_1 = 6.12\,\mu s$ (E11), estimated DL cost $C_2 \approx 500\,\mu s$ (literature reference \cite{7}; Stage 2 latency benchmarking is identified as future work), and the pass-through rate at optimal tuning $\alpha(\tau=0.06) = 15.25\%$ (E17):
 $$E[C] = 6.12 + 0.1525 \times 500 = \textbf{82.37}\,\mu s$$
 \textbf{Conclusion}: Compared to pure deep learning inference on all traffic, we achieved a \textbf{6.07$\times$ system-level speedup}.
 
@@ -919,7 +919,7 @@ $$E[C] = 6.12 + 0.1525 \times 500 = \textbf{82.37}\,\mu s$$
 P(\text{Detect}|\text{Attack}) &= P(S_1=1|\text{Attack}) \times P(S_2 \text{ correct}|S_1=1) \\
                                &= 0.999 \times 0.93 = \textbf{92.9\%}
 \end{align*}
-\textbf{Conclusion}: Under this independence assumption, we maintain nearly identical detection capabilities as the pure DL-only model (93.0\%) at a microscopic fraction of the computational cost.
+\textbf{Conclusion}: Under this independence assumption, we maintain nearly identical detection capabilities as the pure DL-only model (93.0\%) at a microscopic fraction of the computational cost. \emph{Limitation}: this independence assumption holds when S1 and S2 errors are uncorrelated; in adversarial scenarios where an attacker jointly optimizes against both stages, actual recall may be lower --- the system-level evasion rate analysis (Section~6.1, Point~4) provides the adversarial upper bound.
 
 \textbf{3. System-Level False Positive Rate (FPR)}: The upper bound probability of benign traffic raising false alarms is:
 \begin{align*}
@@ -958,7 +958,7 @@ $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{
 \midrule
 Bagging reduces RF Variance & \cite{3} & E4: OOB 50$\to$200 trees nearly unchanged & Verified \\
 DL High Variance & \cite{5} & E4: Gen Gap = 0.006 (low) & Overturned \\
-RF robust to perturbation & Design assumption & E14: RF $\varepsilon$=0.001 $\to$ 47\% & Overturned \\
+RF robust to perturbation & Prior belief (ensemble stability) & E14: RF $\varepsilon$=0.001 $\to$ 47\% & Overturned \\
 PGD stronger than FGSM & \cite{13} & E14: PGD vs FGSM @$\varepsilon$=0.01: 47\% vs 76\% & Verified \\
 SHAP axiomatic uniqueness & \cite{12} & E2: SHAP vs Gini $\rho$=0.94 & Verified \\
 Learned representations outperform raw features & \cite{5} & E12: Silhouette +59\% & Verified \\
@@ -977,7 +977,7 @@ M-F1 CI dominated by minority class samples & $\text{Var} \propto 1/n_k$ & E6: M
 \begin{enumerate}
 \item \textbf{DL High Variance (\cite{5}) $\to$ Overturned}: TransECA-Net showed a microscopic Generalization Gap of +0.006 in E4, indicating extremely low variance. Root Cause: \cite{8}'s observation assumes insufficient data or weak regularization. By leveraging a massive dataset (235K hard examples) combined with modern explicit sparse regularization (AdamW weight decay + Cosine Annealing + Dropout), our model successfully suppresses high variance while maintaining high representational capacity.
 
-\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 46.94\%. Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
+\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 46.94\%. This expectation was an informal prior belief based on ensemble stability (Breiman \cite{3} proves variance reduction via bagging but does not claim robustness to uniform additive noise). Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
 \end{enumerate}
 
 \textbf{Strategic System Significance (Orthogonal Weaknesses)}: If we solely relied on Stage 1 (RF), the system would collapse under simple noise. If we solely relied on Stage 2 (DL), the system would be easily evaded by PGD gradient attacks and computationally infeasible. In our \textbf{two-stage architecture}, RF is immune to gradients, and DL resists simple noise. Because an attacker cannot craft a payload that is simultaneously pure uniform noise and an exact adversarial gradient, the overall system evasion rate is suppressed to a mere 8.04\%. This is the ultimate experimental justification for the hierarchical design.
@@ -1060,7 +1060,7 @@ Figure~\ref{fig:figure23} presents the complete evidence chain logic flow and cl
 \textbf{Bottleneck} & \textbf{Evidence} & \textbf{Root Cause} \\
 \midrule
 Unstable minority class attack classification & E6 M-F1 CI = 0.074; E12 Silhouette < 0 & Inherent similarity between attack subclasses + extremely small samples (Heartbleed $n$=11) \\
-Low UNSW-NB15 performance & E15 W-F1 = 0.703 (vs CIC 0.95) & Cross-domain distribution differences (feature space/labeling protocol mismatch) \\
+Low UNSW-NB15 performance & E15 W-F1 = 0.703 (vs CIC 0.950) & Cross-domain distribution differences (feature space/labeling protocol mismatch) \\
 RF fragile to feature perturbation & E14 $\varepsilon$=0.001 causes collapse & Inherent weakness of axis-aligned decision boundaries \\
 \bottomrule
 \end{tabular}
@@ -1095,7 +1095,7 @@ This experiment report comprehensively validates the hierarchical IDS framework 
 \textbf{Processing Performance} & Relative Speedup (vs Monolithic DL) & \textbf{6.07$\times$} & E11, E17 \\
 \textbf{Adversarial Resilience} & System Evasion Rate under Strongest PGD & \textbf{8.04\%} & E14, E17 \\
 \textbf{Base Capability (S1)} & Stage 1 Filter Recall (Binary) & \textbf{99.9\%} & E16, E1 \\
-\textbf{Base Capability (S2)} & Stage 2 Multiclass Weighted F1 & \textbf{0.957} & E8 \\
+\textbf{Base Capability (S2)} & Stage 2 Multiclass Weighted F1 & \textbf{0.950} & S2 Training \\
 \textbf{Generalization Ability} & UNSW-NB15 Cross-Dataset W-F1 & \textbf{0.703} & E15 \\
 \textbf{Rep.\ Learning} & Silhouette Coeff.\ Gain in UMAP Space & \textbf{+59\%} & E12 \\
 \textbf{Statistical Confidence} & W-F1 95\% Confidence Interval (CI) Width & \textbf{0.003} & E6 \\
