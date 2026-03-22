@@ -44,7 +44,7 @@ $$E[C] = 6.12 + 0.1525 \times 500 = 82.37\mu s$$
 | DL-Only | 500 μs | 93.0% | ~7% | ✓ |
 | **Hierarchical** | **82.37 μs** | **92.9%** | **0.007%** | ✓ |
 
-系统 Recall 推导:
+系统 Recall 推导 (基于分类误差独立性假设):
 $$P(\text{Detect}|\text{Attack}) = P(S_1=1|\text{Attack}) \times P(S_2 \text{ correct}|S_1=1) = 0.999 \times 0.93 = 0.929$$
 
 系统 FPR 推导:
@@ -79,7 +79,7 @@ Breiman (2001) 理论表明：RF 泛化误差上界 $PE^* \leq \bar{\rho} \cdot 
 
 ### 2.3 阈值优化 (E17)
 
-IDS 的检测问题本质是 **Neyman-Pearson 假设检验**: 在控制误报率 ($P(\text{报警}|\text{正常}) \leq \alpha_0$) 的约束下，最大化检测率。RF 后验概率 $h_1(x)$ 上的阈值检验等价于似然比检验 (LRT)，在此框架下具有最优性。
+IDS 的检测问题本质是在控制误报率 ($P(\text{报警}|\text{正常}) \leq \alpha_0$) 的约束下，最大化检测率。RF 后验概率 $h_1(x)$ 上的阈值检验等价于似然比检验 (LRT)，在此框架下具有最优性。
 
 E17 结果：$\tau = 0.06$ → Recall = **99.9%**, $\alpha = 15.25\%$
 
@@ -193,9 +193,9 @@ E1 采用 5×3 Nested CV (外层评估、内层调参, 搜索 1,296 组合)，�
 
 | 模型 | 理论预期 | 实测 | 验证? |
 |------|---------|------|-------|
-| RF Variance | 低 (Bagging: $\text{Var}_{Bag} = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}$, $B \uparrow$ 降 Var) | OOB Gap: 0.00173→0.00171 | ✅ |
-| RF Bias | 低 (决策树为强学习器) | L-Curve Gap@100% = 0.0016 | ✅ |
-| DL Variance | 高 ([Kwon'17] 预期) | Gen Gap = +0.006 (低!) | ❌ **推翻** |
+| RF Variance | 低 (Bagging: $\text{Var}_{Bag} = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}$, $B \uparrow$ 降 Var) | OOB Gap: 0.00173→0.00171 | 验证 |
+| RF Bias | 低 (决策树为强学习器) | L-Curve Gap@100% = 0.0016 | 验证 |
+| DL Variance | 高 ([Kwon'17] 预期) | Gen Gap = +0.006 (低!) |  **推翻** |
 | DL Bias | 低 | Acc = 93% (中等) | ⚠️ |
 
 **为什么 [Kwon'17] 的 "DL 高 Variance" 预测被推翻？**
@@ -274,8 +274,7 @@ Silhouette 仍为负值说明 15 类攻击确实存在**固有重叠** (尤其 D
 
 **③ 弱点正交 = 系统级鲁棒**: RF 对随机噪声脆弱但对**梯度攻击免疫** (分段常数, $\nabla h_1 = 0$)；TransECA 对随机噪声鲁棒但对梯度攻击敏感。攻击者无法用单一策略同时突破两层。
 
-**系统逃逸概率**:
-
+**系统逃逸概率 (基于两级漏洞结构独立性假设):
 $$P(\text{逃逸}) = \alpha \times P(h_2 \text{ 误分类} | \text{到达 Stage 2}) = 0.1525 \times (1 - 0.4728) = 0.0804$$
 
 即使在 PGD ε=0.01 的强攻击下, 系统级逃逸率仅 **8.04%**, 远低于单层 TransECA 的 52.72%。分层架构的安全增益来自 **攻击面隔离 + 传递率限制**, 而非单层的绝对鲁棒。
@@ -286,15 +285,15 @@ $$P(\text{逃逸}) = \alpha \times P(h_2 \text{ 误分类} | \text{到达 Stage 
 
 | 预测 | 来源 | 验证实验 | 结果 |
 |------|------|---------|------|
-| Bagging 降低 RF Variance | Breiman (2001) | E4: OOB 50→200 trees 几乎无变化 | ✅ 验证 |
-| DL 高 Variance | [Kwon'17] | E4: Gen Gap = 0.006 (低) | ❌ 推翻 |
-| RF 对扰动鲁棒 | 设计假设 | E14: RF ε=0.001 → 47% | ❌ 推翻 |
-| PGD 强于 FGSM | Madry (2018) | E14: PGD vs FGSM @ε=0.01: 47% vs 76% | ✅ 验证 |
-| SHAP 公理唯一性 | Lundberg (2017) | E2: SHAP vs Gini ρ=0.94 | ✅ 验证 |
-| 学习表征优于原始特征 | [Kwon'17] | E12: Silhouette +59% | ✅ 验证 |
-| 分层降低期望成本 | §1 推导 | E11+E17: 6.07× 加速 | ✅ 验证 |
-| 跨域泛化受域距离限制 | Ben-David (2010) | E15: UNSW 64% < CIC 93% | ✅ 验证 |
-| CI Width ∝ $n^{-1/2}$ | Efron (1979) | E6: S1 Width 0.0002, S2 Width 0.003 | ✅ 验证 |
+| Bagging 降低 RF Variance | Breiman (2001) | E4: OOB 50→200 trees 几乎无变化 |  验证 |
+| DL 高 Variance | [Kwon'17] | E4: Gen Gap = 0.006 (低) |  推翻 |
+| RF 对扰动鲁棒 | 设计假设 | E14: RF ε=0.001 → 47% |  推翻 |
+| PGD 强于 FGSM | Madry (2018) | E14: PGD vs FGSM @ε=0.01: 47% vs 76% |  验证 |
+| SHAP 公理唯一性 | Lundberg (2017) | E2: SHAP vs Gini ρ=0.94 |  验证 |
+| 学习表征优于原始特征 | [Kwon'17] | E12: Silhouette +59% |  验证 |
+| 分层降低期望成本 | §1 推导 | E11+E17: 6.07× 加速 |  验证 |
+| 跨域泛化受域距离限制 | Ben-David (2010) | E15: UNSW 64% < CIC 93% |  验证 |
+| CI Width ∝ $n^{-1/2}$ | Efron (1979) | E6: S1 Width 0.0002, S2 Width 0.003 |  验证 |
 | M-F1 CI 受小类样本主导 | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed n=11) | ✅ 验证 |
 
 **10 项验证, 2 项推翻**。两项推翻并不削弱分层架构的论点，反而揭示了更精确的机制:

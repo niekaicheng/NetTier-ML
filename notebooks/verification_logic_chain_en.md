@@ -44,7 +44,7 @@ $$E[C] = 6.12 + 0.1525 \times 500 = 82.37\mu s$$
 | DL-Only | 500 μs | 93.0% | ~7% | ✓ |
 | **Hierarchical** | **82.37 μs** | **92.9%** | **0.007%** | ✓ |
 
-System Recall derivation:
+System Recall derivation (under Independence Assumption):
 $$P(\text{Detect}|\text{Attack}) = P(S_1=1|\text{Attack}) \times P(S_2 \text{ correct}|S_1=1) = 0.999 \times 0.93 = 0.929$$
 
 System FPR derivation:
@@ -79,7 +79,7 @@ Breiman (2001) theory states: RF generalization error upper bound $PE^* \leq \ba
 
 ### 2.3 Threshold Optimization (E17)
 
-The IDS detection problem is essentially a **Neyman-Pearson hypothesis test**: maximize detection rate under a false alarm rate constraint ($P(\text{Alarm}|\text{Normal}) \leq \alpha_0$). Thresholding on RF posterior probability $h_1(x)$ is equivalent to a likelihood ratio test (LRT), which is optimal under this framework.
+The IDS detection problem is essentially maximizing the detection rate under a false alarm rate constraint ($P(\text{Alarm}|\text{Normal}) \leq \alpha_0$). Thresholding on RF posterior probability $h_1(x)$ is equivalent to a likelihood ratio test (LRT), which is optimal under this framework.
 
 E17 Result: $\tau = 0.06$ → Recall = **99.9%**, $\alpha = 15.25\%$
 
@@ -193,9 +193,9 @@ E1 employs 5×3 Nested CV (outer loop for evaluation, inner loop for tuning, sea
 
 | Model | Theoretical Expectation | Experimental Result | Verified? |
 |-------|------------------------|-------------------|-----------|
-| RF Variance | Low (Bagging: $\text{Var}_{Bag} = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}$, $B \uparrow$ reduces Var) | OOB Gap: 0.00173→0.00171 | ✅ |
-| RF Bias | Low (decision trees are strong learners) | L-Curve Gap@100% = 0.0016 | ✅ |
-| DL Variance | High ([Kwon'17] expectation) | Gen Gap = +0.006 (low!) | ❌ **Overturned** |
+| RF Variance | Low (Bagging: $\text{Var}_{Bag} = \rho\sigma^2 + \frac{(1-\rho)\sigma^2}{B}$, $B \uparrow$ reduces Var) | OOB Gap: 0.00173→0.00171 | Verified |
+| RF Bias | Low (decision trees are strong learners) | L-Curve Gap@100% = 0.0016 | Verified |
+| DL Variance | High ([Kwon'17] expectation) | Gen Gap = +0.006 (low!) |  **Overturned** |
 | DL Bias | Low | Acc = 93% (moderate) | ⚠️ |
 
 **Why is [Kwon'17]'s "DL High Variance" prediction overturned?**
@@ -274,8 +274,7 @@ However, the +59% improvement demonstrates that TransECA-Net learns better discr
 
 **③ Orthogonal weaknesses = system-level robustness**: RF is fragile to random noise but **immune to gradient attacks** (piecewise constant function, $\nabla h_1 = 0$); TransECA is robust to random noise but sensitive to gradient attacks. No single attack strategy can simultaneously breach both layers.
 
-**System Evasion Probability**:
-
+**System Evasion Probability (under Structural Independence Assumption):
 $$P(\text{Evasion}) = \alpha \times P(h_2 \text{ misclassifies} | \text{reaches Stage 2}) = 0.1525 \times (1 - 0.4728) = 0.0804$$
 
 Even under the strong PGD attack at ε=0.01, the system-level evasion rate is only **8.04%**, far below single-layer TransECA's 52.72%. The hierarchical architecture's security benefit stems from **attack surface isolation + pass-through rate limitation**, not absolute robustness of any single layer.
@@ -286,16 +285,16 @@ Even under the strong PGD attack at ε=0.01, the system-level evasion rate is on
 
 | Prediction | Source | Verification Experiment | Result |
 |---------|------|---------|------|
-| Bagging reduces RF Variance | Breiman (2001) | E4: OOB 50→200 trees nearly unchanged | ✅ Verified |
-| DL High Variance | [Kwon'17] | E4: Gen Gap = 0.006 (low) | ❌ Overturned |
-| RF robust to perturbation | Design assumption | E14: RF ε=0.001 → 47% | ❌ Overturned |
-| PGD stronger than FGSM | Madry (2018) | E14: PGD vs FGSM @ε=0.01: 47% vs 76% | ✅ Verified |
-| SHAP axiomatic uniqueness | Lundberg (2017) | E2: SHAP vs Gini ρ=0.94 | ✅ Verified |
-| Learned representations outperform raw features | [Kwon'17] | E12: Silhouette +59% | ✅ Verified |
-| Hierarchical reduces expected cost | §1 derivation | E11+E17: 6.07× speedup | ✅ Verified |
-| Cross-domain generalization limited by domain distance | Ben-David (2010) | E15: UNSW 64% < CIC 93% | ✅ Verified |
-| CI Width ∝ $n^{-1/2}$ | Efron (1979) | E6: S1 Width 0.0002, S2 Width 0.003 | ✅ Verified |
-| M-F1 CI dominated by minority class samples | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed n=11) | ✅ Verified |
+| Bagging reduces RF Variance | Breiman (2001) | E4: OOB 50→200 trees nearly unchanged |  Verified |
+| DL High Variance | [Kwon'17] | E4: Gen Gap = 0.006 (low) |  Overturned |
+| RF robust to perturbation | Design assumption | E14: RF ε=0.001 → 47% |  Overturned |
+| PGD stronger than FGSM | Madry (2018) | E14: PGD vs FGSM @ε=0.01: 47% vs 76% |  Verified |
+| SHAP axiomatic uniqueness | Lundberg (2017) | E2: SHAP vs Gini ρ=0.94 | Verified |
+| Learned representations outperform raw features | [Kwon'17] | E12: Silhouette +59% | Verified |
+| Hierarchical reduces expected cost | §1 derivation | E11+E17: 6.07× speedup |  Verified |
+| Cross-domain generalization limited by domain distance | Ben-David (2010) | E15: UNSW 64% < CIC 93% | Verified |
+| CI Width ∝ $n^{-1/2}$ | Efron (1979) | E6: S1 Width 0.0002, S2 Width 0.003 |  Verified |
+| M-F1 CI dominated by minority class samples | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed n=11) | Verified |
 
 **10 verified, 2 overturned**. The two overturned predictions do not weaken the hierarchical architecture argument; rather, they reveal more precise mechanisms:
 - DL High Variance → Corrected: Effective regularization can suppress it
