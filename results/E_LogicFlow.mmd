@@ -1,0 +1,50 @@
+flowchart LR
+    classDef stage1 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef stage2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef merge fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef stat fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+
+    subgraph SG1 ["【Stage 1】 提效预过滤"]
+        direction TB
+        E1["E1: Nested CV<br>(统计无偏估计)"]
+        E16["E16: Time-aware<br>(验证全量基线)"]
+        E4_1["E4: OOB 分析<br>(确认极低方差)"]
+        E11["E11: 延迟测试<br>(6.12μs 实时吞吐)"]
+        E17["E17: 阈值参数优化<br>(τ=0.06, α=15.25%)"]
+        E1 ~~~ E16 ~~~ E4_1 ~~~ E11 ~~~ E17
+    end
+
+    subgraph SG2 ["【Stage 2】 深度特征提炼"]
+        direction TB
+        E8["E8: 架构核心消融<br>(Transformer核心+ECA护航)"]
+        E10_C["E10: 通道权重分析<br>(与ECA效果互相印证)"]
+        E12["E12: 表征流形可视化<br>(t-SNE提升59%类间距)"]
+        E15["E15: 跨数据集泛化<br>(UNSW-NB15架构迁移)"]
+        E2_E10["E2+E10: 可解释性闭环<br>(SHAP 与 IG 定理三角验证)"]
+        E8 -.-> E10_C
+        E10_C ~~~ E12 ~~~ E15 ~~~ E2_E10
+    end
+
+    subgraph SG3 ["【系统整合】 核心理论闭环"]
+        direction TB
+        I1["效率数学推导<br>期望成本 E[C]=82μs <br><b>(提速 6.07 倍)</b>"]
+        I2["主动安全性防御<br>弱点正交截断梯度<br><b>(逃逸率锁死 8.04%)</b>"]
+        I3["高置信度全局指标<br><b>Recall 92.9% / FPR 0.007%</b>"]
+        I1 ~~~ I2 ~~~ I3
+    end
+
+    subgraph SG4 ["【理论基石】 统计学最后保障"]
+        direction TB
+        G1["E6: Bootstrap 参数区间<br>(极窄置信度上限保障)"]
+        G2["E1+E4: 面向未知分布的<br>双重防过拟合检验体系"]
+        G1 ~~~ G2
+    end
+
+    SG1 -->|为S2争取时间| SG3
+    SG2 -->|为S1精确兜底| SG3
+    SG3 -->|逻辑全部建立于| SG4
+
+    class SG1,E1,E16,E4_1,E11,E17 stage1
+    class SG2,E8,E10_C,E12,E15,E2_E10 stage2
+    class SG3,I1,I2,I3 merge
+    class SG4,G1,G2 stat

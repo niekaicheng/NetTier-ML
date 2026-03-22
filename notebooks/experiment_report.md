@@ -20,7 +20,6 @@
 ## 2 Phase 1: Stage 1 基础验证
 **设计逻辑主线**：任何分层架构的第一步，必须确保其“前门”（Stage 1）具备压倒性的速度优势和极低的漏报率。因此，本阶段通过 E1 与 E16 确立 RF 模型的极高召回率基线，随后利用 E17 寻找拦截正常流量的最佳阈值，最终在 E11 中验证其微秒级延迟是否足以支撑线速防御。只有 Stage 1 跑得足够快、滤得足够准，后续部署深度学习才有意义。
 ### 2.1 E1+E16 — RF 超参调优与基线建立
-### 2.1 基线性能 (E1 + E16)
 
 | 实验 | 方法 | 关键结果 |
 |------|------|---------|
@@ -29,54 +28,16 @@
 
 E1 的 0.796 与全量的 1.00 之差，反映的是**数据量效应**而非选择偏差——Nested CV 通过内外层隔绝保证了估计的无偏性 (Cawley & Talbot, 2010)。
 
-### 2.2 Variance 收敛 (E4)
 
-Breiman (2001) 理论表明：RF 泛化误差上界 $PE^* \leq \bar{\rho} \cdot s^2/\hat{s}^2$，增加树数量 $B$ 会通过降低树间相关性 $\bar{\rho}$ 来降低此上界，但存在收敛极限。
 
-| 树数量 $B$ | OOB Error | 变化 |
-|---|---|---|
-| 10 | ~0.003 | — |
-| 50 | **0.00173** | 收敛拐点 |
-| 200 | 0.00171 | Δ < 0.00002 |
-
-→ $B=50$ 即已收敛。同时 L-Curve 显示 train-test gap 仅 **0.0016**，确认 RF 处于低 Bias + 低 Variance 的理想状态。
-
-### 2.3 阈值优化 (E17)
-
-IDS 的检测问题本质是在控制误报率 ($P(\text{报警}|\text{正常}) \leq \alpha_0$) 的约束下，最大化检测率。RF 后验概率 $h_1(x)$ 上的阈值检验等价于似然比检验 (LRT)，在此框架下具有最优性。
-
-E17 结果：$\tau = 0.06$ → Recall = **99.9%**, $\alpha = 15.25\%$
-
-→ 操作点 $(FPR \approx 0.001, TPR = 0.999)$ 几乎位于 ROC 曲线左上角，**以极小误报代价换取近完美检测**。
-
-### 2.4 实时性 (E11)
-
-$C_1 = 6.12\mu s$ → 吞吐量 163K samples/s，超越 [Abu Al-Haija'22] 基准 9.09μs 的 33%。对于典型企业网络 50K pps 负载，系统利用率仅 $\rho = 50000/163399 = 0.31$，远离饱和。
 
 ---
 
-### 2.2 E17 — 阈值优化
-### 2.3 阈值优化 (E17)
-
-IDS 的检测问题本质是在控制误报率 ($P(\text{报警}|\text{正常}) \leq \alpha_0$) 的约束下，最大化检测率。RF 后验概率 $h_1(x)$ 上的阈值检验等价于似然比检验 (LRT)，在此框架下具有最优性。
-
-E17 结果：$\tau = 0.06$ → Recall = **99.9%**, $\alpha = 15.25\%$
-
-→ 操作点 $(FPR \approx 0.001, TPR = 0.999)$ 几乎位于 ROC 曲线左上角，**以极小误报代价换取近完美检测**。
-
-### 2.4 实时性 (E11)
-
-$C_1 = 6.12\mu s$ → 吞吐量 163K samples/s，超越 [Abu Al-Haija'22] 基准 9.09μs 的 33%。对于典型企业网络 50K pps 负载，系统利用率仅 $\rho = 50000/163399 = 0.31$，远离饱和。
-
----
 
 E17 阈值优化与 ROC 曲线
 *注.* 曲线交点数据从物理层面锚定了  这一极值点。数据表明，在此阈值下系统能够维持 99.9% 的罕见高召回率，同时将 FPR 压制在 0.001 级别。逻辑上，该确切数字解答了“如何安全截断流量”的核心问题，确保了向 Stage 2 泄露的计算负载（）被严格封死在硬件吞吐上限之内。
 
-### 2.3 E11 — 推理延迟基准测试
-### 2.4 实时性 (E11)
 
-$C_1 = 6.12\mu s$ → 吞吐量 163K samples/s，超越 [Abu Al-Haija'22] 基准 9.09μs 的 33%。对于典型企业网络 50K pps 负载，系统利用率仅 $\rho = 50000/163399 = 0.31$，远离饱和。
 
 ---
 
@@ -298,31 +259,7 @@ Attention 对角线主导机制 / Bwd Pkt Len Std 的跨模型作用力衰减 / 
 #### 跨模型交叉验证总结论
 **最终论证：TransECA-Net**** ****的决策依据与**** E2 ****是否形成了跨模型交叉验证？——得出了充分且明确的肯定结论。** 这种跨模型的交叉验证（Stage 1 RF 的 SHAP vs Stage 2 TransECA-Net 的 IG/Attention）不仅在**宏观特征选择上达成了一致性**（共同锚定 TCP 初始窗口与 IAT 时序特征，与领域先验完全吻合），更确立了**微观差异化的合理性**。Stage 1 提供宏观归因防御，而 Stage 2 的深层梯度传播机制在此基础上，为各类具体攻击（如 FTP-Patator 的异常窗口、Heartbleed 的异常头部）定制了相互正交的独立防御剖面。两者在物理焦点上的部分收敛与分类能力上的细粒度互补，打通了“跨模型差异验证”的逻辑闭环，构成了整个两阶段分层架构最具学理说服力的论点。
 
-### 4.3 E6 — Bootstrap 置信区间
-### 5.1 Bootstrap 置信区间 (E6)
 
-| Stage | 测试集 $n$ | W-F1 | 95% CI Width |
-|---|---|---|---|
-| S1 (RF) | 462,762 | 0.9991 | **0.0002** |
-| S2 (TransECA) | 67,317 | 0.9506 | **0.0029** |
-| S2 (TransECA) | 67,317 | M-F1 = 0.766 | **0.0736** |
-
-CI Width 与理论预期 $O(n^{-1/2})$ 的比较：S1 Width / $n^{-1/2}$ = 0.14 (因 F1≈1 方差极小)；S2 W-F1 Width / $n^{-1/2}$ = 0.75 (接近理论)。
-
-**M-F1 CI 为何特别宽？**
-
-$$\text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{n_k}$$
-
-Heartbleed $n_k = 11$、Infiltration $n_k = 36$ → 这两个极小类的方差 ($\propto 1/n_k$) 主导了总 M-F1 方差。**CI 宽不是模型缺陷，是小样本的固有不确定性。**
-
-### 5.2 Nested CV 的无偏性 (E1)
-
-E1 采用 5×3 Nested CV (外层评估、内层调参, 搜索 1,296 组合)，报告 F1-Macro = 0.796。与全量训练 F1 ≈ 1.00 的差距源于数据量增加的效果，而非选择偏差 (普通 CV 包含超参搜索时会产生乐观偏差)。
-
----
-
-E6 Bootstrap 分布
-*注.* 钟形分布带量化了不同阶段的测量抖动。Stage 1 的 95% 置信区间带宽仅为 0.0002，标志着极稳健的绝对大样本收敛；而 Stage 2 的 M-F1 区间扩大至 0.074。逻辑链上，这符合二项分布极限原理，排除了深层模型在应对不足 20 个样本（如 Infiltration）时“算法设计缺陷”的可能性，证明这是基础客观数学方差。
 
 ## 5 Phase 4: 面向部署的进阶特性
 **设计逻辑主线**：在完成了“又快、又准、又可信”的验证后，距离真实工业部署还差最后也是最严苛的一环——对抗敌意环境。现代入侵检测系统无时不刻不在面对黑客的规避测试（Evasion Attacks）。因此，我们通过 E14 向系统注入恶意噪声，并在此过程中证实了“弱点正交”的惊人优势。结合 E4、E12 对系统底层过拟合方差的极限刺探与流形可视化，本阶段彻底确立了分层架构在真实复杂的网络环境中的实战价值。
@@ -603,234 +540,34 @@ E17 (τ=0.06, α=15.25%)
     ⑥ 统计可靠性: CI ∝ n^{-1/2}, Nested CV 无偏
 ```
 
----
-## 7 系统性瓶颈与改进方向
-### 7.1 已识别瓶颈
-### 7.2 改进方向
-**少数类增强**: 考虑 few-shot learning 或 class-conditional data augmentation, 处理 Heartbleed/Infiltration 等极端小类
-**对抗训练**: 对 TransECA-Net 引入对抗训练 (Adversarial Training), 在小扰动范围内提升鲁棒性
-**跨域适配**: 引入 Domain Adaptation 技术, 缩小 CIC-IDS2017 与 UNSW-NB15 的特征分布距离
-**在线学习**: 探索增量学习机制, 适应网络流量分布的时间漂移
-
-## 8 结论
-本实验报告通过 13 项系统实验, 从 **6 ****个维度** 完整验证了分层 IDS 框架:
-分层架构的核心优势不在于 “每一层都最强”, 而在于 **“两层弱点正交**** + ****攻击面隔离”**: RF 以 6.12μs 的低成本过滤 84.75% 的流量, TransECA-Net 以 DL 能力精炼剩余难例。系统性能经 Bootstrap CI (窄) + Nested CV (无偏) + 跨数据集 (UNSW-NB15) 三重统计保障, 结论可靠。
 
 ## 附录 A: 不执行的实验
+
+| 实验 | 原因 |
+| :--- | :--- |
+| E3 (特征选择 Top-K) | RF 具备内置特征重要性；E2 SHAP 已对此进行了边际收益递减的覆盖 |
+| E5 (验证曲线) | E1 的 Nested CV 网格搜索已包含超参 vs 性能曲线；结论已完全覆盖 |
+| E7 (DL 正则化) | E8 消融已验证架构贡献；正则化微调是与 E8 重叠的训练细节 |
+| E13 (不平衡处理 SMOTE) | `class_weight` 已包含在 E1 的搜索空间中；已合并至执行过程 |
+
 ## 附录 B: 全部产出文件索引
-## 附录 C: 参考文献 (References)
-按照 APA 7th Edition 格式整理的核心算法与基础评价体系文献：
-[1] Abu Al-Haija, Q., Odeh, A., & Qattous, H. (2022). ML-Based Darknet Traffic Detection System. *IEEE Access*. [2] Ben-David, S., Blitzer, J., Crammer, K., Kulesza, A., Pereira, F., & Vaughan, J. W. (2010). A theory of learning from different domains. *Machine learning*, 79, 151-175. [3] Breiman, L. (2001). Random forests. *Machine learning*, 45(1), 5-32. [4] Cawley, G. C., & Talbot, N. L. (2010). On over-fitting in model selection and subsequent selection bias in performance evaluation. *Journal of Machine Learning Research*, 11, 2079-2107. [5] Doula, et al. (2025). Analysis of ML-Based Methods for Network Traffic. [6] Efron, B. (1979). Bootstrap methods: another look at the jackknife. *The Annals of Statistics*, 1-26. [7] Kaur, et al. (2021). ML Techniques for Anomaly Detection in Network Traffic. [8] Kwon, D., Kim, H., Kim, J., Suh, S. C., Kim, I., & Kim, K. J. (2017). Deep learning-based network anomaly detection. *Cluster Computing*, 22(1), 209-224. [9] Liu, H., et al. (2025). TransECA-Net: A Transformer-Based Model. [10] Loshchilov, I., & Hutter, F. (2016). SGDR: Stochastic gradient descent with warm restarts. *arXiv preprint arXiv:1608.03983*. [11] Loshchilov, I., & Hutter, F. (2017). Decoupled weight decay regularization. *arXiv preprint arXiv:1711.05101*. [12] Lundberg, S. M., & Lee, S. I. (2017). A unified approach to interpreting model predictions. *Advances in neural information processing systems*, 30. [13] Madry, A., Makelov, A., Schmidt, L., Tsipras, D., & Vladu, A. (2018). Towards deep learning models resistant to adversarial attacks. *International Conference on Learning Representations*. [14] McInnes, L., Healy, J., & Melville, J. (2018). UMAP: Uniform manifold approximation and projection for dimension reduction. *arXiv preprint arXiv:1802.03426*. [15] Moustafa, N., & Slay, J. (2015). UNSW-NB15: a comprehensive data set for network intrusion detection systems. *2015 Military Communications and Information Systems Conference (MilCIS)*, 1-6. [16] Ring, M., Wunderlich, S., Scheuring, D., Landes, D., & Hotho, A. (2019). A survey of network-based intrusion detection data sets. *Computers & Security*, 86, 147-167. [17] Sharafaldin, I., Lashkari, A. H., & Ghorbani, A. A. (2018). Toward generating a new intrusion detection dataset and intrusion traffic characterization. *ICISSP*, 108-116. [18] Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: a simple way to prevent neural networks from overfitting. *The journal of machine learning research*, 15(1), 1929-1958. [19] Sundararajan, M., Taly, A., & Yan, Q. (2017). Axiomatic attribution for deep networks. *International conference on machine learning*, 3319-3328. [20] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., … & Polosukhin, I. (2017). Attention is all you need. *Advances in neural information processing systems*, 30. [21] van der Maaten, L., & Hinton, G. (2008). Visualizing data using t-SNE. *Journal of machine learning research*, 9(11). [22] Littlewood, B., & Strigini, L. (2004). Redundancy and diversity in security. *IEEE Security & Privacy*, 2(3), 56-61. [23] Wang, Q., Wu, B., Zhu, P., Li, P., Zuo, W., & Hu, Q. (2020). ECA-Net: Efficient channel attention for deep convolutional neural networks. *CVPR*, 11534–11542. [24] Goodfellow, I. J., Shlens, J., & Szegedy, C. (2015). Explaining and harnessing adversarial examples. *ICLR*. arXiv:1412.6572. [25] Abnar, S., & Zuidema, W. (2020). Quantifying attention flow in transformers. *ACL*, 4190–4197. https://doi.org/10.18653/v1/2020.acl-main.385
 
-| 项目 | 规格 |
-| --- | --- |
-| GPU | Intel ARC 130T (16GB VRAM) |
-| 框架 | PyTorch 2.10.0+xpu |
-| ML 库 | scikit-learn, SHAP, captum |
-| 可视化 | t-SNE, UMAP, matplotlib |
+| 实验 | 核心产出 |
+| :--- | :--- |
+| E1+E16 | `stage1_rf_best.pkl` |
+| E17 | `results/E17_threshold_tuning_*.json` |
+| E11 | `results/E11_latency_benchmark_*.json` |
+| S1 | `models_chk/stage1_rf_stratified.joblib`, `data/stage2/*.parquet` |
+| S2 | `models_chk/stage2_transeca.pth` |
+| E8 | `results/E8_ablation_comparison.png`, `results/E8_ablation_bar.png` |
+| E15 | `results/E15_unsw_training_curves.png`, `results/E15_unsw_confusion_matrix.png`, `results/E15_cross_dataset_comparison.png` |
+| E2 | `results/E2_shap_summary.png`, `results/E2_shap_bar.png`, `results/E2_shap_vs_rf.png` |
+| E6 | `results/E6_bootstrap_distributions.png` |
+| E10 | `results/E10_ig_global_importance.png`, `results/E10_attention_heatmap.png`, `results/E10_eca_channel_weights.png` |
+| E14 | `results/E14_robustness_curve.png`, `results/E14_per_class_robustness.png` |
+| E4 | `results/E4_oob_vs_trees.png`, `results/E4_dl_learning_curves.png`, `results/E4_complexity_vs_perf.png`, `results/E4_rf_learning_curve.png` |
+| E12 | `results/E12_tsne_raw.png`, `results/E12_umap_raw.png`, `results/E12_tsne_embedding.png`, `results/E12_umap_embedding.png` |
 
-
-| 数据集 | 用途 | 样本量 | 特征数 | 类别数 |
-| --- | --- | --- | --- | --- |
-| CIC-IDS2017 | 主训练/测试 | 2.3M | 80 (→76) | 15 |
-| CIC-IDS2017 Stage 2 | S2 训练/验证/测试 | 235K / 33K / 67K | 76 | 15 |
-| UNSW-NB15 | 跨数据集泛化 | 149K / 26K / 82K | 186 | 10 |
-
-
-| 阶段 | 实验 | 目标 |
-| --- | --- | --- |
-| Phase 1 | E1+E16, E17, E11, S1 Training | Stage 1 基础: 调参、阈值、延迟、全量训练 |
-| Phase 2 | S2 Training, E8, E15 | Stage 2 核心: 训练、消融、泛化 |
-| Phase 3 | E2, E6, E10 | 可解释性与统计可靠性 |
-| Phase 4 | E14, E4, E12 | 鲁棒性、Bias-Variance、可视化 |
-
-
-| 实验 | 方法 | 关键结果 |
-| --- | --- | --- |
-| E1 | 5×3 Nested CV | F1-Macro = 0.796 (无偏估计) |
-| E16 | Time-aware Split + 全量数据 | Val/Test F1 ≈ 1.00, Attack Recall ≈ 0.99 |
-
-
-| 指标 | 值 |
-| --- | --- |
-| 目标 Recall | 99.9% |
-| 最优阈值 | 0.06 |
-| 传递率 | 15.25% |
-
-
-| 指标 | 结果 | 目标 |
-| --- | --- | --- |
-| Stage 1 延迟 | 6.12 μs/sample | < 10 μs |
-| 吞吐量 | 163,399 samples/s | > 100K |
-
-
-| 指标 | 结果 |
-| --- | --- |
-| 验证集 F1 | ~1.00 |
-| 测试集 F1 | ~1.00 |
-| Stage 2 训练样本数 | 235,556 |
-
-
-| 指标 | 结果 |
-| --- | --- |
-| Test Accuracy | 93.00% |
-| Best Val Accuracy | 92.52% |
-| Weighted F1 | 0.95 |
-| 训练时间 | 64.18 min |
-
-
-| 变体 | 参数量 | Test Acc | W-F1 | M-F1 |
-| --- | --- | --- | --- | --- |
-| CNN-Only | 2,703 | 61.89% | 0.668 | 0.235 |
-| No-ECA (CNN+Trans) | 301,455 | 92.05% | 0.947 | 0.675 |
-| Full TransECA-Net | 301,460 | 89.71% | 0.925 | 0.759 |
-
-
-| 组件 | W-F1 贡献 | M-F1 贡献 | 解读 |
-| --- | --- | --- | --- |
-| Transformer | +0.279 | +0.440 | 架构核心, Acc 提升 30pp |
-| ECA | -0.022 | +0.085 | W-F1 微降, 但大幅提升少数类识别 |
-
-
-| 数据集 | Test Acc | W-F1 | M-F1 |
-| --- | --- | --- | --- |
-| CIC-IDS2017 | 93.00% | 0.950 | 0.80 |
-| UNSW-NB15 | 63.64% | 0.703 | 0.397 |
-
-
-| 类别 | F1 | 解读 |
-| --- | --- | --- |
-| Generic | 0.97 | 最佳, 大类+特征明确 |
-| Reconnaissance | 0.80 | 良好, 模式清晰 |
-| Normal | Precision 0.99, Recall 0.57 | 保守分类 |
-| Analysis / Worms / Shellcode | < 0.30 | 极少样本, 仍是难点 |
-
-
-| 排名 | 特征 | SHAP 值 |
-| --- | --- | --- |
-| 1 | Bwd Packet Length Std | 0.032 |
-| 2 | Init Bwd Win Bytes | 0.029 |
-| 3 | Bwd Pkt Len Mean | 0.028 |
-| 4 | Pkt Len Var | 0.025 |
-| 5 | Fwd IAT Min | 0.024 |
-
-
-| 验证指标 | 值 | 解读 |
-| --- | --- | --- |
-| SHAP vs RF Gini Spearman | 0.9444 | 两种方法高度一致 |
-| SHAP 计算时间 | 235.1s | — |
-
-
-| 方法 | Top-1 特征 | 关键 Top-5 |
-| --- | --- | --- |
-| Integrated Gradients | Init Fwd Win Bytes (IG=2.107) | Init Fwd Win Bytes, Flow Packets/s, Bwd Header Length, Fwd Seg Size Min |
-| Attention Rollout | Fwd IAT Mean | Fwd IAT Mean, Fwd Pkt Len Max, Flow Bytes/s, Init Fwd Win Bytes |
-| ECA Channel Attn | mean=0.449, std=0.009, CV=0.020 | 近均匀通道分布 |
-
-
-| Stage | 指标 | 点估计 | 95% CI | CI Width |
-| --- | --- | --- | --- | --- |
-| S1 (RF) | Accuracy | 0.9991 | [0.9990, 0.9992] | 0.0002 |
-| S1 (RF) | W-F1 | 0.9991 | [0.9990, 0.9992] | 0.0002 |
-| S1 (RF) | M-F1 | 0.9982 | [0.9980, 0.9983] | 0.0003 |
-| S2 (TransECA) | Accuracy | 0.9259 | [0.9237, 0.9279] | 0.0042 |
-| S2 (TransECA) | W-F1 | 0.9506 | [0.9491, 0.9520] | 0.0029 |
-| S2 (TransECA) | M-F1 | 0.7658 | [0.7391, 0.8127] | 0.0736 |
-
-
-| 攻击 | Clean Acc | =0.001 | =0.01 | =0.1 |
-| --- | --- | --- | --- | --- |
-| RF (L∞ noise) | 99.59% | 46.94% | 6.45% | 0.43% |
-| TransECA FGSM | 92.16% | 90.26% | 75.73% | 6.09% |
-| TransECA PGD | 92.16% | 90.20% | 47.28% | 0.66% |
-
-
-| 分析 | 关键指标 |
-| --- | --- |
-| RF OOB | → OOB Err=0.00173,  → 0.00171 (已收敛,  近最优) |
-| DL Generalization Gap | Final Train−Val Loss = +0.006 (轻微欠拟合, 趋势递减) |
-| 容量跃迁 | CNN-Only (2.7K params) → 61.9% Acc; TransECA (301K) → 93.0% (+31pp) |
-| RF Learning Curve | Gap@1% = 0.0106, Gap@100% = 0.0016 (低 Variance) |
-
-
-| 预测 | 理论来源 | 实测 | 验证? |
-| --- | --- | --- | --- |
-| RF 低 Variance | [13]: Bagging  降 Var | OOB 50→200 几乎无变化 | ✅ |
-| RF 低 Bias | 决策树为强学习器 | L-Curve Gap@100% = 0.0016 | ✅ |
-| DL 高 Variance | [5] | Gen Gap = +0.006 (低) | ❌ 推翻 |
-
-
-| 方法 | Silhouette Score |
-| --- | --- |
-| t-SNE (Raw) | -0.1621 |
-| UMAP (Raw) | -0.2349 |
-| t-SNE (Embedding) | -0.0959 |
-| UMAP (Embedding) | -0.0668 |
-
-
-| 指标 | 原始特征空间 | TransECA Embedding |
-| --- | --- | --- |
-| 平均 Silhouette | -0.1985 | -0.0814 |
-| 改善幅度 | — | +59% |
-
-
-| 维度 | 指标 | 数值 | 支撑实验 |
-| --- | --- | --- | --- |
-| 精度 | System Recall | 92.9% | E17 × S2 Training |
-| 精度 | System FPR | 0.007% | E17 × S2 Training |
-| 效率 | 期望推理成本 | 82.37 μs | E11 + E17 |
-| 效率 | 加速比 (vs DL-Only) | 6.07× | E11 + E17 |
-| 鲁棒性 | 系统逃逸率 (PGD =0.01) | 8.04% | E14 + E17 |
-| 泛化 | UNSW-NB15 W-F1 | 0.703 | E15 |
-| 表征 | Silhouette 改善 | +59% | E12 |
-| 统计 | S2 W-F1 95% CI Width | 0.003 | E6 |
-
-
-| 理论预测 | 来源 | 验证实验 | 结果 |
-| --- | --- | --- | --- |
-| Bagging 降低 RF Variance | [13] | E4: OOB 50→200 trees 几乎无变化 | 验证 |
-| DL 高 Variance | [5] | E4: Gen Gap = 0.006 (低) | 推翻 |
-| RF 对扰动鲁棒 | 设计假设 | E14: RF =0.001 → 47% | 推翻 |
-| PGD 强于 FGSM | [13] | E14: PGD vs FGSM @=0.01: 47% vs 76% | 验证 |
-| SHAP 公理唯一性 | [12] | E2: SHAP vs Gini =0.94 | 验证 |
-| 学习表征优于原始特征 | [5] | E12: Silhouette +59% | 验证 |
-| 分层降低期望成本 | 数学推导 | E11+E17: 6.07× 加速 | 验证 |
-| 跨域泛化受域距离限制 | [2] | E15: UNSW 64% < CIC 93% | 验证 |
-| CI Width | [6] | E6: S1 Width 0.0002, S2 Width 0.003 | 验证 |
-| M-F1 CI 受小类样本主导 |  | E6: M-F1 CI = 0.074 (Heartbleed =11) | 验证 |
-
-
-### 逻辑流
-
-```
-阶段 1 验证                         阶段 2 验证
-──────────────────                  ──────────────────
-E1 (Nested CV 无偏)                 E8 (消融: 各组件贡献)
-E16 (时间感知基准)                    ├─ Transformer +30pp → 核心
-E4 (OOB 已收敛, 低 B-V)               ├─ ECA: W-F1 -0.02 / M-F1 +0.085
-E11 (6.12μs 实时性)                   └─ 与 E10 互加印证 (CV=0.02)
-E17 (τ=0.06, α=15.25%)
-                                    E2+E10 (可解释性三角校验)
-        ↓                           E12 (表征能力 +59% → 有效)
-                                    E15 (UNSW W-F1=0.70 → 可泛化)
-  ┌─────┴──────┐
-  │   分层集成  │
-  │ (Integration)│
-  ├────────────┤
-  │ §1: E[C]=82μs, 6.07× 加速      │
-  │ §8: 逃逸率 8.04%              │
-  │     (弱点正交防御)            │
-  │ Recall 92.9% / FPR 0.007%      │
-  └────────────┘
-        ↓
-  ┌──   统计可靠性保障   ──┐
-  │ E6: 置信区间宽度可靠    │
-  │ E1: 评估过程无偏        │
-  │ E4: 低方差 (Variance)   │
-  └────────────────────────┘
-```
-
----
 
 ## 7 系统性瓶颈与改进方向
 
