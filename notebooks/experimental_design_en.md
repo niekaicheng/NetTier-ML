@@ -807,18 +807,18 @@ $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{
 
 ### 6.3 Cross-Validation Matrix: Theoretical Predictions vs Experiments
 
-| Theoretical Prediction                                 | Source                     | Verification Experiment                          | Result       |
-| ------------------------------------------------------ | -------------------------- | ------------------------------------------------ | ------------ |
-| Bagging reduces RF Variance                            | [13]                       | E4: OOB 50→200 trees nearly unchanged            | ✅ Verified   |
-| DL High Variance                                       | [5]                        | E4: Gen Gap = 0.006 (low)                        | ❌ Overturned |
-| RF robust to perturbation                              | Design assumption          | E14: RF $\varepsilon$=0.001 → 47%                | ❌ Overturned |
-| PGD stronger than FGSM                                 | [13]                       | E14: PGD vs FGSM @$\varepsilon$=0.01: 47% vs 76% | ✅ Verified   |
-| SHAP axiomatic uniqueness                              | [12]                       | E2: SHAP vs Gini $\rho$=0.94                     | ✅ Verified   |
-| Learned representations outperform raw features        | [5]                        | E12: Silhouette +59%                             | ✅ Verified   |
-| Hierarchical reduces expected cost                     | Mathematical derivation    | E11+E17: 6.07× speedup                           | ✅ Verified   |
-| Cross-domain generalization limited by domain distance | [2]                        | E15: UNSW 64% < CIC 93%                          | ✅ Verified   |
-| CI Width $\propto n^{-1/2}$                            | [6]                        | E6: S1 Width 0.0002, S2 Width 0.003              | ✅ Verified   |
-| M-F1 CI dominated by minority class samples            | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed $n$=11)          | ✅ Verified   |
+| Theoretical Prediction                                 | Source                     | Verification Experiment                          | Result     |
+| ------------------------------------------------------ | -------------------------- | ------------------------------------------------ | ---------- |
+| Bagging reduces RF Variance                            | [13]                       | E4: OOB 50→200 trees nearly unchanged            | Verified   |
+| DL High Variance                                       | [5]                        | E4: Gen Gap = 0.006 (low)                        | Overturned |
+| RF robust to perturbation                              | Design assumption          | E14: RF $\varepsilon$=0.001 → 47%                | Overturned |
+| PGD stronger than FGSM                                 | [13]                       | E14: PGD vs FGSM @$\varepsilon$=0.01: 47% vs 76% | Verified   |
+| SHAP axiomatic uniqueness                              | [12]                       | E2: SHAP vs Gini $\rho$=0.94                     | Verified   |
+| Learned representations outperform raw features        | [5]                        | E12: Silhouette +59%                             | Verified   |
+| Hierarchical reduces expected cost                     | Mathematical derivation    | E11+E17: 6.07× speedup                           | Verified   |
+| Cross-domain generalization limited by domain distance | [2]                        | E15: UNSW 64% < CIC 93%                          | Verified   |
+| CI Width $\propto n^{-1/2}$                            | [6]                        | E6: S1 Width 0.0002, S2 Width 0.003              | Verified   |
+| M-F1 CI dominated by minority class samples            | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed $n$=11)          | Verified   |
 
 **10 verified, 2 overturned**. The two overturned predictions do not weaken the hierarchical architecture argument; rather, they reveal more precise mechanisms and the advantage of "orthogonal weaknesses":
 
