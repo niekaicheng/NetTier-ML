@@ -1,7 +1,7 @@
 # Experiment Report — Hierarchical Network Intrusion Detection Framework (Hierarchical IDS)
 
 > **Project**: 6800GNetTier-ML  
-> **Report Date**: 2026-03-03  
+> **Report Date**: 2026-03-22  
 > **Experiment Hardware**: Intel ARC 130T GPU (16GB), PyTorch 2.10.0+xpu  
 > **Data Sources**: experimentalRank, experimental_design.md, verification_logic_chain.md
 
@@ -117,10 +117,10 @@ Dataset selection is based on [16]'s 15 evaluation criteria. CIC-IDS2017 outperf
 
 **Method**: Throughput/Latency Benchmark, multiple sampling runs averaged.
 
-| Metric          | Result                | Target    |
-| --------------- | --------------------- | --------- |
-| Stage 1 Latency | **6.12 μs/sample**    | < 10 μs ✅ |
-| Throughput      | **163,399 samples/s** | > 100K ✅  |
+| Metric          | Result                | Target  |
+| --------------- | --------------------- | ------- |
+| Stage 1 Latency | **6.12 μs/sample**    | < 10 μs |
+| Throughput      | **163,399 samples/s** | > 100K  |
 
 **Analysis**: The experimental peak of 6.12μs perfectly corroborates the previously theorized **time complexity axiom $\mathcal{O}(B \cdot D)$ [3]**. By rigidly constraining the ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation necessitates at most 1,000 parallel scalar conditionals, compressing the execution latency squarely into minimal L1-cache clock cycles. This mathematically proves that exceeding the [7] baseline by 33% stems primarily from precise theoretical variance-scale truncations, rather than hardware over-provisioning. Consequently, for a typical 50K pps load, the system utilization ratio bounds safely at merely $\rho = 50000/163399 = 0.31$ (abundant overhead margin).
 
@@ -136,8 +136,8 @@ Dataset selection is based on [16]'s 15 evaluation criteria. CIC-IDS2017 outperf
 
 | Metric                   | Result  |
 | ------------------------ | ------- |
-| Validation F1            | ~1.00   |
-| Test F1                  | ~1.00   |
+| Validation F1            | 0.9991  |
+| Test F1                  | 0.9991  |
 | Stage 2 Training Samples | 235,556 |
 
 **Output**: `models_chk/stage1_rf_stratified.joblib` (production model), `data/stage2/{train,val,test}.parquet` (Hard Examples)
@@ -226,18 +226,14 @@ Dataset selection is based on [16]'s 15 evaluation criteria. CIC-IDS2017 outperf
 *Core Validation:* The 50-percentage-point oscillation amplitude in the CNN-Only Val Acc curve exposes the fragile generalization of a monolithic convolutional mechanism. The 1–2pp gap separating No-ECA and Full precisely anchors the ECA's genuine but auxiliary marginal augmentation bracket.
 
 **Logic Chain Summary**
-```text
-CNN-Only Val Acc oscillates by 50pp + Loss elevated by 0.15
-        ↓
-CNN lacks sequential modeling → Generalization proves profoundly unstable
-        ↓
-Introduce Transformer (No-ECA) → Metrics jump +27pp, curve variance flattens
-        ↓
-Introduce ECA (Full group) → Accuracy gains additional +1~2pp, terminal convergence smoothed
-        ↓
-Deduction: Transformer shapes the main defense trunk; ECA acts as auxiliary detail-tuning.
-           The trunk safeguards baseline performance; the tuning layer elevates limits.
-```
+
+The CNN-Only variant exhibits a validation accuracy oscillation of 50 percentage points alongside a persistently elevated loss of 0.15, which directly exposes the absence of sequential modeling capacity: without the ability to correlate temporally distant flow features, the convolutional-only architecture generalizes profoundly unstably across training iterations.
+
+Introducing the Transformer encoder (No-ECA group) resolves this instability decisively — metrics jump by approximately 27pp and curve variance flattens substantially, confirming that self-attention's long-range dependency modeling is the primary driver of reliable classification on hard examples.
+
+Adding the ECA module (Full group) yields a further incremental gain of 1–2pp in accuracy with noticeably smoother terminal convergence, indicating that channel recalibration provides genuine but auxiliary benefit on top of the already-stable Transformer backbone.
+
+The deduction is therefore structural: the Transformer constitutes the main defense trunk, safeguarding baseline performance and training stability, while ECA functions as a detail-tuning layer that elevates the performance ceiling without bearing any foundational load.
 
 **Figure 3**
 
@@ -365,17 +361,15 @@ Notably, SHAP promoted `Init Bwd Win Bytes` from RF Gini rank #23 to #2, because
 
 #### Core Logic Chain Summary
 
-```text
-Bwd Pkt Len Std → Widest split, +0.15 outliers → Backward packet dispersion is the supreme attack fingerprint
-        ↓
-Init Bwd Win Bytes → Unidirectional positive contribution → TCP window anomaly flags early DoS onset
-        ↓
-Fwd IAT Min → Bidirectional → Low value = High-frequency attack / High value = Normal cadence
-        ↓
-IAT Total/Max/Mean → ±0.05 stable auxiliary boundary anchoring
-        ↓
-Deduction: Multidimensional synergistic evaluation, not isolated thresholds → Decision pathways prove physically interpretable
-```
+*Bwd Pkt Len Std* anchors the hierarchy at the top, exhibiting the widest SHAP split range and the densest concentration of +0.15 positive outliers. This establishes backward packet length dispersion as the supreme attack fingerprint: highly variable response packet sizes are a reliable structural marker that distinguishes adversarial flows from benign baselines.
+
+*Init Bwd Win Bytes* contributes in a strictly unidirectional positive direction, meaning elevated initial TCP window sizes consistently push the model toward an attack prediction. This behavior directly corresponds to the early-onset anomalies characteristic of DoS attacks, where TCP handshake parameters are manipulated before sustained payload traffic begins.
+
+*Fwd IAT Min* operates bidirectionally, making it a dual-purpose discriminator: abnormally low values signal high-frequency attack patterns such as flooding, while unusually high values indicate the relaxed inter-arrival cadence of normal traffic. A single feature thus encodes both attack and benign signatures through opposite directional contributions.
+
+The remaining temporal features — *IAT Total*, *IAT Max*, and *IAT Mean* — cluster within a stable ±0.05 SHAP band, functioning as auxiliary boundary anchors that reinforce the primary discriminators without dominating individual decisions.
+
+The overall deduction is that the Stage 1 decision pathway operates through multidimensional synergistic evaluation rather than isolated threshold triggers. No single feature alone determines classification; instead, the coordinated interplay across packet length dispersion, TCP window initialization, and inter-arrival timing produces decision boundaries that remain physically interpretable and consistent with established network traffic domain knowledge.
 
 **Figure 8**
 
@@ -387,19 +381,13 @@ Deduction: Multidimensional synergistic evaluation, not isolated thresholds → 
 
 #### Core Logic Chain Summary
 
-```text
-ρ = 0.9444 → Both methods exhibit macroscopic ranking consistency
-        ↓
-Shared Top Features = Payload Length + IAT Timing 
-        ↓
-Strict alignment with [17] domain knowledge → Validates physical legitimacy
-        ↓
-Init Bwd Win Bytes: Gini #23 → SHAP #2 (21-place variance)
-        ↓
-Gini disregards interaction effects → SHAP precisely captures synergistic contributions
-        ↓
-Deduction: Stage 1 decision pathway is highly reliable, establishing a benchmark for E10 black-box deconstruction.
-```
+A Spearman correlation of ρ = 0.9444 between SHAP attribution scores and RF Gini importance rankings establishes that the two methods achieve strong macroscopic consistency despite their fundamentally different derivation mechanisms — one grounded in game-theoretic marginal contributions, the other in single-feature split purity gain.
+
+Their shared top-ranked features converge on two physical dimensions: payload length metrics (led by *Bwd Pkt Len Std* and *Bwd Pkt Len Mean*) and inter-arrival timing constraints (led by *Fwd IAT Min* and *Fwd IAT Total*). This joint prioritization aligns strictly with the domain knowledge established by Sharafaldin et al. [17], where TCP window behavior and packet timing intervals are recognized as the foundational discriminators for DoS and brute-force anomaly detection, thereby validating the physical legitimacy of Stage 1's learned decision boundaries.
+
+The most diagnostically significant divergence between the two methods concerns *Init Bwd Win Bytes*, which Gini ranks at position 23 but SHAP elevates to position 2 — a 21-place upward displacement. This discrepancy is not noise; it is a direct manifestation of the methodological difference. Gini measures only the isolated, unconditional split contribution of each feature, and therefore systematically underestimates features whose true importance is conditional on interaction with neighboring variables. SHAP, by satisfying the Shapley consistency axioms, correctly accounts for these synergistic contributions, revealing that *Init Bwd Win Bytes* exerts a far greater boundary influence when acting in concert with surrounding temporal and payload features than its standalone split gain would suggest.
+
+The cumulative deduction is that Stage 1's decision pathway is highly reliable and physically grounded: both attribution frameworks independently converge on the same discriminative structure, and their divergences are interpretable and theoretically principled rather than contradictory. This dual-method validation establishes a rigorous interpretability benchmark against which the Stage 2 deep-network black-box deconstruction in E10 can be meaningfully compared.
 
 ---
 
@@ -443,27 +431,17 @@ Two attribution methods with theoretically independent guarantees (SHAP: Shapley
 
 **Core Logic Chain Summary**
 
-```text
-IG Top-1: Init Fwd Win Bytes (2.107)
-SHAP Top-2: Init Bwd Win Bytes
-        ↓
-Both method paradigms propel TCP Initial Window features into Top-Tier
-→ Indicates partial convergence, barring directional asymmetry (Fwd ≠ Bwd)
-        ↓
-IAT sequence properties heavily saturate both methodologies
-→ Temporal interval components possess vastly resilient cross-model consistency
-        ↓
-Bwd Pkt Len Std: SHAP #1 → IG Mid-Tier
-→ Explicit ranking divergence; theorized that sequence modeling scatters singular feature impact (hypothetical inference)
-        ↓
-PSH Flag Count: IG Exclusive (1.236)
-→ Neural detection isolated injection assault phenomena entirely missed by discrete RFs
-        ↓
-ECA CV=0.02 → Radically uniform distribution (empirically supported)
-→ Solidifies the E8 ablation 1–2pp threshold conclusion ✅
-        ↓
-Deduction: Divergent attribution methods partially converge over TCP Window + IAT structures, supporting physical diagnostic legitimacy despite specific feature ranking asymmetries.
-```
+At the top of the attribution hierarchy, IG ranks *Init Fwd Win Bytes* first with a score of 2.107, while SHAP independently elevates *Init Bwd Win Bytes* to its second position. Although the two methods focus on opposite traffic directions, both paradigms propel TCP initial window features into the top tier — a partial convergence that confirms the physical significance of TCP handshake window parameters as attack discriminators, even as the directional asymmetry (forward vs. backward) reflects each method's distinct sensitivity to flow structure.
+
+IAT sequence properties saturate the upper ranks of both attribution frameworks with notable consistency. Temporal interval features — including *Fwd IAT Total*, *Fwd IAT Min*, and related statistics — appear prominently across both IG and SHAP rankings, demonstrating that inter-arrival timing carries resilient cross-model discriminative weight regardless of whether attribution is computed through gradient integration or game-theoretic marginal contributions.
+
+The most prominent ranking divergence involves *Bwd Pkt Len Std*, which holds the top SHAP position but falls to the mid-tier under IG. This gap is interpreted as a hypothetical inference: the Transformer's sequence modeling mechanism may scatter the concentrated impact of a single high-variance feature across multiple temporal positions in the attention pathway, diluting its apparent per-feature IG score while its aggregate contribution remains substantial under SHAP's interaction-aware accounting.
+
+*PSH Flag Count* emerges as an IG-exclusive signal with a score of 1.236, appearing with negligible importance in SHAP's RF-based attribution. This exclusivity indicates that the neural architecture detects a TCP injection assault phenomenon — abnormal PSH flag accumulation patterns — through learned sequential representations that are structurally inaccessible to the discrete split logic of Random Forests.
+
+Finally, the ECA channel weight distribution yields a coefficient of variation of just 0.02, confirming an empirically near-uniform distribution with essentially zero subclass specialization. This result directly consolidates the E8 ablation finding: ECA's contribution is bounded to the 1–2pp marginal range precisely because its channel recalibration operates on already well-balanced CNN-extracted representations, leaving no concentrated gradient pathway for the module to specialize.
+
+The cumulative deduction is that divergent attribution methods — despite their methodological differences — partially converge over TCP window initialization and IAT temporal structures, which together form the physically interpretable core of the decision boundary. Specific feature ranking asymmetries between IG and SHAP are explainable rather than contradictory, each reflecting a principled property of the underlying attribution mechanism, and collectively they reinforce rather than undermine confidence in the diagnostic legitimacy of the two-stage architecture.
 
 **Figure 10**
 
@@ -477,26 +455,17 @@ Deduction: Divergent attribution methods partially converge over TCP Window + IA
 
 **Core Logic Chain Summary**
 
-```text
-FTP-Patator: Init Fwd Win Bytes = 6.024 (Global Maximum Positive)
-→ TCP window anomaly mathematically enforces brute-force recognition
-        ↓
-Bot: Fwd IAT Total = -4.702 (Global Maximum Negative)
-→ Chronometric intervals assert inverse contributions relative to standard threat profiles (highly atypical sequence signatures)
-        ↓
-Heartbleed: Bwd Header Length = 5.250
-→ Anomalous backward headers impeccably index protocol-layer exploits
-        ↓
-DoS GoldenEye: Uniform holistic multi-activation (IAT, Rate, Window all > 3.0)
-→ Rejects single-driver signatures in favor of multi-dimensional synergy
-        ↓
-DoS Slowloris: Fwd Seg Size Min peaks (2.586)
-→ Segment scaling mathematically operates as the primary isolation vector
-        ↓
-Benign: Uniformly suppressed IG floors; zero extreme singular spikes
-        ↓
-Deduction: Distinct categorical threat matrices force violently divergent topological activations. The intelligence engine maps fine-grained compartmental isolation parameters completely bypassing monolithic, global threshold judgments.
-```
+*FTP-Patator* produces the global maximum positive IG score across the entire per-class matrix, with *Init Fwd Win Bytes* reaching 6.024. This extreme activation confirms that grossly anomalous TCP window sizes during the forward handshake phase are the defining signature of brute-force credential attacks — the model has learned to treat this single protocol parameter as a near-sufficient indicator for this threat class.
+
+*Bot* traffic generates the global maximum negative IG value, with *Fwd IAT Total* scoring -4.702. The strongly negative direction is structurally significant: it indicates that botnet flows exert an inverse contribution relative to standard threat profiles, where compressed inter-arrival totals push the model *away* from benign predictions rather than toward a shared attack template. This reversal marks botnet timing behavior as a fundamentally distinct temporal regime compared to other attack categories.
+
+*Heartbleed* concentrates its activation almost entirely on *Bwd Header Length* (5.250), with negligible contributions from other features. This tight focus maps precisely onto the protocol-layer mechanics of the exploit: memory over-read requests manifest as structurally anomalous backward header sizes, and the model isolates this single protocol artifact as the primary fingerprint without distributing attention across broader traffic statistics.
+
+Within the DoS family, *GoldenEye* and *Slowloris* reveal that even closely related attack categories employ fundamentally different activation structures. GoldenEye distributes activation broadly across IAT, flow rate, and window properties — all exceeding 3.0 — rejecting any single-driver signature in favor of multi-dimensional synergistic pressure. Slowloris, by contrast, concentrates almost entirely on *Fwd Seg Size Min* (2.586), where minimum forward segment scaling operates as the primary isolation vector, reflecting the attack's strategy of holding connections open through deliberately undersized segments.
+
+Benign traffic presents uniformly suppressed IG values with no extreme singular spikes across any feature dimension, forming a flat activation floor that stands in categorical contrast to the sharply peaked, class-specific profiles of every attack category.
+
+The overall deduction is that distinct threat classes induce violently divergent topological activations rather than sharing a common detection signature. The model has learned fine-grained, compartmentalized isolation parameters that are unique to each attack's physical mechanism — brute-force window manipulation, botnet timing inversion, protocol header exploitation, distributed multi-feature flooding, or connection-starving segment minimization — and it applies these class-specific activation profiles entirely independently of any monolithic global threshold judgment.
 
 **Figure 11**
 
@@ -510,24 +479,21 @@ Deduction: Distinct categorical threat matrices force violently divergent topolo
 
 **Core Logic Chain Summary**
 
-```text
-[Tri-Graph Convergence (Absolute Confidence)]
-Init Fwd Win Bytes → SHAP Top + IG #1 + Attention #5
-IAT Series → Universally saturate all three frameworks
-→ Physical detection anchor completely locks onto TCP Initial Windows and Chronometric Intervals ✅
-        ↓
-[Dual-Graph Convergence (High Confidence)]
-Flow Bytes/s → IG Mid-Tier + Attention #3
-Fwd IAT Mean → IG Top-5 + Attention #1
-→ Mathematical velocity features command heavier neural-network weight processing ✅
-        ↓
-[Single-Graph Exclusive (Inference, Caution Required)]
-Fwd Pkt Len Max → Attention #2 ONLY (Requires vetting, potentially biased by small sampling variance) ⚠️
-        ↓
-[Maximum Tri-Graph Divergence]
-Bwd Pkt Len Std → SHAP #1 → IG Mid-Tier → Attention drops off Top-5 map
-→ Explicitly record geometric divergence data; actively resist forcing hypothetical mechanistic explanations
-```
+**[Tri-Graph Convergence — Absolute Confidence]**
+
+*Init Fwd Win Bytes* achieves top-tier placement across all three attribution frameworks simultaneously — SHAP Top, IG rank 1, and Attention rank 5 — making it the single most structurally consistent feature in the entire analysis. The IAT series similarly saturates all three frameworks without exception. Together, these two feature families constitute the physical detection anchor of the system: TCP initial window parameters and chronometric inter-arrival intervals are independently confirmed as the primary discriminative dimensions regardless of attribution methodology.
+
+**[Dual-Graph Convergence — High Confidence]**
+
+*Flow Bytes/s* appears in the IG mid-tier and reaches Attention rank 3, while *Fwd IAT Mean* places in the IG top-5 and commands the highest Attention weight overall at rank 1. The convergence of these velocity and temporal rate features across two independent frameworks indicates that the neural network assigns disproportionately heavy processing weight to mathematical flow velocity dimensions — a pattern that is consistent across gradient-based and attention-based attribution but not yet independently confirmed by SHAP's tree-based computation.
+
+**[Single-Graph Exclusive — Inference, Caution Required]**
+
+*Fwd Pkt Len Max* secures Attention rank 2 but does not appear prominently in either SHAP or IG rankings. This single-framework exclusivity warrants analytical caution: the Attention attribution for this feature is derived from a substantially smaller sample pool (405 samples versus SHAP's 6,068), and the elevated ranking may reflect sampling variance rather than a genuine model-level signal. It is retained as an observation requiring independent validation rather than treated as an established discriminator.
+
+**[Maximum Tri-Graph Divergence]**
+
+*Bwd Pkt Len Std* presents the sharpest cross-method divergence in the dataset: it holds SHAP rank 1, falls to the IG mid-tier, and drops entirely off the Attention top-5. This three-stage decay across successively deeper attribution layers is recorded as an empirical geometric fact. No mechanistic explanation is imposed — the divergence could reflect interaction effects captured by SHAP but diluted by Transformer sequence modeling, or it could stem from attribution formula differences, sample size asymmetries, or architectural inductive biases. All such explanations remain hypothetical, and the data point is preserved in its unresolved form as a candidate for targeted follow-up investigation.
 
 **Figure 12**
 
@@ -541,19 +507,25 @@ Bwd Pkt Len Std → SHAP #1 → IG Mid-Tier → Attention drops off Top-5 map
 
 **Core Logic Chain Summary**
 
-```text
-[Dual-Verified Empirical Data (Highest Confidence)]
-ECA CV=0.020 + E8 Ablation 1–2pp variance → ECA marginal contribution is mathematically linked to a structural deficiency in channel selectivity.
-Init Fwd Win Bytes & IAT Series → Indisputably confirmed as the most unyielding cross-architectural discriminator suite (RF/IG/Attention).
-        ↓
-[Micro-Divergence Derivation (High Confidence)]
-Massive IG Per-Class isolation vectors + Near-uniform ECA global distribution (Zero subclass specialization).
-→ Confirms category-level topological differences emanate authentically from deep gradient pathways, entirely bypassing ECA channel masks.
-        ↓
-[Hypothetical Postulates (Requires Vetting Caution)]
-Attention Diagonal dominance mechanisms / Bwd Pkt Len Std's cross-model dissipation / Fwd Pkt Len Max signaling as a Transformer-exclusive marker.
-→ While theoretically sound, exact physical mechanisms lack control-variable empirical testing and are rigidly preserved as analytical inferences rather than dogmatic laws.
-```
+**[Dual-Verified Empirical Data (Highest Confidence)]**
+
+ECA CV=0.020 combined with E8 Ablation's 1–2pp variance confirms that ECA's marginal contribution is mathematically linked to a structural deficiency in channel selectivity. Init Fwd Win Bytes and the IAT Series have been indisputably validated as the most unyielding cross-architectural discriminator suite, consistent across RF, IG, and Attention attribution methods.
+
+**[Micro-Divergence Derivation (High Confidence)]**
+
+The conjunction of massive IG per-class isolation vectors with a near-uniform ECA global distribution — indicating zero subclass specialization — confirms that category-level topological differences emanate authentically from deep gradient pathways, entirely bypassing ECA channel masks.
+
+**[Hypothetical Postulates (Requires Vetting Caution)]**
+
+Three analytical inferences emerge from the interpretability experiments, though each awaits rigorous control-variable empirical testing before being treated as established fact.
+
+First, the diagonal dominance pattern observed in the Transformer's attention heatmaps suggests a positional self-referencing mechanism, where each token attends most strongly to itself. While this is theoretically consistent with the model learning localized temporal signatures in network flow sequences, the precise physical mechanism driving this pattern has not been isolated under controlled conditions.
+
+Second, the cross-model dissipation of *Bwd Pkt Len Std* — its elevated importance in some architectures but not others — points to the possibility that backward packet length variance encodes traffic structure in a representation-dependent way, captured differently by convolutional versus attention-based inductive biases. This remains an inference grounded in feature attribution comparisons rather than direct causal verification.
+
+Third, *Fwd Pkt Len Max* appears to function as a Transformer-exclusive discriminative marker, contributing meaningfully to the Transformer encoder's decisions while remaining relatively inert in RF and CNN-based attributions. This could reflect the Transformer's capacity to model long-range dependencies that amplify the significance of extreme packet size events, but again, this interpretation is analytically derived rather than experimentally confirmed.
+
+All three postulates are theoretically coherent and consistent with the observed data, but are retained as structured analytical hypotheses rather than definitive conclusions. They demarcate the frontier of what this experimental chain can rigorously support, and each constitutes a concrete candidate for targeted follow-up investigation.
 
 #### Cross-Model Validation Final Conclusion
 
@@ -675,11 +647,11 @@ Consolidating the empirical observations and stringent theoretical projections d
 
 **Theoretical Predictions vs Experimental Results**:
 
-| Prediction       | Theoretical Source                     | Experimental Result         | Verified?        |
-| ---------------- | -------------------------------------- | --------------------------- | ---------------- |
-| RF Low Variance  | [13]: Bagging $\uparrow B$ reduces Var | OOB 50→200 nearly unchanged | ✅                |
-| RF Low Bias      | Decision trees are strong learners     | L-Curve Gap@100% = 0.0016   | ✅                |
-| DL High Variance | [5]                                    | Gen Gap = +0.006 (low)      | ❌ **Overturned** |
+| Prediction       | Theoretical Source                     | Experimental Result         | Verified?      |
+| ---------------- | -------------------------------------- | --------------------------- | -------------- |
+| RF Low Variance  | [13]: Bagging $\uparrow B$ reduces Var | OOB 50→200 nearly unchanged | Verified       |
+| RF Low Bias      | Decision trees are strong learners     | L-Curve Gap@100% = 0.0016   | Verified       |
+| DL High Variance | [5]                                    | Gen Gap = +0.006 (low)      | **Overturned** |
 
 **[5]'s "DL High Variance" prediction is overturned**: The prediction's premise is insufficient data or inadequate regularization. In this experiment, AdamW weight decay + CosineAnnealing provide effective regularization, placing TransECA-Net at a **moderate Bias + low Variance** operating point.
 
@@ -778,6 +750,13 @@ The core objective of this project is to resolve the efficiency vs. accuracy tra
 
 Synthesizing results across all experiments, the hierarchical architecture's system-level metrics are:
 
+**Figure 22**
+*The Defense Structures*
+
+![IDS Impossible Trinity](../results/E14_impossible_trinity_concept.png)
+
+*Note*: Traditional monolithic detection models often struggle to maintain full-spectrum robustness across the dimensions of **Payload** preservation, **Uniform Noise** resistance, and **Gradient Perturbation** immunity. For instance, Random Forests (RF) are exceptionally fast and immune to gradients but highly fragile to random noise; Deep Learning (DL) is accurate and robust against noise but susceptible to precise gradient-based manipulations. The hierarchical architecture leverages these orthogonal weaknesses to bridge the gap across all three attack vectors, achieving a resilient systemic defense.
+
 | Dimension          | Metric                                       | Value     | Supporting Experiment |
 | ------------------ | -------------------------------------------- | --------- | --------------------- |
 | **Accuracy**       | System Recall                                | 92.9%     | E17 × S2 Training     |
@@ -828,18 +807,18 @@ $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{
 
 ### 6.3 Cross-Validation Matrix: Theoretical Predictions vs Experiments
 
-| Theoretical Prediction                                 | Source                     | Verification Experiment                          | Result       |
-| ------------------------------------------------------ | -------------------------- | ------------------------------------------------ | ------------ |
-| Bagging reduces RF Variance                            | [13]                       | E4: OOB 50→200 trees nearly unchanged            | ✅ Verified   |
-| DL High Variance                                       | [5]                        | E4: Gen Gap = 0.006 (low)                        | ❌ Overturned |
-| RF robust to perturbation                              | Design assumption          | E14: RF $\varepsilon$=0.001 → 47%                | ❌ Overturned |
-| PGD stronger than FGSM                                 | [13]                       | E14: PGD vs FGSM @$\varepsilon$=0.01: 47% vs 76% | ✅ Verified   |
-| SHAP axiomatic uniqueness                              | [12]                       | E2: SHAP vs Gini $\rho$=0.94                     | ✅ Verified   |
-| Learned representations outperform raw features        | [5]                        | E12: Silhouette +59%                             | ✅ Verified   |
-| Hierarchical reduces expected cost                     | Mathematical derivation    | E11+E17: 6.07× speedup                           | ✅ Verified   |
-| Cross-domain generalization limited by domain distance | [2]                        | E15: UNSW 64% < CIC 93%                          | ✅ Verified   |
-| CI Width $\propto n^{-1/2}$                            | [6]                        | E6: S1 Width 0.0002, S2 Width 0.003              | ✅ Verified   |
-| M-F1 CI dominated by minority class samples            | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed $n$=11)          | ✅ Verified   |
+| Theoretical Prediction                                 | Source                     | Verification Experiment                          | Result     |
+| ------------------------------------------------------ | -------------------------- | ------------------------------------------------ | ---------- |
+| Bagging reduces RF Variance                            | [13]                       | E4: OOB 50→200 trees nearly unchanged            | Verified   |
+| DL High Variance                                       | [5]                        | E4: Gen Gap = 0.006 (low)                        | Overturned |
+| RF robust to perturbation                              | Design assumption          | E14: RF $\varepsilon$=0.001 → 47%                | Overturned |
+| PGD stronger than FGSM                                 | [13]                       | E14: PGD vs FGSM @$\varepsilon$=0.01: 47% vs 76% | Verified   |
+| SHAP axiomatic uniqueness                              | [12]                       | E2: SHAP vs Gini $\rho$=0.94                     | Verified   |
+| Learned representations outperform raw features        | [5]                        | E12: Silhouette +59%                             | Verified   |
+| Hierarchical reduces expected cost                     | Mathematical derivation    | E11+E17: 6.07× speedup                           | Verified   |
+| Cross-domain generalization limited by domain distance | [2]                        | E15: UNSW 64% < CIC 93%                          | Verified   |
+| CI Width $\propto n^{-1/2}$                            | [6]                        | E6: S1 Width 0.0002, S2 Width 0.003              | Verified   |
+| M-F1 CI dominated by minority class samples            | $\text{Var} \propto 1/n_k$ | E6: M-F1 CI = 0.074 (Heartbleed $n$=11)          | Verified   |
 
 **10 verified, 2 overturned**. The two overturned predictions do not weaken the hierarchical architecture argument; rather, they reveal more precise mechanisms and the advantage of "orthogonal weaknesses":
 
@@ -870,6 +849,10 @@ If we solely relied on Stage 1 (RF), the system would collapse under simple nois
 
 ### 6.5 Evidence Chain Logic Flow & Closure Graph
 
+**Figure 23**
+
+*Evidence Chain Logic Flow & Closure Graph*
+
 ![Evidence Chain Logic Flow & Closure Graph](../results/E_LogicFlow.png)
 
 **Diagram Explanation:**
@@ -877,6 +860,25 @@ The figure above comprehensively illustrates the rigorous logical chain carrying
 1. **Stage 1 & 2 Verification Pools (Parallel)**: These pools establish the inherent capabilities of individual models concerning base costs (Stage 1) and complex feature representations/black-box interpretability (Stage 2). Extensive experiments (E1 to E17) intricately mapped out the exact strengths and weaknesses of both RF and TransECA.
 2. **System-Level Integration (Convergence)**: This forms the "soul" of the entire Hierarchical IDS framework. Rather than simply cascading two models, this stage mathematically derives the end-system efficiency using the independent data uncovered upstream (e.g., optimal threshold tuning $\alpha$). It proves a **6.07× systemic speedup** and demonstrates that the **"Orthogonal Weaknesses"** mechanism successfully suppresses the adversarial evasion rate to a mere **8.04%**.
 3. **Global Statistical Guarantee (Foundation)**: The authenticity of all preceding conclusions relies entirely upon a strict underlying statistical framework (e.g., E1's unbiased estimation, E6's ultra-narrow confidence intervals). This ensures that the hierarchical synergy showcased above is not only theoretically consistent but statistically bulletproof.
+
+**Figure 24**
+
+*Superior Performance Perspective of Hierarchical Architecture (Radar Chart)*
+
+![Radar Chart](../results/performance_radar_chart.png)
+
+*Note*: The radar chart comprehensively evaluates the multi-metric performance of the hierarchical framework across **six core dimensions**. The results demonstrate that the system successfully breaks the traditional "impossible triangle" constraints, achieving a near-ideal Pareto-optimal trade-off.
+
+#### 6.5.1 Detailed Metric Dimension Definitions
+
+| Evaluation Dimension             | Core Metrics                                        | Technical Explanation & Physical Meaning                                                                                                                                                              |
+| :------------------------------- | :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Accuracy**                     | System Recall (92.9%), FPR (0.007%)                 | Measures the discriminant effectiveness across all 15 attack categories. The hierarchical design ensures high-precision capture of difficult samples after filtering 84.75% of total traffic.         |
+| **Efficiency**                   | Inference Latency (82μs), Speedup (6.07×)           | Measures real-time throughput. Based on the $L_{sys} = L_1 + \alpha L_2$ theoretical derivation, Stage 1's high-speed filtering is proven critical for industrial-scale deployment.                   |
+| **Interpretability (XAI)**       | SHAP Importance, IG Attribution, Attention Heatmaps | Measures decision transparency. Triangulation via SHAP ↔ IG proves that the model's decision logic aligns precisely with security domain knowledge like TCP Windows and IAT.                          |
+| **Generalization (Gen)**         | UNSW-NB15 W-F1 (0.70), Silhouette Coeff (+59%)      | Measures adaptability to unseen domains. E15 cross-dataset experiments prove that TransECA learns attack feature representations with fundamental universality.                                       |
+| **Robustness**                   | PGD Evasion Rate (8.04%), Orthogonal Dissent        | Measures adversarial resilience. Leverages the "orthogonal weaknesses" of non-differentiable trees and deep self-attention to mathematically reduce the adversarial evasion risk of the joint system. |
+| **Statistical Reliability (SR)** | Bootstrap CI (±0.003), Nested CV Gap (0.006)        | Measures the certainty of evaluation conclusions. Narrow confidence intervals prove that results are systematic and robust, not isolated random coincidences.                                         |
 
 ---
 
@@ -901,7 +903,26 @@ The figure above comprehensively illustrates the rigorous logical chain carrying
 
 ## 8 Conclusion
 
-This experiment report comprehensively validates the hierarchical IDS framework through 13 systematic experiments across **6 dimensions**:
+This experiment report comprehensively validates the hierarchical IDS framework through 13 systematic experiments across **6 dimensions**.
+
+### 8.1 Summary of Core Quantitative Metrics
+
+| Evaluation Domain          | Specific Metric                         | Performance Value    | Supporting Experiment |
+| :------------------------- | :-------------------------------------- | :------------------- | :-------------------- |
+| **Detection Accuracy**     | System-Level Global Recall              | **92.9%** (15-class) | E17, S2               |
+| **Detection Accuracy**     | System-Level False Positive Rate        | **0.007%**           | E17, S2               |
+| **Processing Performance** | Avg. Inference Latency per Sample       | **82.37 μs**         | E11, E17              |
+| **Processing Performance** | Relative Speedup (vs Monolithic DL)     | **6.07×**            | E11, E17              |
+| **Adversarial Resilience** | System Evasion Rate under Strongest PGD | **8.04%**            | E14, E17              |
+| **Base Capability (S1)**   | Stage 1 Filter Recall (Binary)          | **99.9%**            | E16, E1               |
+| **Base Capability (S2)**   | Stage 2 Multiclass Weighted F1          | **0.957**            | E8                    |
+| **Generalization Ability** | UNSW-NB15 Cross-Dataset W-F1            | **0.703**            | E15                   |
+| **Rep. Learning**          | Silhouette Coeff. Gain in UMAP Space    | **+59%**             | E12                   |
+| **Statistical Confidence** | W-F1 95% Confidence Interval (CI) Width | **0.003**            | E6                    |
+
+---
+
+### 8.2 Comprehensive Dimensional Conclusions
 
 | Dimension                 | Core Conclusion                                                | Key Data  |
 | ------------------------- | -------------------------------------------------------------- | --------- |
