@@ -1,6 +1,6 @@
 # 实验报告 — 分层网络入侵检测框架 (Hierarchical IDS)
 **项目**: 6800GNetTier-ML
-**报告日期**: 2026-03-03
+**报告日期**: 2026-03-22
 **实验硬件**: Intel ARC 130T GPU (16GB), PyTorch 2.10.0+xpu
 **数据来源**: experimentalRank, experimental_design.md, verification_logic_chain.md
 

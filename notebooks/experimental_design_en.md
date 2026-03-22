@@ -1,7 +1,7 @@
 # Experiment Report — Hierarchical Network Intrusion Detection Framework (Hierarchical IDS)
 
 > **Project**: 6800GNetTier-ML  
-> **Report Date**: 2026-03-03  
+> **Report Date**: 2026-03-22  
 > **Experiment Hardware**: Intel ARC 130T GPU (16GB), PyTorch 2.10.0+xpu  
 > **Data Sources**: experimentalRank, experimental_design.md, verification_logic_chain.md
 
