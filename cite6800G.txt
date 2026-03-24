@@ -1,0 +1,28 @@
+1. Sharafaldin, I., Lashkari, A. H., & Ghorbani, A. A. (2018). Toward generating a new intrusion detection dataset
+and intrusion traffic characterization. Proceedings of the 4th International Conference on Information Systems
+Security and Privacy (ICISSP), 108–116. https://www.scitepress.org/papers/2018/66398/66398.pdf
+2. Liu, Z., Wu, J., & Wang, X. (2025). TransECA-Net: A transformer-based model for encrypted traffic
+classification. Applied Sciences, 15(6), 2977. https://doi.org/10.3390/app15062977
+3. Kwon, D., Kim, H., Kim, J. et al. A survey of deep learning-based network anomaly detection. Cluster Comput 22 (Suppl 1), 949–961 (2019). https://doi.org/10.1007/s10586-017-1117-8
+4. Ring, M., Wunderlich, S., Scheuring, D., Landes, D., & Hotho, A. (2019). A survey of network-based intrusion
+detection data sets. Computers & Security, 86, 147–167. https://doi.org/10.1016/j.cose.2019.06.005
+5. Ahmad, A., & Adnane, A. (2025). Federated learning augmented cybersecurity for SDN-based aeronautical
+communication network. Electronics, 14(8), 1535. https://doi.org/10.3390/electronics14081535
+6. Doula, S. A., & Al-Zewairi, M. (2025). Analysis of machine learning-based methods for network traffic anomaly detection and prediction. Proceedings of the 21st International Conference on Web Information Systems and Technologies (WEBIST). https://www.scitepress.org/Papers/2025/137018/137018.pdf 
+7. Abu Al-Haija, Q., Krichen, M., & Abu Elhaija, W. (2022). Machine-Learning-Based Darknet Traffic Detection
+System for IoT Applications. Electronics, 11(4), 556. https://doi.org/10.3390/electronics11040556
+8. Kaur, H., & Singh, G. (2021). Machine learning techniques for anomaly detection in network traffic. 2021
+Sixth International Conference on Image Information Processing (ICIIP), 444–449.
+https://ieeexplore.ieee.org/document/9702647
+9. Wang, R., Zhao, J., Zhang, H., He, L., Li, H., & Huang, M. (2025). Network Traffic Analysis Based on Graph Neural Networks: A Scoping Review. Big Data and Cognitive Computing, 9(11), 270. https://doi.org/10.3390/bdcc9110270
+10. . Moustafa, N., & Slay, J. (2015). UNSW-NB15: A comprehensive data set for network intrusion detection
+systems (UNSW-NB15 network data set). 2015 Military Communications and Information Systems Conference
+(MilCIS), 1–6. https://ieeexplore.ieee.org/document/7348942
+
+
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+
+[1] Q. Abu Al-Haija, A. Odeh, and H. Qattous. 2022. ML-Based darknet traffic detection system. IEEE Access 10 (2022), 87608–87621.
+
+[2] S. Ben-David, J. Blitzer, K. Crammer, A. Kulesza, F. Pereira, and J. W. Vaughan. 2010. A theory of learning from different domains. Machine Learning 79 (2010), 151–175.
+
+[3] L. Breiman. 2001. Random forests. Machine Learning 45, 1 (2001), 5–32.
+
+[4] G. C. Cawley and N. L. C. Talbot. 2010. On over-fitting in model selection and subsequent selection bias in performance evaluation. Journal of Machine Learning Research 11 (2010), 2079–2107.
+
+[5] J. Wang. 2025. Analysis of machine learning-based methods for network traffic anomaly detection and prediction. In Proceedings of the 2nd International Conference on Data Science and Engineering (ICDSE). 550–554.
+
+[6] B. Efron. 1979. Bootstrap methods: another look at the jackknife. The Annals of Statistics 7, 1 (1979), 1–26.
+
+[7] R. Singh, N. Srivastava, and A. Kumar. 2021. Machine learning techniques for anomaly detection in network traffic. In Proceedings of the 2021 Sixth International Conference on Image Information Processing (ICIIP). 261–266.
+
+[8] D. Kwon, H. Kim, J. Kim, S. C. Suh, I. Kim, and K. J. Kim. 2017. Deep learning-based network anomaly detection. Cluster Computing 22, 1 (2017), 209–224.
+
+[9] Z. Liu, et al. 2025. TransECA-Net: A transformer-based model for encrypted traffic classification. Applied Sciences 15 (2025).
+
+[10] I. Loshchilov and F. Hutter. 2016. SGDR: Stochastic gradient descent with warm restarts. arXiv preprint arXiv:1608.03983 (2016).
+
+[11] I. Loshchilov and F. Hutter. 2017. Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101 (2017).
+
+[12] S. M. Lundberg and S. I. Lee. 2017. A unified approach to interpreting model predictions. In Advances in Neural Information Processing Systems (NeurIPS), Vol. 30.
+
+[13] A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu. 2018. Towards deep learning models resistant to adversarial attacks. In International Conference on Learning Representations (ICLR).
+
+[14] L. McInnes, J. Healy, and J. Melville. 2018. UMAP: Uniform manifold approximation and projection for dimension reduction. arXiv preprint arXiv:1802.03426 (2018).
+
+[15] N. Moustafa and J. Slay. 2015. UNSW-NB15: a comprehensive data set for network intrusion detection systems. In Proceedings of the 2015 Military Communications and Information Systems Conference (MilCIS). 1–6.
+
+[16] M. Ring, S. Wunderlich, D. Scheuring, D. Landes, and A. Hotho. 2019. A survey of network-based intrusion detection data sets. Computers & Security 86 (2019), 147–167.
+
+[17] I. Sharafaldin, A. H. Lashkari, and A. A. Ghorbani. 2018. Toward generating a new intrusion detection dataset and intrusion traffic characterization. In Proceedings of the 4th International Conference on Information Systems Security and Privacy (ICISSP). 108–116.
+
+[18] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov. 2014. Dropout: a simple way to prevent neural networks from overfitting. The Journal of Machine Learning Research 15, 1 (2014), 1929–1958.
+
+[19] M. Sundararajan, A. Taly, and Q. Yan. 2017. Axiomatic attribution for deep networks. In Proceedings of the 34th International Conference on Machine Learning (ICML). 3319–3328.
+
+[20] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polosukhin. 2017. Attention is all you need. In Advances in Neural Information Processing Systems (NeurIPS), Vol. 30.
+
+[21] L. van der Maaten and G. Hinton. 2008. Visualizing data using t-SNE. Journal of Machine Learning Research 9, 11 (2008), 2579-2605.
+
+[22] B. Littlewood and L. Strigini. 2004. Redundancy and diversity in security. IEEE Security & Privacy 2, 3 (2004), 56–61.
+
+[23] Q. Wang, B. Wu, P. Zhu, P. Li, W. Zuo, and Q. Hu. 2020. ECA-Net: Efficient channel attention for deep convolutional neural networks. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). 11534–11542.
+
+[24] I. J. Goodfellow, J. Shlens, and C. Szegedy. 2015. Explaining and harnessing adversarial examples. In International Conference on Learning Representations (ICLR).
+
+[25] S. Abnar and W. Zuidema. 2020. Quantifying attention flow in transformers. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL). 4190–4197.

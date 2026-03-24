@@ -1,0 +1,111 @@
+根据修改后的文档，[17] Sharafaldin et al. (2018) 在正文中共出现 **4 处引用**，可归为两类引用目的：
+
+---
+
+### 一、作为数据集来源引用（1处）
+
+**第37行（§1.2 Data Foundation）**：
+> "CIC-IDS2017 **[17]** outperforms KDD99/NSL-KDD in timeliness (2017), traffic type…"
+
+**引用原因**：CIC-IDS2017 是本实验的主数据集，[17] 是该数据集的原始提出论文。首次提及数据集时标注出处，说明数据来源的合法性和可追溯性。
+
+---
+
+### 二、作为领域知识/特征工程依据引用（3处）
+
+这三处都出现在 **E2 SHAP 可解释性分析** 部分，引用目的一致：用 [17] 中 Table 3 的特征选择结论作为"领域知识基准"，验证本实验模型学到的判别特征与已有安全领域认知一致。
+
+| 行号 | 所在段落 | 具体引用语境 |
+|---|---|---|
+| **343** | E2 Beeswarm 图注释 | 模型将 `Init Bwd Win Bytes`（异常 TCP 窗口大小）识别为 DoS/BruteForce 的早期指标，引用 [17] 证明这与已有领域知识吻合 |
+| **380** | E2 SHAP vs Gini 散点图注释 | SHAP 和 Gini 两种方法都将 Payload 长度指标和 IAT 时间间隔排在最重要位置，引用 [17] 确认 TCP 窗口和时间间隔是 DoS/BruteForce 检测的基础特征 |
+| **386** | E2 核心逻辑链总结 | 总结两种归因方法共同聚焦的两个物理维度（载荷长度 + 到达间隔），引用 [17] 作为领域知识的权威背书，验证 Stage 1 决策边界的物理合理性 |
+
+---
+
+### 总结
+
+[17] 在报告中承担**两个角色**：一是作为 **CIC-IDS2017 数据集的原始文献**提供数据溯源（1处），二是作为 **网络安全特征工程的领域知识权威**（3处），用其 Table 3 中关于 TCP 窗口、IAT 时间间隔、Packet Length 等关键检测特征的结论，来交叉验证本实验模型自动学习到的特征重要性排序是否符合安全领域的已有认知。
+
+Let me search for all references to [9] (TransECA-Net) in the report, as well as any mentions of "TransECA" that might need citation.So [9] is never cited in the body text — only listed in the references. Let me now search for all mentions of "TransECA" to understand where the architecture is discussed:Now I have a comprehensive picture. The architecture name "TransECA-Net" is used extensively throughout the report but **[9] is never cited in the body text**. Let me analyze which mentions should cite [9] based on the PDF content.
+
+根据完整分析，以下是 **[9] Liu et al. (2025) TransECA-Net** 在报告中的引用情况和建议：
+
+---
+
+## 当前状态
+
+**[9] 在正文中被引用次数：0 次** — 仅出现在参考文献列表（第985行），全文从未以 `[9]` 形式引用。
+
+而 "TransECA-Net" 这个名称在全文出现了 **50+ 次**，作为 Stage 2 的核心架构名称。
+
+---
+
+## 应该引用 [9] 的位置及原因
+
+### 类别一：架构首次引入（必须引用）
+
+| 行号 | 内容 | 引用原因 |
+|---|---|---|
+| **12** | Abstract 首次提到 "Stage 2 TransECA-Net deep learning model" | 架构名称直接来源于 [9]，首次出现必须标注出处 |
+| **45–46** | §1.3 Model Architecture: "1D-CNN → ECA [23] → Transformer Encoder" | 这里描述了 TransECA-Net 的具体结构（CNN+ECA+Transformer），该架构设计出自 [9]。已引用 [23] (ECA-Net 原论文)，但缺少 [9] 作为整体架构来源 |
+
+### 类别二：架构设计理念的阐述（应该引用）
+
+| 行号 | 内容 | 引用原因 |
+|---|---|---|
+| **149** | Phase 2 设计逻辑："TransECA-Net is intrinsically capable of precisely classifying these high-difficulty packets" | 阐述 TransECA-Net 的设计目标（CNN 局部特征+Transformer 全局时序依赖+ECA 通道注意力），这正是 [9] 的核心贡献 |
+| **151** | §3.1 标题 "Stage 2 Training — TransECA-Net" | 架构训练部分，应注明架构来源 |
+| **157** | 训练配置 "d_model=128, nhead=8, num_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts" | 超参数配置参考了 [9] 的设计（[9] 同样使用 AdamW、类似的 Transformer 配置） |
+
+### 类别三：消融实验中引用架构组件设计（应该引用）
+
+| 行号 | 内容 | 引用原因 |
+|---|---|---|
+| **176** | E8 Ablation: "Quantify the contributions of TransECA-Net's three components (CNN, Transformer, ECA [23])" | 三组件拆分设计（CNN-Only / No-ECA / Full）与 [9] Section 4.3 的消融实验设计完全一致，应并列引用 [9] |
+| **195** | "traffic classification requires correlating distant features…which is the core capability of Self-Attention" | 这一论断与 [9] Section 3.2 中关于 Transformer 在流量分类中优于 LSTM 的论述一致 |
+
+### 类别四：可选引用（引用会增强学术严谨性）
+
+| 行号 | 内容 | 引用原因 |
+|---|---|---|
+| **196** | ECA 的差异化价值分析：全局 W-F1 略降但 M-F1 提升 0.085 | [9] Table 5 的消融实验同样证明 ECA 带来的提升幅度有限但有价值（+3%精度） |
+| **504** | ECA channel attention CV=0.020 近均匀分布 | 可与 [9] 中 ECA 的设计意图（轻量级通道选择）进行对比讨论 |
+
+---
+
+## 不需要引用 [9] 的位置
+
+报告中大量使用 "TransECA-Net" 作为自己实验中 Stage 2 模型的名称。以下场景属于描述**自身实验结果**，无需反复引用 [9]：
+
+- E6 Bootstrap CI 结果中的 "S2 (TransECA)" 性能数据（第550–552行）
+- E14 对抗鲁棒性实验中 "TransECA FGSM / PGD" 的结果（第587–588行）
+- E12 t-SNE/UMAP 中 "TransECA embeddings" 的可视化结果（第718行）
+- E4 偏差-方差分析中的容量转换数据（第645行）
+
+这些都是报告自身实验的产出，只要在架构首次引入时标注了 [9]，后续无需重复。
+
+---
+
+## 参考文献条目需更新
+
+当前第985行：
+> `[9] Z. Liu, et al. 2025. TransECA-Net: A transformer-based model for encrypted traffic classification. Applied Sciences 15 (2025).`
+
+应更正为完整引用：
+> `[9] Z. Liu, Y. Xie, Y. Luo, Y. Wang, and X. Ji. 2025. TransECA-Net: A transformer-based model for encrypted traffic classification. Applied Sciences 15, 6 (2025), 2977. https://doi.org/10.3390/app15062977`
+
+---
+
+## 总结
+
+| 优先级 | 位置 | 操作 |
+|---|---|---|
+| **必须** | 第12行（Abstract首次提及） | 加 `[9]` |
+| **必须** | 第45–46行（架构描述） | 加 `[9]` |
+| **必须** | 第985行（参考文献） | 更新为完整引用含 DOI |
+| **应该** | 第149行或第151行（Phase 2 开头） | 加 `[9]` |
+| **应该** | 第176行（E8 消融实验目标） | 加 `[9]` |
+| **可选** | 第195行（Transformer 核心能力论述） | 加 `[9]` |
+
+需要我现在帮你执行这些修改吗？

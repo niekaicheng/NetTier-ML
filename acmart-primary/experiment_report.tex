@@ -1,6 +1,7 @@
 \documentclass[sigconf]{acmart}
 
 \usepackage{stfloats}
+\usepackage{url}
 \usepackage{afterpage}
 \AtBeginDocument{%
   \providecommand\BibTeX{%
@@ -70,7 +71,7 @@ UNSW-NB15 & Cross-dataset generalization & 149K / 26K / 82K & 186 & 10 \\
 
 \subsection{Data Foundation} Table~\ref{tab:datasets} summarizes the three datasets.
 
-Dataset selection is based on \cite{16}'s 15 evaluation criteria. CIC-IDS2017 outperforms KDD99/NSL-KDD in timeliness (2017), traffic type (real + simulated), labeling precision (flow-level + packet-level), and attack diversity (7 major categories, 14 subcategories).
+Dataset selection is based on \cite{4}'s 15 evaluation criteria. CIC-IDS2017 \cite{1} outperforms KDD99/NSL-KDD in timeliness (2017), traffic type (real + simulated), labeling precision (flow-level + packet-level), and attack diversity (7 major categories, 14 subcategories).
 
 \subsection{Model Architecture}
 \textbf{Stage 1 --- Random Forest}:
@@ -78,9 +79,9 @@ Dataset selection is based on \cite{16}'s 15 evaluation criteria. CIC-IDS2017 ou
 \item 50 decision trees, max\_depth=20, 76 features
 \end{itemize}
 
-\textbf{Stage 2 --- TransECA-Net}:
+\textbf{Stage 2 --- TransECA-Net \cite{2}}:
 \begin{itemize}
-\item 1D-CNN $\to$ ECA \cite{23} $\to$ Transformer Encoder (d\_model=128, nhead=8, num\_layers=3)
+\item 1D-CNN $\to$ ECA \cite{18} $\to$ Transformer Encoder (d\_model=128, nhead=8, num\_layers=3)
 \item Parameters: 301,460
 \end{itemize}
 
@@ -128,7 +129,7 @@ E16 & Time-aware Split + Full Data & Val/Test F1 $\approx$ 1.00, Attack Recall $
 
 \textbf{Method}: 5$\times$3 Nested Cross-Validation (outer 5-Fold evaluation, inner 3-Fold tuning), search space of 1,296 combinations, including \texttt{n\_estimators}, \texttt{max\_depth}, \texttt{class\_weight} and other parameters. E16 additionally employs Time-aware Split for full-data training. The results are summarized in Table~\ref{tab:s1_baseline}.
 
-\textbf{Analysis}: The gap between E1's 0.796 and full training's 1.00 reflects a \textbf{data volume effect} rather than selection bias --- Nested CV guarantees unbiased estimation through inner-outer loop isolation \cite{4}. After full training, RF approaches saturated performance on the binary classification task.
+\textbf{Analysis}: The gap between E1's 0.796 and full training's 1.00 reflects a \textbf{data volume effect} rather than selection bias --- Nested CV guarantees unbiased estimation through inner-outer loop isolation \cite{12}. After full training, RF approaches saturated performance on the binary classification task.
 
 \subsection{E17 --- Threshold Optimization}
 \textbf{Logic Chain Deduction}: Building upon the high-recall baseline established in E1, this phase calibrates the optimal operational point balancing maximum attack interception (Recall) against the minimization of benign traffic falsely forwarded (processing burden). The E17 experiment quantitatively maps the posterior probability and statistically isolates the numerical threshold value ($\tau=0.06$). Furthermore, it defines the leakage payload transmission ratio ($\alpha$) relayed to the succeeding deep-learning layers. This distinct threshold calculation parameterizes the required functional bridge linking Stage 1's low-latency filtering (E11) directly to Stage 2's deep-feature compensation capabilities.
@@ -169,7 +170,7 @@ Pass-through Rate $\alpha$ & \textbf{15.25\%} \\
 \subsection{E11 --- Inference Latency Benchmark}
 \textbf{Logic Chain Deduction}: Following the exact determination of algorithmic thresholds and transmission parameters governed during E17, Phase E11 provides a system engineering empirical baseline for latency optimization. Through rigorous throughput and clock-latency benchmark stress testing, this evaluation objectively documents that a Random Forest can reliably complete preliminary filtering at extremely low overhead computational burdens---specifically within microsecond scales (6.12 $\mu$s). This time metric empirically validates the mathematical time-complexity advantages of a shallow tree structure operating under high-frequency ingress line rates, quantifiably reducing aggregate computational pressure directed toward the expensive Stage 2 layer.
 
-\textbf{Objective}: Validate the speed advantage of the hierarchical architecture, benchmarking against \cite{7}'s 9.09 $\mu$s baseline.
+\textbf{Objective}: Validate the speed advantage of the hierarchical architecture, benchmarking against \cite{6}'s 9.09 $\mu$s baseline.
 
 \textbf{Method}: Throughput/Latency Benchmark, multiple sampling runs averaged.
 
@@ -188,7 +189,7 @@ Throughput & \textbf{163,399 samples/s} & > 100K \\
 
 \noindent Table~\ref{tab:latency} presents the latency benchmark results.
 
-\textbf{Analysis}: The experimental peak of 6.12 $\mu$s perfectly corroborates the previously theorized \textbf{time complexity axiom $\mathcal{O}(B \cdot D)$ \cite{3}}. By rigidly constraining the ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation necessitates at most 1,000 parallel scalar conditionals, compressing the execution latency squarely into minimal L1-cache clock cycles. This mathematically proves that exceeding the \cite{7} baseline by 33\% stems primarily from precise theoretical variance-scale truncations, rather than hardware over-provisioning. Consequently, for a typical 50K pps load, the system utilization ratio bounds safely at merely $\rho = 50000/163399 = 0.31$ (abundant overhead margin).
+\textbf{Analysis}: The experimental peak of 6.12 $\mu$s perfectly corroborates the previously theorized \textbf{time complexity axiom $\mathcal{O}(B \cdot D)$ \cite{11}}. By rigidly constraining the ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation necessitates at most 1,000 parallel scalar conditionals, compressing the execution latency squarely into minimal L1-cache clock cycles. This mathematically proves that exceeding the \cite{6} baseline by 33\% stems primarily from precise theoretical variance-scale truncations, rather than hardware over-provisioning. Consequently, for a typical 50K pps load, the system utilization ratio bounds safely at merely $\rho = 50000/163399 = 0.31$ (abundant overhead margin).
 
 \subsection{Stage 1 Full Training}
 \textbf{Logic Chain Deduction}: Experiments involving heuristic parameter tuning, threshold estimation, and hardware execution efficiency empirically confirm Stage 1's adequacy as an upstream data filter. Since relatively lenient thresholds prioritize overall packet throughput, a substantial quantity of ``Hard Examples'' possessing intricate deceptive characteristics routinely penetrates this specific barrier layer. This procedural step generates a generalized production model on the extensive, complete datastore while systematically slicing and mining via cross-validation to isolate these hard-to-classify bypass traffic residuals. This segregated sample cluster represents the exact, dimensionally complex traffic demographic systematically funneled forward as a focused training baseline for the high-capacity Stage 2 architecture (TransECA-Net).
@@ -245,7 +246,7 @@ Training Time & 64.18 min \\
 \subsection{E8 --- Ablation Study}
 \textbf{Logic Chain Deduction}: The high classification accuracy of Stage 2 requires explicit mechanistic attribution rather than being treated as a black-box metric. This ablation study decomposes the TransECA-Net architecture to demonstrate that its ability to process the hard examples from Stage 1 does not stem from simple parameter scaling. Instead, it relies specifically on the Transformer's capacity for long-range feature correlation and the ECA module's enhancement of minority-class channels. Validating the necessity of these structural components provides the essential architectural foundation for the subsequent visualization and generalization experiments (E12, E15).
 
-\textbf{Objective}: Quantify the contributions of TransECA-Net's three components (CNN, Transformer, ECA \cite{23}).
+\textbf{Objective}: Quantify the contributions of TransECA-Net's three components (CNN, Transformer, ECA \cite{18}).
 
 
 \begin{table*}[!t]
@@ -378,7 +379,7 @@ UNSW-NB15 & 63.64\% & \textbf{0.703} & 0.397 \\
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: Architecture Generalization --- same architecture, zero modifications, trained from scratch on UNSW-NB15 (149K/26K/82K, 186 features, 10 classes). This experiment evaluates \emph{architecture generalization} (i.e., whether the TransECA-Net structure can learn effectively on a new dataset), not zero-shot transfer or fine-tuning --- no weights are carried over from the CIC-IDS2017-trained model. Performance across datasets is reported in Table~\ref{tab:cross_gen}.
+\textbf{Method}: Architecture Generalization --- same architecture, zero modifications, trained from scratch on UNSW-NB15 \cite{8} (149K/26K/82K, 186 features, 10 classes). This experiment evaluates \emph{architecture generalization} (i.e., whether the TransECA-Net structure can learn effectively on a new dataset), not zero-shot transfer or fine-tuning --- no weights are carried over from the CIC-IDS2017-trained model. Performance across datasets is reported in Table~\ref{tab:cross_gen}.
 
 
 \begin{table*}[!t]
@@ -398,7 +399,7 @@ Analysis / Worms / Shellcode & < 0.30 & Very few samples, remains challenging \\
 
 \textbf{Per-Class Highlights}: Per-class highlights are listed in Table~\ref{tab:e15_per_class}.
 
-\textbf{Analysis}: The performance drop conforms to domain adaptation theory \cite{2}: target domain error = source domain error + inter-domain distribution distance + irreducible term. CIC-IDS2017 and UNSW-NB15 differ significantly in feature space (76 vs 186), labeling protocol, and attack distribution, yet W-F1 = 0.703 > random baseline (0.1), with Generic F1 = 0.97 and Reconnaissance F1 = 0.80, proving that \textbf{the architecture possesses cross-domain generalizability --- transferable to new datasets without modification}.
+\textbf{Analysis}: The performance drop conforms to domain adaptation theory \cite{10}: target domain error = source domain error + inter-domain distribution distance + irreducible term. CIC-IDS2017 and UNSW-NB15 differ significantly in feature space (76 vs 186), labeling protocol, and attack distribution, yet W-F1 = 0.703 > random baseline (0.1), with Generic F1 = 0.97 and Reconnaissance F1 = 0.80, proving that \textbf{the architecture possesses cross-domain generalizability --- transferable to new datasets without modification}.
 
 
 
@@ -409,7 +410,7 @@ Analysis / Worms / Shellcode & < 0.30 & Very few samples, remains challenging \\
 \includegraphics[width=\columnwidth]{../results/E15_unsw_training_curves.png}
 \end{figure}
 
-\textit{Note (Figure 4 --- Training Evolution).} The curves confirm the architecture's structural adaptability when trained from scratch on the entirely new topological dataset UNSW-NB15 (note: this validates \emph{architecture generalization}, not zero-shot or transfer learning --- the model is re-trained from scratch on UNSW-NB15 with no weights transferred from CIC-IDS2017). The loss continuously converges, ultimately yielding a Test Acc = 63.64\% (W-F1 = 0.703), where the performance degradation aligns with Ben-David's domain adaptation theory \cite{2}. Achieving Generic F1 = 0.97 and Reconnaissance F1 = 0.80 proves the architecture learned universally applicable attack feature representations rather than memorizing source domain statistical noise. The low performance in rare categories (Analysis/Worms/Shellcode, F1 < 0.30) originates from extreme sample imbalance, constituting an irreducible error term that does not alter the overall assessment of the architecture's generalization capability.
+\textit{Note (Figure 4 --- Training Evolution).} The curves confirm the architecture's structural adaptability when trained from scratch on the entirely new topological dataset UNSW-NB15 (note: this validates \emph{architecture generalization}, not zero-shot or transfer learning --- the model is re-trained from scratch on UNSW-NB15 with no weights transferred from CIC-IDS2017). The loss continuously converges, ultimately yielding a Test Acc = 63.64\% (W-F1 = 0.703), where the performance degradation aligns with Ben-David's domain adaptation theory \cite{10}. Achieving Generic F1 = 0.97 and Reconnaissance F1 = 0.80 proves the architecture learned universally applicable attack feature representations rather than memorizing source domain statistical noise. The low performance in rare categories (Analysis/Worms/Shellcode, F1 < 0.30) originates from extreme sample imbalance, constituting an irreducible error term that does not alter the overall assessment of the architecture's generalization capability.
 
 
 \begin{figure}[H]
@@ -431,7 +432,7 @@ Analysis / Worms / Shellcode & < 0.30 & Very few samples, remains challenging \\
 \end{figure}
 
 
-\textit{Note (Figure 6 --- Cross-Dataset Degradation).} The bar chart quantifies the structural performance degradation of the architecture's cross-domain migration across three metric dimensions. Test Accuracy dropped from 93.0\% on CIC-IDS2017 to 63.6\% on UNSW-NB15, an absolute decrease of 29.4 percentage points; Weighted F1 fell from 0.950 to 0.703, a decay amplitude of approximately 26\%; Macro F1 experienced the most significant drop, plunging from 0.80 to 0.397, achieving a 50\% decay magnitude. This inconsistency in decay rates across the three metrics inherently carries diagnostic significance: the parallel decay of W-F1 and Accuracy indicates that cross-domain recognition capabilities for major classes (Generic, Normal) remain fundamentally preserved. Conversely, the halving of Macro F1 directly reflects that rare classes (Analysis, Worms, Shellcode, F1 < 0.30) almost entirely lost discriminable boundaries within the new domain. This structural disparity adheres strictly to Ben-David's domain adaptation theory \cite{2}: the error induced by inter-domain distribution distances acts as a severe multiplier on sparse sample categories, rather than distributing uniformly across all classes.
+\textit{Note (Figure 6 --- Cross-Dataset Degradation).} The bar chart quantifies the structural performance degradation of the architecture's cross-domain migration across three metric dimensions. Test Accuracy dropped from 93.0\% on CIC-IDS2017 to 63.6\% on UNSW-NB15, an absolute decrease of 29.4 percentage points; Weighted F1 fell from 0.950 to 0.703, a decay amplitude of approximately 26\%; Macro F1 experienced the most significant drop, plunging from 0.80 to 0.397, achieving a 50\% decay magnitude. This inconsistency in decay rates across the three metrics inherently carries diagnostic significance: the parallel decay of W-F1 and Accuracy indicates that cross-domain recognition capabilities for major classes (Generic, Normal) remain fundamentally preserved. Conversely, the halving of Macro F1 directly reflects that rare classes (Analysis, Worms, Shellcode, F1 < 0.30) almost entirely lost discriminable boundaries within the new domain. This structural disparity adheres strictly to Ben-David's domain adaptation theory \cite{10}: the error induced by inter-domain distribution distances acts as a severe multiplier on sparse sample categories, rather than distributing uniformly across all classes.
 
 
 
@@ -479,7 +480,7 @@ SHAP Computation Time & 235.1s & --- \\
 
  Validation metrics are reported in Table~\ref{tab:e2_validation}.
 
-\textbf{Key Findings}: RF primarily relies on Payload length statistics + IAT time features, perfectly consistent with network security domain knowledge (\cite{1} identifies TCP window and time intervals as core features for detecting DoS/BruteForce).
+\textbf{Key Findings}: RF primarily relies on Payload length statistics + IAT time features, perfectly consistent with network security domain knowledge (\cite{6} identifies TCP window and time intervals as core features for detecting DoS/BruteForce).
 
 Notably, SHAP promoted \texttt{Init Bwd Win Bytes} from RF Gini rank \#23 to \#2, because SHAP captures \textbf{feature interaction effects} (satisfying Shapley consistency axioms), whereas Gini only measures single-feature split contributions.
 
@@ -492,7 +493,7 @@ Notably, SHAP promoted \texttt{Init Bwd Win Bytes} from RF Gini rank \#23 to \#2
 \includegraphics[width=\columnwidth]{../results/E2_shap_summary.png}
 \end{figure}
 
-\textit{Note (Figure 7 --- SHAP Attribution).} The beeswarm plot visualizes the decision criteria of the Top 20 out of 76 features in the Stage 1 front-line filter from a game-theoretic attribution perspective. Color dictates the feature value (Red = High, Blue = Low), while the horizontal axis maps the direction and magnitude of the impact on model output. The \textbf{strongest discriminative feature} is \texttt{Bwd Packet Length Std}, where red nodes (high standard deviation) cluster intensely around +0.15 forming the widest distribution. This mathematically proves that drastic dispersion in backward packet lengths serves as the most prominent statistical fingerprint for malicious traffic. \texttt{Init Bwd Win Bytes} exhibits a unidirectional positive contribution model: high-value red nodes gather tightly at +0.05, whereas low-value blue nodes anchor near the zero axis. This conforms entirely with domain knowledge citing anomalous initial TCP window sizes as early indicators for DoS/BruteForce attacks \cite{17}. Conversely, \texttt{Fwd IAT Min} presents a bidirectional distribution: mass quantities of blue nodes (low time intervals) saturate the negative zone, precisely mapping to high-frequency attack bombardments; red nodes (long time intervals) map to the positive zone, corresponding to baseline normal traffic.
+\textit{Note (Figure 7 --- SHAP Attribution).} The beeswarm plot visualizes the decision criteria of the Top 20 out of 76 features in the Stage 1 front-line filter from a game-theoretic attribution perspective. Color dictates the feature value (Red = High, Blue = Low), while the horizontal axis maps the direction and magnitude of the impact on model output. The \textbf{strongest discriminative feature} is \texttt{Bwd Packet Length Std}, where red nodes (high standard deviation) cluster intensely around +0.15 forming the widest distribution. This mathematically proves that drastic dispersion in backward packet lengths serves as the most prominent statistical fingerprint for malicious traffic. \texttt{Init Bwd Win Bytes} exhibits a unidirectional positive contribution model: high-value red nodes gather tightly at +0.05, whereas low-value blue nodes anchor near the zero axis. This conforms entirely with domain knowledge citing anomalous initial TCP window sizes as early indicators for DoS/BruteForce attacks \cite{1}. Conversely, \texttt{Fwd IAT Min} presents a bidirectional distribution: mass quantities of blue nodes (low time intervals) saturate the negative zone, precisely mapping to high-frequency attack bombardments; red nodes (long time intervals) map to the positive zone, corresponding to baseline normal traffic.
 
 \subsubsection{Data-Tracking Decomposition --- Core Logic Chain Summary}
 
@@ -515,7 +516,7 @@ The remaining temporal features --- \textit{IAT Total}, \textit{IAT Max}, and \t
 
 \textit{Note (Figure 8 --- Axiomatic Consistency).} The scatterplot illustrates the ranking consistency across 76 features between the SHAP (game-theoretic attribution) and RF Gini (single-feature split contribution) importance systems, yielding a Spearman $\rho = 0.9444$. This proves that both methods deeply align on macroscopic feature prioritization. The \textbf{structural divergence between the two methods} carries definitive diagnostic value: SHAP wildly elevates \texttt{Init Bwd Win Bytes} from Gini's rank \#23 directly to \#2---an extreme leap of 21 places. This divergence represents an explicit manifestation of SHAP satisfying the Shapley consistency axioms by capturing complex feature interaction effects; conversely, the Gini index only measures the pure independence homogeneity gain, drastically underestimating the true boundary impact of \texttt{Init Bwd Win Bytes} when collaborating synergistically with surrounding traits.
 
-A Spearman correlation of $\rho = 0.9444$ between SHAP attribution scores and RF Gini importance rankings establishes that the two methods achieve strong macroscopic consistency despite their fundamentally different derivation mechanisms. Their shared top-ranked features converge on two physical dimensions: payload length metrics (led by \textit{Bwd Pkt Len Std} and \textit{Bwd Pkt Len Mean}) and inter-arrival timing constraints (led by \textit{Fwd IAT Min} and \textit{Fwd IAT Total}). This joint prioritization aligns strictly with the domain knowledge established by Sharafaldin et al.\ \cite{17}, thereby validating the physical legitimacy of Stage 1's learned decision boundaries.
+A Spearman correlation of $\rho = 0.9444$ between SHAP attribution scores and RF Gini importance rankings establishes that the two methods achieve strong macroscopic consistency despite their fundamentally different derivation mechanisms. Their shared top-ranked features converge on two physical dimensions: payload length metrics (led by \textit{Bwd Pkt Len Std} and \textit{Bwd Pkt Len Mean}) and inter-arrival timing constraints (led by \textit{Fwd IAT Min} and \textit{Fwd IAT Total}). This joint prioritization aligns strictly with the domain knowledge established by Sharafaldin et al.\ \cite{1}, thereby validating the physical legitimacy of Stage 1's learned decision boundaries.
 
 \subsection{E10 --- Stage 2 Interpretability (IG + Attention)}
 \textbf{Logic Chain Deduction}: Sustaining the baseline model verification parameters derived during E2, this experiment probes Stage 2 complexity evaluations (TransECA-Net) utilizing Integrated Gradients (IG) and continuous Attention mechanics to perform cross-layer attribution. Analytics indicate that despite radically contrasting algorithmic derivation architectures (continuous tensor propagation measured by IG versus discrete distribution branches measured by SHAP), focal traffic elements critically driving network classification align across models (for instance, primary focus onto Initial Window properties and Interval constraints). This consistent focal overlap reinforces prevailing cybersecurity diagnostic consensus while reinforcing confidence regarding rational dual-stage architectural stability across dissimilar monitoring operations.
@@ -537,13 +538,13 @@ ECA Channel Attn & mean=0.449, std=0.009, \textbf{CV=0.020} & Near-uniform chann
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: Integrated Gradients (captum, 405 samples $\times$ 50 steps) + Attention Rollout \cite{25} + ECA Channel Attention \cite{23}. A comparison of attribution methods is provided in Table~\ref{tab:interpretability_comparison}.
+\textbf{Method}: Integrated Gradients (captum, 405 samples $\times$ 50 steps) + Attention Rollout \cite{9} + ECA Channel Attention \cite{18}. A comparison of attribution methods is provided in Table~\ref{tab:interpretability_comparison}.
 
 \textbf{Cross-Model Partial Convergence}: Two attribution methods with theoretically independent guarantees (SHAP: Shapley axioms; IG: completeness axiom $\sum IG_i = F(x) - F(x')$), applied to architecturally distinct models (RF vs TransECA-Net), exhibit \textbf{partial convergence} in core physical priorities:
 \begin{itemize}
 \item Both elevate \texttt{Init Win Bytes} class traits (in forward and backward directions, respectively) into the Top echelon.
 \item Both persistently center on temporal IAT statistical interval features.
-\item Geometrically aligned with \cite{1}'s core cyber-domain knowledge.
+\item Geometrically aligned with \cite{6}'s core cyber-domain knowledge.
 \end{itemize}
 
 $\to$ \textbf{Theoretical framework independence $\times$ Core domain knowledge alignment = Rational Physical Decision Pathways, albeit short of absolute triangulation.}
@@ -631,7 +632,7 @@ S2 (TransECA) & M-F1 & 0.7658 & [0.7391, 0.8127] & \textbf{0.0736} \\
 \begin{enumerate}
 \item \textbf{S1 CI is extremely narrow} (< 0.001): Large test set ($n = 462,762$) + F1 $\approx$ 1 (minimal variance) $\to$ highly reliable performance estimates.
 \item \textbf{S2 W-F1 CI = 0.003}: Consistent with the theoretical expectation of CI Width $\propto n^{-1/2}$.
-\item \textbf{S2 M-F1 CI = 0.074 (relatively wide)}: This directly validates the probabilistic collapse assumption regarding the Law of Large Numbers on microscopic minority classes. Because extreme minorities (e.g., Heartbleed $n_k=11$) intrinsically mandate bloated asymptotic variance ($\text{Var} \propto \frac{1}{n_k}$ \cite{6}) under binomial distributions, this isolated metric jitter explicitly reflects inherent mathematical ambient noise rather than neural network fitting flaws.
+\item \textbf{S2 M-F1 CI = 0.074 (relatively wide)}: This directly validates the probabilistic collapse assumption regarding the Law of Large Numbers on microscopic minority classes. Because extreme minorities (e.g., Heartbleed $n_k=11$) intrinsically mandate bloated asymptotic variance ($\text{Var} \propto \frac{1}{n_k}$ \cite{13}) under binomial distributions, this isolated metric jitter explicitly reflects inherent mathematical ambient noise rather than neural network fitting flaws.
 \end{enumerate}
 
 
@@ -670,13 +671,13 @@ TransECA PGD & 92.16\% & 90.20\% & \textbf{47.28\%} & 0.66\% \\
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: FGSM \cite{24} (single-step) + PGD \cite{13} (5 steps) on TransECA-Net; L$\infty$ Uniform Noise on RF; $\varepsilon \in \{0.001, 0.005, 0.01, 0.05, 0.1\}$, 10,000 stratified subsamples. Note: the clean accuracy baseline in this experiment (92.16\%) is measured on this 10,000-sample stratified subset and differs slightly from the full test-set result (93.00\% in S2 Training) due to subset sampling; all adversarial comparisons are made against the same subset baseline. Table~\ref{tab:adversarial} summarizes accuracy under adversarial attacks.
+\textbf{Method}: FGSM \cite{14} (single-step) + PGD \cite{17} (5 steps) on TransECA-Net; L$\infty$ Uniform Noise on RF; $\varepsilon \in \{0.001, 0.005, 0.01, 0.05, 0.1\}$, 10,000 stratified subsamples. Note: the clean accuracy baseline in this experiment (92.16\%) is measured on this 10,000-sample stratified subset and differs slightly from the full test-set result (93.00\% in S2 Training) due to subset sampling; all adversarial comparisons are made against the same subset baseline. Table~\ref{tab:adversarial} summarizes accuracy under adversarial attacks.
 
 \textbf{Three Key Findings}:
 
 \textbf{(1) RF is unexpectedly fragile}: $\varepsilon = 0.001$ drops accuracy from 99.6\% to 47\%, overturning the assumption that ``RF is naturally robust.'' Reason: RF decision boundaries are axis-aligned hyperrectangles; minimal feature value shifts can cross boundaries.
 
-\textbf{(2) PGD > FGSM}: At $\varepsilon = 0.01$, PGD is 28.5pp lower than FGSM (47\% vs 76\%), validating \cite{13}'s theory --- multi-step iterative optimization finds stronger adversarial examples within the $\ell_\infty$ ball.
+\textbf{(2) PGD > FGSM}: At $\varepsilon = 0.01$, PGD is 28.5pp lower than FGSM (47\% vs 76\%), validating \cite{17}'s theory --- multi-step iterative optimization finds stronger adversarial examples within the $\ell_\infty$ ball.
 
 \textbf{(3) Orthogonal weaknesses = system-level robustness}: RF is fragile to random noise but \textbf{immune} to gradient attacks (piecewise constant function, $\nabla h_1 = 0$); TransECA is robust to random noise but sensitive to gradient attacks. No single attack strategy can simultaneously breach both layers.
 
@@ -696,7 +697,7 @@ Even under the strong PGD attack at $\varepsilon = 0.01$, the system-level evasi
 \includegraphics[width=\columnwidth]{../results/E14_robustness_curve.png}
 \end{figure}
 
-\textit{Note (Figure 14 --- Attack Resilience Curves).} The dual charts present the robustness trajectories across Accuracy and W-F1 dimensions under three attack strategies. \textbf{Unexpected RF Fragility}: Under L$\infty$ random noise, RF sharply plummets from 99.6\% to 46.94\% at just $\varepsilon=0.001$, and collapses to 6.45\% at $\varepsilon=0.01$, overturning the intuitive assumption of ``inherent random forest robustness.'' Theoretically, RF's axis-aligned hyper-rectangular decision boundaries allow minuscule feature shifts to cross classification margins. \textbf{PGD's Intensity Advantage}: At $\varepsilon=0.01$, PGD degrades TransECA's accuracy to 47.28\%, while FGSM only drops it to 75.73\% (a 28.5pp gap), perfectly aligning with \cite{13}'s multi-step iteration theory. \textbf{Orthogonal Weakness Observation}: RF is extremely sensitive to random noise but immune to gradient attacks ($\nabla h_1 \approx 0$), whereas TransECA is relatively stable against random noise but sensitive to parameter gradients. \textbf{System-Level Evasion Estimation}: Factoring in the empirically measured Stage 1 (RF) leak rate ($\alpha=0.1525$), the theoretical system-level evasion rate under intense PGD $\varepsilon=0.01$ conditions is mathematically calculated at 8.04\%, drastically lower than the standalone TransECA's 52.72\%.
+\textit{Note (Figure 14 --- Attack Resilience Curves).} The dual charts present the robustness trajectories across Accuracy and W-F1 dimensions under three attack strategies. \textbf{Unexpected RF Fragility}: Under L$\infty$ random noise, RF sharply plummets from 99.6\% to 46.94\% at just $\varepsilon=0.001$, and collapses to 6.45\% at $\varepsilon=0.01$, overturning the intuitive assumption of ``inherent random forest robustness.'' Theoretically, RF's axis-aligned hyper-rectangular decision boundaries allow minuscule feature shifts to cross classification margins. \textbf{PGD's Intensity Advantage}: At $\varepsilon=0.01$, PGD degrades TransECA's accuracy to 47.28\%, while FGSM only drops it to 75.73\% (a 28.5pp gap), perfectly aligning with \cite{17}'s multi-step iteration theory. \textbf{Orthogonal Weakness Observation}: RF is extremely sensitive to random noise but immune to gradient attacks ($\nabla h_1 \approx 0$), whereas TransECA is relatively stable against random noise but sensitive to parameter gradients. \textbf{System-Level Evasion Estimation}: Factoring in the empirically measured Stage 1 (RF) leak rate ($\alpha=0.1525$), the theoretical system-level evasion rate under intense PGD $\varepsilon=0.01$ conditions is mathematically calculated at 8.04\%, drastically lower than the standalone TransECA's 52.72\%.
 
 \begin{enumerate}
 \item \textbf{Robust Anchors}: Heartbleed emerges as the strongest resilient class globally (sustaining a flawless 1.00 even at $\varepsilon=0.05$). Paired with E10's IG extrema analysis (\texttt{Bwd Header Length} IG=5.250), it empirically proves that classes with hyper-concentrated feature signatures possess decision boundaries inherently resistant to localized gradient perturbations.
@@ -719,7 +720,7 @@ Even under the strong PGD attack at $\varepsilon = 0.01$, the system-level evasi
 Consolidating the empirical observations and stringent theoretical projections derived from the dual charts, E14 does not merely juxtapose two individually flawed models. Rather, it formally establishes the pinnacle real-world security dividend of this architecture---\textbf{``Structural Orthogonality Defense''}.
 \begin{enumerate}
 \item \textbf{Physical Isolation of Algorithmic Vulnerabilities}: The evaluations empirically reveal that the fundamentally distinct mathematical substrates of the two stages geometrically isolate their attack surfaces. Stage 1 (RF) is hypersensitive to random noise (degrading to 6.45\% at $\varepsilon=0.01$), yet its discontinuous, non-differentiable step-function axis splits ($\nabla h_1 \approx 0$) render it intrinsically immune to gradient-resolving attacks that rely on back-propagation. Conversely, Stage 2 (TransECA-Net) is uniquely susceptible to hyper-precise PGD gradient manipulation (degrading to 47.28\%), but acts as a robust sponge to smoothly filter out macroscopic random uniform noise.
-\item \textbf{Engineering Asymmetrical Attack Barriers}: This diametrical divergence strictly mandates mutually exclusive regions within the attacker's adversarial generation space. Evading the holistic architecture dictates an unprecedented complexity: an attacker's single continuous network flow payload must synchronously encapsulate a barrage of ``macro-dispersion discrete noise (to blind S1)'' while retaining a matrix of ``hyper-precise localized back-propagation fine-tuning (to crack S2).'' This mathematically contradictory demand---an \textbf{``impossible evasion triangle'' rooted in the principle of Security Diversity \cite{22}}---serves as the explicit architectural logic anchoring the theoretical compression of our cascaded global evasion probability to roughly 8\% ($0.1525 \times 0.5272$).
+\item \textbf{Engineering Asymmetrical Attack Barriers}: This diametrical divergence strictly mandates mutually exclusive regions within the attacker's adversarial generation space. Evading the holistic architecture dictates an unprecedented complexity: an attacker's single continuous network flow payload must synchronously encapsulate a barrage of ``macro-dispersion discrete noise (to blind S1)'' while retaining a matrix of ``hyper-precise localized back-propagation fine-tuning (to crack S2).'' This mathematically contradictory demand---an \textbf{``impossible evasion triangle'' rooted in the principle of Security Diversity \cite{15}}---serves as the explicit architectural logic anchoring the theoretical compression of our cascaded global evasion probability to roughly 8\% ($0.1525 \times 0.5272$).
 \end{enumerate}
 
 \subsection{E4 --- Bias-Variance Analysis}
@@ -751,7 +752,7 @@ RF Learning Curve & Gap@1\% = 0.0106, Gap@100\% = \textbf{0.0016} (low Variance)
 \toprule
 \textbf{Prediction} & \textbf{Theoretical Source} & \textbf{Experimental Result} & \textbf{Verified?} \\
 \midrule
-RF Low Variance & \cite{3}: Bagging $\uparrow B$ reduces Var & OOB 50$\to$200 nearly unchanged & Verified \\
+RF Low Variance & \cite{11}: Bagging $\uparrow B$ reduces Var & OOB 50$\to$200 nearly unchanged & Verified \\
 RF Low Bias & Decision trees are strong learners & L-Curve Gap@100\% = 0.0016 & Verified \\
 DL High Variance & \cite{5} & Gen Gap = +0.006 (low) & \textbf{Overturned} \\
 \bottomrule
@@ -781,7 +782,7 @@ DL High Variance & \cite{5} & Gen Gap = +0.006 (low) & \textbf{Overturned} \\
 \end{figure}
 
 
-\textit{Note (Figure 17 --- Generalization Gaps).} The smooth, tight tracking between the training and validation loss curves provides compelling empirical evidence refuting the traditional paradigm (e.g., \cite{8}) that ``high-capacity deep architectures inevitably induce high variance in network intrusion datasets.'' The terminal generalization gap recorded in the topology is an exceptionally microscopic +0.006. This near-perfect fit is not coincidental; rather, it is the direct physical consequence of massive Stage 1 ``Hard Example'' data ingestion coupled with modern, aggressive regularization regimes (including AdamW weight decay, Cosine Annealing learning rate scheduling, and inter-layer Dropout), which collectively suppress structural risk. The extreme minimization of this metric gap not only entirely dissipates the overfitting concerns inherently associated with a 301,460-parameter array but also conclusively proves that TransECA-Net successfully anchors onto a ``Moderate Bias + Low Variance'' operational plateau.
+\textit{Note (Figure 17 --- Generalization Gaps).} The smooth, tight tracking between the training and validation loss curves provides compelling empirical evidence refuting the traditional paradigm (e.g., \cite{3}) that ``high-capacity deep architectures inevitably induce high variance in network intrusion datasets.'' The terminal generalization gap recorded in the topology is an exceptionally microscopic +0.006. This near-perfect fit is not coincidental; rather, it is the direct physical consequence of massive Stage 1 ``Hard Example'' data ingestion coupled with modern, aggressive regularization regimes (including AdamW weight decay, Cosine Annealing learning rate scheduling, and inter-layer Dropout), which collectively suppress structural risk. The extreme minimization of this metric gap not only entirely dissipates the overfitting concerns inherently associated with a 301,460-parameter array but also conclusively proves that TransECA-Net successfully anchors onto a ``Moderate Bias + Low Variance'' operational plateau.
 
 
 \begin{figure}[H]
@@ -910,7 +911,7 @@ The core objective of this project is to resolve the efficiency vs.\ accuracy tr
 \textbf{In-Depth Logic Deduction}:
 
 \textbf{1. Expected Inference Cost ($E[C]$)}: By the Law of Total Probability, expected time per sample is: $E[C] = C_1 + \alpha(\tau) \cdot C_2$.
-Substituting measured Stage 1 cost $C_1 = 6.12\,\mu s$ (E11), estimated DL cost $C_2 \approx 500\,\mu s$ (literature reference \cite{7}; Stage 2 latency benchmarking is identified as future work), and the pass-through rate at optimal tuning $\alpha(\tau=0.06) = 15.25\%$ (E17):
+Substituting measured Stage 1 cost $C_1 = 6.12\,\mu s$ (E11), estimated DL cost $C_2 \approx 500\,\mu s$ (literature reference \cite{6}; Stage 2 latency benchmarking is identified as future work), and the pass-through rate at optimal tuning $\alpha(\tau=0.06) = 15.25\%$ (E17):
 $$E[C] = 6.12 + 0.1525 \times 500 = \textbf{82.37}\,\mu s$$
 \textbf{Conclusion}: Compared to pure deep learning inference on all traffic, we achieved a \textbf{6.07$\times$ system-level speedup}.
 
@@ -928,7 +929,7 @@ P(\text{FA}|\text{Normal}) &\leq P(S_1=1|\text{Normal}) \times P(S_2=\text{attac
 \end{align*}
 \textbf{Conclusion}: Cascading two orthogonal filtering mechanisms causes false positive rates to drop multiplicatively, exponentially reducing Alert Fatigue for Security Operation Centers.
 
-\textbf{4. System Evasion Rate}: The final probability of a successful evasion equals the joint probability of bypassing Stage 1 and deceiving Stage 2. Assuming structural independence of vulnerabilities between the two distinct model families (security diversity principle, cf.\ \cite{22}):
+\textbf{4. System Evasion Rate}: The final probability of a successful evasion equals the joint probability of bypassing Stage 1 and deceiving Stage 2. Assuming structural independence of vulnerabilities between the two distinct model families (security diversity principle, cf.\ \cite{15}):
 \begin{align*}
 P(\text{Successful Evasion}) = \alpha(\tau) \times P(h_2(x+\delta) \text{ is deceived} \mid x \text{ reaches S2})
 \end{align*}
@@ -940,7 +941,7 @@ $$ P(\text{Evasion}) = 0.1525 \times (1 - 0.4728) = \textbf{8.04\%} $$
 
 Beyond macro-architectural performance, our evaluations are strictly underwritten by statistical theorems at the micro-level:
 
-\textbf{1. Bagging Variance Limits (Breiman's Theorem)}: According to \cite{3}, the generalization error bound of a Random Forest is governed by its base variance and correlation:
+\textbf{1. Bagging Variance Limits (Breiman's Theorem)}: According to \cite{11}, the generalization error bound of a Random Forest is governed by its base variance and correlation:
 $$ \text{Var}_{\text{ensemble}} = \rho\sigma^2 + \frac{1-\rho}{B}\sigma^2 $$
 Our E4 evaluation demonstrated that the OOB Error converges perfectly at $0.00171$ after $B=50$ trees. \textbf{Conclusion Verification}: As $B$ increases, the term $\frac{1-\rho}{B}$ diminishes to zero, locking the system bottleneck to the intrinsic tree correlation $\rho$. This mathematically proves that deploying a tiny-scale RF ($B \approx 50$) as the Phase-1 high-speed filter is theoretically optimal and saturated in performance.
 
@@ -956,15 +957,15 @@ $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{
 \toprule
 \textbf{Theoretical Prediction} & \textbf{Source} & \textbf{Verification Experiment} & \textbf{Result} \\
 \midrule
-Bagging reduces RF Variance & \cite{3} & E4: OOB 50$\to$200 trees nearly unchanged & Verified \\
+Bagging reduces RF Variance & \cite{11} & E4: OOB 50$\to$200 trees nearly unchanged & Verified \\
 DL High Variance & \cite{5} & E4: Gen Gap = 0.006 (low) & Overturned \\
 RF robust to perturbation & Prior belief (ensemble stability) & E14: RF $\varepsilon$=0.001 $\to$ 47\% & Overturned \\
-PGD stronger than FGSM & \cite{13} & E14: PGD vs FGSM @$\varepsilon$=0.01: 47\% vs 76\% & Verified \\
-SHAP axiomatic uniqueness & \cite{12} & E2: SHAP vs Gini $\rho$=0.94 & Verified \\
+PGD stronger than FGSM & \cite{17} & E14: PGD vs FGSM @$\varepsilon$=0.01: 47\% vs 76\% & Verified \\
+SHAP axiomatic uniqueness & \cite{16} & E2: SHAP vs Gini $\rho$=0.94 & Verified \\
 Learned representations outperform raw features & \cite{5} & E12: Silhouette +59\% & Verified \\
 Hierarchical reduces expected cost & Mathematical derivation & E11+E17: 6.07$\times$ speedup & Verified \\
-Cross-domain generalization limited by domain distance & \cite{2} & E15: UNSW 64\% < CIC 93\% & Verified \\
-CI Width $\propto n^{-1/2}$ & \cite{6} & E6: S1 Width 0.0002, S2 Width 0.003 & Verified \\
+Cross-domain generalization limited by domain distance & \cite{10} & E15: UNSW 64\% < CIC 93\% & Verified \\
+CI Width $\propto n^{-1/2}$ & \cite{13} & E6: S1 Width 0.0002, S2 Width 0.003 & Verified \\
 M-F1 CI dominated by minority class samples & $\text{Var} \propto 1/n_k$ & E6: M-F1 CI = 0.074 (Heartbleed $n$=11) & Verified \\
 \bottomrule
 \end{tabular}
@@ -975,9 +976,9 @@ M-F1 CI dominated by minority class samples & $\text{Var} \propto 1/n_k$ & E6: M
 \textbf{10 verified, 2 overturned}. The two overturned predictions do not weaken the hierarchical architecture argument; rather, they reveal more precise mechanisms and the advantage of ``orthogonal weaknesses'':
 
 \begin{enumerate}
-\item \textbf{DL High Variance (\cite{5}) $\to$ Overturned}: TransECA-Net showed a microscopic Generalization Gap of +0.006 in E4, indicating extremely low variance. Root Cause: \cite{8}'s observation assumes insufficient data or weak regularization. By leveraging a massive dataset (235K hard examples) combined with modern explicit sparse regularization (AdamW weight decay + Cosine Annealing + Dropout), our model successfully suppresses high variance while maintaining high representational capacity.
+\item \textbf{DL High Variance (\cite{5}) $\to$ Overturned}: TransECA-Net showed a microscopic Generalization Gap of +0.006 in E4, indicating extremely low variance. Root Cause: \cite{3}'s observation assumes insufficient data or weak regularization. By leveraging a massive dataset (235K hard examples) combined with modern explicit sparse regularization (AdamW weight decay + Cosine Annealing + Dropout), our model successfully suppresses high variance while maintaining high representational capacity.
 
-\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 46.94\%. This expectation was an informal prior belief based on ensemble stability (Breiman \cite{3} proves variance reduction via bagging but does not claim robustness to uniform additive noise). Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
+\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 46.94\%. This expectation was an informal prior belief based on ensemble stability (Breiman \cite{11} proves variance reduction via bagging but does not claim robustness to uniform additive noise). Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
 \end{enumerate}
 
 \textbf{Strategic System Significance (Orthogonal Weaknesses)}: If we solely relied on Stage 1 (RF), the system would collapse under simple noise. If we solely relied on Stage 2 (DL), the system would be easily evaded by PGD gradient attacks and computationally infeasible. In our \textbf{two-stage architecture}, RF is immune to gradients, and DL resists simple noise. Because an attacker cannot craft a payload that is simultaneously pure uniform noise and an exact adversarial gradient, the overall system evasion rate is suppressed to a mere 8.04\%. This is the ultimate experimental justification for the hierarchical design.
@@ -1180,79 +1181,58 @@ E12 & \texttt{results/E12\_tsne\_raw.png}, \texttt{results/E12\_umap\_raw.png}, 
 \begin{thebibliography}{99}
 
 \bibitem{1}
-Q.\ Abu Al-Haija, A.\ Odeh, and H.\ Qattous. 2022. ML-Based darknet traffic detection system. \textit{IEEE Access} 10 (2022), 87608--87621.
+I.\ Sharafaldin, A.\ H.\ Lashkari, and A.\ A.\ Ghorbani. 2018. Toward generating a new intrusion detection dataset and intrusion traffic characterization. In \textit{Proceedings of the 4th International Conference on Information Systems Security and Privacy (ICISSP)}. 108--116. \url{https://www.scitepress.org/papers/2018/66398/66398.pdf}
 
 \bibitem{2}
-S.\ Ben-David, J.\ Blitzer, K.\ Crammer, A.\ Kulesza, F.\ Pereira, and J.\ W.\ Vaughan. 2010. A theory of learning from different domains. \textit{Machine Learning} 79 (2010), 151--175.
+Z.\ Liu, Y.\ Xie, Y.\ Luo, Y.\ Wang, and X.\ Ji. 2025. TransECA-Net: A transformer-based model for encrypted traffic classification. \textit{Applied Sciences} 15, 6 (2025), 2977. \url{https://doi.org/10.3390/app15062977}
 
 \bibitem{3}
-L.\ Breiman. 2001. Random forests. \textit{Machine Learning} 45, 1 (2001), 5--32.
+D.\ Kwon, H.\ Kim, J.\ Kim, S.\ C.\ Suh, I.\ Kim, and K.\ J.\ Kim. 2019. A survey of deep learning-based network anomaly detection. \textit{Cluster Computing} 22, Suppl 1 (2019), 949--961. \url{https://doi.org/10.1007/s10586-017-1117-8}
 
 \bibitem{4}
-G.\ C.\ Cawley and N.\ L.\ C.\ Talbot. 2010. On over-fitting in model selection and subsequent selection bias in performance evaluation. \textit{Journal of Machine Learning Research} 11 (2010), 2079--2107.
+M.\ Ring, S.\ Wunderlich, D.\ Scheuring, D.\ Landes, and A.\ Hotho. 2019. A survey of network-based intrusion detection data sets. \textit{Computers \& Security} 86 (2019), 147--167. \url{https://doi.org/10.1016/j.cose.2019.06.005}
 
 \bibitem{5}
-J.\ Wang. 2025. Analysis of machine learning-based methods for network traffic anomaly detection and prediction. In \textit{Proceedings of the 2nd International Conference on Data Science and Engineering (ICDSE)}. 550--554.
+J.\ Wang. 2025. Analysis of machine learning-based methods for network traffic anomaly detection and prediction. In \textit{Proceedings of the 2nd International Conference on Data Science and Engineering (ICDSE)}. 550--554. \url{https://doi.org/10.5220/0013701800004670}
 
 \bibitem{6}
-B.\ Efron. 1979. Bootstrap methods: another look at the jackknife. \textit{The Annals of Statistics} 7, 1 (1979), 1--26.
+Q.\ Abu Al-Haija, M.\ Krichen, and W.\ Abu Elhaija. 2022. Machine-learning-based darknet traffic detection system for IoT applications. \textit{Electronics} 11, 4 (2022), 556. \url{https://doi.org/10.3390/electronics11040556}
 
 \bibitem{7}
-R.\ Singh, N.\ Srivastava, and A.\ Kumar. 2021. Machine learning techniques for anomaly detection in network traffic. In \textit{Proceedings of the 2021 Sixth International Conference on Image Information Processing (ICIIP)}. 261--266.
+H.\ Kaur and G.\ Singh. 2021. Machine learning techniques for anomaly detection in network traffic. In \textit{Proceedings of the 2021 Sixth International Conference on Image Information Processing (ICIIP)}. 444--449. \url{https://ieeexplore.ieee.org/document/9702647}
 
 \bibitem{8}
-D.\ Kwon, H.\ Kim, J.\ Kim, S.\ C.\ Suh, I.\ Kim, and K.\ J.\ Kim. 2017. Deep learning-based network anomaly detection. \textit{Cluster Computing} 22, 1 (2017), 209--224.
+N.\ Moustafa and J.\ Slay. 2015. UNSW-NB15: a comprehensive data set for network intrusion detection systems (UNSW-NB15 network data set). In \textit{Proceedings of the 2015 Military Communications and Information Systems Conference (MilCIS)}. 1--6. \url{https://ieeexplore.ieee.org/document/7348942}
 
 \bibitem{9}
-Z.\ Liu, et al.\ 2025. TransECA-Net: A transformer-based model for encrypted traffic classification. \textit{Applied Sciences} 15 (2025).
+S.\ Abnar and W.\ Zuidema. 2020. Quantifying attention flow in transformers. In \textit{Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)}. 4190--4197.
 
 \bibitem{10}
-I.\ Loshchilov and F.\ Hutter. 2016. SGDR: Stochastic gradient descent with warm restarts. \textit{arXiv preprint arXiv:1608.03983} (2016).
+S.\ Ben-David, J.\ Blitzer, K.\ Crammer, A.\ Kulesza, F.\ Pereira, and J.\ W.\ Vaughan. 2010. A theory of learning from different domains. \textit{Machine Learning} 79, 1-2 (2010), 151--175. \url{https://doi.org/10.1007/s10994-009-5152-4}
 
 \bibitem{11}
-I.\ Loshchilov and F.\ Hutter. 2017. Decoupled weight decay regularization. \textit{arXiv preprint arXiv:1711.05101} (2017).
+L.\ Breiman. 2001. Random forests. \textit{Machine Learning} 45, 1 (2001), 5--32. \url{https://doi.org/10.1023/A:1010933404324}
 
 \bibitem{12}
-S.\ M.\ Lundberg and S.\ I.\ Lee. 2017. A unified approach to interpreting model predictions. In \textit{Advances in Neural Information Processing Systems (NeurIPS)}, Vol.\ 30.
+G.\ C.\ Cawley and N.\ L.\ C.\ Talbot. 2010. On over-fitting in model selection and subsequent selection bias in performance evaluation. \textit{Journal of Machine Learning Research} 11 (2010), 2079--2107. \url{https://jmlr.org/papers/v11/cawley10a.html}
 
 \bibitem{13}
-A.\ Madry, A.\ Makelov, L.\ Schmidt, D.\ Tsipras, and A.\ Vladu. 2018. Towards deep learning models resistant to adversarial attacks. In \textit{International Conference on Learning Representations (ICLR)}.
+B.\ Efron. 1979. Bootstrap methods: another look at the jackknife. \textit{The Annals of Statistics} 7, 1 (1979), 1--26. \url{https://doi.org/10.1214/aos/1176344552}
 
 \bibitem{14}
-L.\ McInnes, J.\ Healy, and J.\ Melville. 2018. UMAP: Uniform manifold approximation and projection for dimension reduction. \textit{arXiv preprint arXiv:1802.03426} (2018).
-
-\bibitem{15}
-N.\ Moustafa and J.\ Slay. 2015. UNSW-NB15: a comprehensive data set for network intrusion detection systems. In \textit{Proceedings of the 2015 Military Communications and Information Systems Conference (MilCIS)}. 1--6.
-
-\bibitem{16}
-M.\ Ring, S.\ Wunderlich, D.\ Scheuring, D.\ Landes, and A.\ Hotho. 2019. A survey of network-based intrusion detection data sets. \textit{Computers \& Security} 86 (2019), 147--167.
-
-\bibitem{17}
-I.\ Sharafaldin, A.\ H.\ Lashkari, and A.\ A.\ Ghorbani. 2018. Toward generating a new intrusion detection dataset and intrusion traffic characterization. In \textit{Proceedings of the 4th International Conference on Information Systems Security and Privacy (ICISSP)}. 108--116.
-
-\bibitem{18}
-N.\ Srivastava, G.\ Hinton, A.\ Krizhevsky, I.\ Sutskever, and R.\ Salakhutdinov. 2014. Dropout: a simple way to prevent neural networks from overfitting. \textit{The Journal of Machine Learning Research} 15, 1 (2014), 1929--1958.
-
-\bibitem{19}
-M.\ Sundararajan, A.\ Taly, and Q.\ Yan. 2017. Axiomatic attribution for deep networks. In \textit{Proceedings of the 34th International Conference on Machine Learning (ICML)}. 3319--3328.
-
-\bibitem{20}
-A.\ Vaswani, N.\ Shazeer, N.\ Parmar, J.\ Uszkoreit, L.\ Jones, A.\ N.\ Gomez, {\L}.\ Kaiser, and I.\ Polosukhin. 2017. Attention is all you need. In \textit{Advances in Neural Information Processing Systems (NeurIPS)}, Vol.\ 30.
-
-\bibitem{21}
-L.\ van der Maaten and G.\ Hinton. 2008. Visualizing data using t-SNE. \textit{Journal of Machine Learning Research} 9, 11 (2008), 2579--2605.
-
-\bibitem{22}
-B.\ Littlewood and L.\ Strigini. 2004. Redundancy and diversity in security. \textit{IEEE Security \& Privacy} 2, 3 (2004), 56--61.
-
-\bibitem{23}
-Q.\ Wang, B.\ Wu, P.\ Zhu, P.\ Li, W.\ Zuo, and Q.\ Hu. 2020. ECA-Net: Efficient channel attention for deep convolutional neural networks. In \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}. 11534--11542.
-
-\bibitem{24}
 I.\ J.\ Goodfellow, J.\ Shlens, and C.\ Szegedy. 2015. Explaining and harnessing adversarial examples. In \textit{International Conference on Learning Representations (ICLR)}.
 
-\bibitem{25}
-S.\ Abnar and W.\ Zuidema. 2020. Quantifying attention flow in transformers. In \textit{Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)}. 4190--4197.
+\bibitem{15}
+B.\ Littlewood and L.\ Strigini. 2004. Redundancy and diversity in security. \textit{IEEE Security \& Privacy} 2, 3 (2004), 56--61.
+
+\bibitem{16}
+S.\ M.\ Lundberg and S.\ I.\ Lee. 2017. A unified approach to interpreting model predictions. In \textit{Advances in Neural Information Processing Systems (NeurIPS)}, Vol.\ 30. \url{https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html}
+
+\bibitem{17}
+A.\ Madry, A.\ Makelov, L.\ Schmidt, D.\ Tsipras, and A.\ Vladu. 2018. Towards deep learning models resistant to adversarial attacks. In \textit{International Conference on Learning Representations (ICLR)}. \url{https://arxiv.org/abs/1706.06083}
+
+\bibitem{18}
+Q.\ Wang, B.\ Wu, P.\ Zhu, P.\ Li, W.\ Zuo, and Q.\ Hu. 2020. ECA-Net: Efficient channel attention for deep convolutional neural networks. In \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}. 11534--11542.
 
 \end{thebibliography}
 
