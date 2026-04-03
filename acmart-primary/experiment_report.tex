@@ -12,8 +12,9 @@
 \copyrightyear{2026}
 \acmYear{2026}
 \acmDOI{}
+\acmISBN{}
 
-\acmConference[Conference '26]{ACM Conference}{March 2026}{Location}
+\acmConference[CyberSec '26]{Cybersecurity Symposium}{March 2026}{Virtual}
 
 \begin{document}
 
@@ -44,7 +45,7 @@ This report summarizes the complete experimental validation of the Hierarchical 
 \toprule
 \textbf{Item} & \textbf{Specification} \\
 \midrule
-GPU & Intel ARC 130T (16GB VRAM) \\
+GPU & Intel Arc A770 (16GB VRAM) \\
 Framework & PyTorch 2.10.0+xpu \\
 ML Libraries & scikit-learn, SHAP, captum \\
 Visualization & t-SNE, UMAP, matplotlib \\
@@ -222,7 +223,7 @@ Stage 2 Training Samples & 235,556 \\
 
 \textbf{Objective}: Train the Stage 2 deep learning model to handle ``Suspicious'' traffic forwarded by Stage 1.
 
-\textbf{Configuration}: d\_model=128, nhead=8, num\_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU (Intel ARC 130T).
+\textbf{Configuration}: d\_model=128, nhead=8, num\_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU (Intel Arc A770).
 
 \begin{table}[!h]
 \caption{Stage 2 Training Results}
@@ -258,7 +259,7 @@ Training Time & 64.18 min \\
 \midrule
 CNN-Only & 2,703 & 61.89\% & 0.668 & 0.235 \\
 No-ECA (CNN+Trans) & 301,455 & 92.05\% & 0.947 & 0.675 \\
-\textbf{Full TransECA-Net} & 301,460 & 89.71\% & 0.925 & \textbf{0.759} \\
+\textbf{Full TransECA-Net} (@20 epochs) & 301,460 & 89.71\% & 0.925 & \textbf{0.759} \\
 \bottomrule
 \end{tabular}
 \end{table*}

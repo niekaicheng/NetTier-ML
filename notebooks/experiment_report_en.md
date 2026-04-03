@@ -2,7 +2,7 @@
 
 > **Project**: 6800GNetTier-ML  
 > **Report Date**: 2026-03-22  
-> **Experiment Hardware**: Intel ARC 130T GPU (16GB), PyTorch 2.10.0+xpu  
+> **Experiment Hardware**: Intel Arc A770 GPU (16GB), PyTorch 2.10.0+xpu  
 > **Data Sources**: experimentalRank, experimental_design.md, verification_logic_chain.md
 
 ---
@@ -21,7 +21,7 @@ This report summarizes the complete experimental validation of the Hierarchical 
 
 | Item          | Specification              |
 | ------------- | -------------------------- |
-| GPU           | Intel ARC 130T (16GB VRAM) |
+| GPU           | Intel Arc A770 (16GB VRAM) |
 | Framework     | PyTorch 2.10.0+xpu         |
 | ML Libraries  | scikit-learn, SHAP, captum |
 | Visualization | t-SNE, UMAP, matplotlib    |
@@ -154,7 +154,7 @@ Dataset selection is based on [4]'s 15 evaluation criteria. CIC-IDS2017 [1] outp
 
 **Objective**: Train the Stage 2 deep learning model to handle "Suspicious" traffic forwarded by Stage 1.
 
-**Configuration**: d_model=128, nhead=8, num_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU (Intel ARC 130T).
+**Configuration**: d_model=128, nhead=8, num_layers=3, BS=512, 30 epochs, AdamW + CosineAnnealingWarmRestarts, XPU (Intel Arc A770).
 
 | Metric            | Result     |
 | ----------------- | ---------- |
@@ -181,7 +181,7 @@ Dataset selection is based on [4]'s 15 evaluation criteria. CIC-IDS2017 [1] outp
 | --------------------- | ---------- | -------- | ----- | --------- |
 | CNN-Only              | 2,703      | 61.89%   | 0.668 | 0.235     |
 | No-ECA (CNN+Trans)    | 301,455    | 92.05%   | 0.947 | 0.675     |
-| **Full TransECA-Net** | 301,460    | 89.71%   | 0.925 | **0.759** |
+| **Full TransECA-Net** (@ 20 epochs) | 301,460    | 89.71%   | 0.925 | **0.759** |
 
 **Component Contribution Analysis**:
 
