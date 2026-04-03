@@ -127,7 +127,7 @@ E16 & Time-aware Split + Full Data & Val/Test F1 $\approx$ 1.00, Attack Recall $
 \end{tabular}
 \end{table*}
 
-\textbf{Method}: 5$\times$3 Nested Cross-Validation (outer 5-Fold evaluation, inner 3-Fold tuning), search space of 1,296 combinations, including \texttt{n\_estimators}, \texttt{max\_depth}, \texttt{class\_weight} and other parameters. E16 additionally employs Time-aware Split for full-data training. The results are summarized in Table~\ref{tab:s1_baseline}.
+\textbf{Method}: 5$\times$3 Nested Cross-Validation (outer 5-Fold evaluation, inner 3-Fold tuning), search space of 48 combinations, including \texttt{n\_estimators}, \texttt{max\_depth}, \texttt{class\_weight} and other parameters. E16 additionally employs Time-aware Split for full-data training. The results are summarized in Table~\ref{tab:s1_baseline}.
 
 \textbf{Analysis}: The gap between E1's 0.796 and full training's 1.00 reflects a \textbf{data volume effect} rather than selection bias --- Nested CV guarantees unbiased estimation through inner-outer loop isolation \cite{12}. After full training, RF approaches saturated performance on the binary classification task.
 
@@ -182,14 +182,14 @@ Pass-through Rate $\alpha$ & \textbf{15.25\%} \\
 \textbf{Metric} & \textbf{Result} & \textbf{Target} \\
 \midrule
 Stage 1 Latency & \textbf{6.12 $\mu$s/sample} & < 10 $\mu$s \\
-Throughput & \textbf{163,399 samples/s} & > 100K \\
+Throughput & \textbf{163,086 samples/s} & > 100K \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \noindent Table~\ref{tab:latency} presents the latency benchmark results.
 
-\textbf{Analysis}: The experimental peak of 6.12 $\mu$s perfectly corroborates the previously theorized \textbf{time complexity axiom $\mathcal{O}(B \cdot D)$ \cite{11}}. By rigidly constraining the ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation necessitates at most 1,000 parallel scalar conditionals, compressing the execution latency squarely into minimal L1-cache clock cycles. This mathematically proves that exceeding the \cite{6} baseline by 33\% stems primarily from precise theoretical variance-scale truncations, rather than hardware over-provisioning. Consequently, for a typical 50K pps load, the system utilization ratio bounds safely at merely $\rho = 50000/163399 = 0.31$ (abundant overhead margin).
+\textbf{Analysis}: The experimental peak of 6.12 $\mu$s corroborates the \textbf{time complexity $\mathcal{O}(B \cdot D)$ \cite{11}}. By constraining ensemble parameters to $B=50$ and $D \le 20$, each sample evaluation requires at most 1,000 parallel scalar conditionals, compressing execution latency into L1-cache clock cycles. This confirms that exceeding the \cite{6} baseline by 33\% stems from precise variance-scale truncations rather than hardware over-provisioning. For a typical 50K pps load, the system utilization ratio is $\rho = 50000/163086 = 0.31$ (abundant overhead margin).
 
 \subsection{Stage 1 Full Training}
 \textbf{Logic Chain Deduction}: Experiments involving heuristic parameter tuning, threshold estimation, and hardware execution efficiency empirically confirm Stage 1's adequacy as an upstream data filter. Since relatively lenient thresholds prioritize overall packet throughput, a substantial quantity of ``Hard Examples'' possessing intricate deceptive characteristics routinely penetrates this specific barrier layer. This procedural step generates a generalized production model on the extensive, complete datastore while systematically slicing and mining via cross-validation to isolate these hard-to-classify bypass traffic residuals. This segregated sample cluster represents the exact, dimensionally complex traffic demographic systematically funneled forward as a focused training baseline for the high-capacity Stage 2 architecture (TransECA-Net).
@@ -580,7 +580,7 @@ Finally, the ECA channel weight distribution yields a coefficient of variation o
 \includegraphics[width=\columnwidth]{../results/E10_ig_per_class.png}
 \end{figure}
 
-\textit{Note (Figure 10 --- Per-Class Topological Isolation).} The fine-grained heatmap projects IG attributions across a cross-dimensional matrix of 15 attack classes and Top-15 features, unmasking the model's heterogeneous, non-monolithic activation strategy. \textbf{Extreme Value Emergence}: \texttt{FTP-Patator} triggers an extreme positive zenith (6.024) exclusively in \texttt{Init Fwd Win Bytes}, mapping exactly to gross TCP window anomalies canonical to brute-force assaults. Conversely, \texttt{Bot} traffic inflicts the entire map's maximum negative plunge (-4.702) upon \texttt{Fwd IAT Total}, demonstrating that chronometric intervals operate inversely for botnets compared to kinetic bombardments. Alternatively, \texttt{Heartbleed} heavily spikes \texttt{Bwd Header Length} (5.250), aligning perfectly with the protocol-layer mechanics of memory-bounding out-of-bounds read exploits. \textbf{Intra-Family Divergence}: Significantly, the DoS family does not deploy a unified signature template---\texttt{GoldenEye} exhibits uniform multi-feature hyper-activation across IAT, packet rates, and window properties; comparatively, \texttt{Slowloris} is overwhelmingly anchored by minimum forward segment scales (Fwd Seg Size Min=2.586). Finally, \texttt{Benign} traffic yields blanket flatline IG values consistently lower than attack categories.
+\textit{Note (Figure 10 --- Per-Class Topological Isolation).} The fine-grained heatmap projects IG attributions across a cross-dimensional matrix of 15 attack classes and Top-15 features, unmasking the model's heterogeneous, non-monolithic activation strategy. \textbf{Extreme Value Emergence}: \texttt{FTP-Patator} triggers an extreme positive zenith (6.024) exclusively in \texttt{Init Fwd Win Bytes}, mapping exactly to gross TCP window anomalies canonical to brute-force assaults. Conversely, \texttt{Bot} traffic inflicts the entire map's maximum negative plunge (-4.702) upon \texttt{Fwd IAT Total}, demonstrating that chronometric intervals operate inversely for botnets compared to kinetic bombardments. Alternatively, \texttt{Heartbleed} heavily spikes \texttt{Bwd Packet Length Max} (5.250), aligning perfectly with the protocol-layer mechanics of memory-bounding out-of-bounds read exploits. \textbf{Intra-Family Divergence}: Significantly, the DoS family does not deploy a unified signature template---\texttt{GoldenEye} exhibits uniform multi-feature hyper-activation across IAT, packet rates, and window properties; comparatively, \texttt{Slowloris} is overwhelmingly anchored by minimum forward segment scales (Fwd Seg Size Min=2.586). Finally, \texttt{Benign} traffic yields blanket flatline IG values consistently lower than attack categories.
 
 \begin{figure}[H]
 \caption{Attention Heatmap}
@@ -598,7 +598,7 @@ Finally, the ECA channel weight distribution yields a coefficient of variation o
 \includegraphics[width=\columnwidth]{../results/E10_eca_channel_weights.png}
 \end{figure}
 
-\textit{Note (Figure 12 --- ECA Channel Activation).} The ECA channel attention distribution explicitly graphs the weights across 128 topological channels (d\_model=128). Displaying a global mean of 0.449 and a CV of 0.020 (yielding an ultra-tight std $\approx$ 0.009), the 128 channel weights remain overwhelmingly concentrated. The maximum annotated peak (`Ch302'=0.488) diverges from the mean by a mere 0.039, confirming an absolute absence of significant inter-channel selectivity. \textbf{The direct physical implication of this near-uniform distribution is}: the ECA module decisively refrains from executing any aggressive suppression or amplification targeting specific channels; rather, it applies an approximately equal-weighted global smoothing operation. \textbf{Cross-Graph Substantiation}: This uniform mathematical geometry directly parallels the empirical outcomes of the E8 ablation study, where the Full vs No-ECA architectural gap hovered at a fractional 1--2pp---the lack of channel selectivity fundamentally yields constrained classification boundary improvements.
+\textit{Note (Figure 12 --- ECA Channel Activation).} The ECA channel attention distribution explicitly graphs the weights across 128 topological channels (d\_model=128). Displaying a global mean of 0.449 and a CV of 0.020 (yielding an ultra-tight std $\approx$ 0.009), the 128 channel weights remain overwhelmingly concentrated. The maximum annotated peak (`Ch127'=0.502) diverges from the mean by a mere 0.053, confirming an absolute absence of significant inter-channel selectivity. \textbf{The direct physical implication of this near-uniform distribution is}: the ECA module decisively refrains from executing any aggressive suppression or amplification targeting specific channels; rather, it applies an approximately equal-weighted global smoothing operation. \textbf{Cross-Graph Substantiation}: This uniform mathematical geometry directly parallels the empirical outcomes of the E8 ablation study, where the Full vs No-ECA architectural gap hovered at a fractional 1--2pp---the lack of channel selectivity fundamentally yields constrained classification boundary improvements.
 
 \paragraph{Cross-Model Validation Final Conclusion.}
 This cross-model validation (Stage 1 RF's SHAP versus Stage 2 TransECA-Net's IG/Attention) not only achieves \textbf{consistency in macroscopic feature selection} (jointly anchoring TCP initial windows and IAT chronological features, flawlessly aligning with domain priors) but also establishes the \textbf{legitimacy of microscopic differentiation}. While Stage 1 provides macroscopic attribution defense, Stage 2's deep gradient propagation mechanisms build upon this to customize orthogonal, independent defensive profiles for specific attacks (e.g., FTP-Patator's anomalous windows, Heartbleed's anomalous headers). Their partial convergence on physical focal points coupled with fine-grained complementarity in classification capabilities completely seals the logic loop of this ``cross-model comparative validation.''
@@ -632,7 +632,7 @@ S2 (TransECA) & M-F1 & 0.7658 & [0.7391, 0.8127] & \textbf{0.0736} \\
 \begin{enumerate}
 \item \textbf{S1 CI is extremely narrow} (< 0.001): Large test set ($n = 462,762$) + F1 $\approx$ 1 (minimal variance) $\to$ highly reliable performance estimates.
 \item \textbf{S2 W-F1 CI = 0.003}: Consistent with the theoretical expectation of CI Width $\propto n^{-1/2}$.
-\item \textbf{S2 M-F1 CI = 0.074 (relatively wide)}: This directly validates the probabilistic collapse assumption regarding the Law of Large Numbers on microscopic minority classes. Because extreme minorities (e.g., Heartbleed $n_k=11$) intrinsically mandate bloated asymptotic variance ($\text{Var} \propto \frac{1}{n_k}$ \cite{13}) under binomial distributions, this isolated metric jitter explicitly reflects inherent mathematical ambient noise rather than neural network fitting flaws.
+\item \textbf{S2 M-F1 CI = 0.074 (relatively wide)}: This directly validates the probabilistic collapse assumption regarding the Law of Large Numbers on microscopic minority classes. Because extreme minorities (e.g., Heartbleed $n_k=3$ in the test set) intrinsically mandate bloated asymptotic variance ($\text{Var} \propto \frac{1}{n_k}$ \cite{13}) under binomial distributions, this isolated metric jitter explicitly reflects inherent mathematical ambient noise rather than neural network fitting flaws.
 \end{enumerate}
 
 
@@ -664,7 +664,7 @@ S2 (TransECA) & M-F1 & 0.7658 & [0.7391, 0.8127] & \textbf{0.0736} \\
 \toprule
 \textbf{Attack} & \textbf{Clean Acc} & \textbf{$\varepsilon$=0.001} & \textbf{$\varepsilon$=0.01} & \textbf{$\varepsilon$=0.1} \\
 \midrule
-RF (L$\infty$ noise) & 99.59\% & \textbf{46.94\%} & 6.45\% & 0.43\% \\
+RF (L$\infty$ noise) & 99.59\% & \textbf{0.65\%} & 0.49\% & 0.43\% \\
 TransECA FGSM & 92.16\% & 90.26\% & \textbf{75.73\%} & 6.09\% \\
 TransECA PGD & 92.16\% & 90.20\% & \textbf{47.28\%} & 0.66\% \\
 \bottomrule
@@ -675,7 +675,7 @@ TransECA PGD & 92.16\% & 90.20\% & \textbf{47.28\%} & 0.66\% \\
 
 \textbf{Three Key Findings}:
 
-\textbf{(1) RF is unexpectedly fragile}: $\varepsilon = 0.001$ drops accuracy from 99.6\% to 47\%, overturning the assumption that ``RF is naturally robust.'' Reason: RF decision boundaries are axis-aligned hyperrectangles; minimal feature value shifts can cross boundaries.
+\textbf{(1) RF is unexpectedly fragile}: $\varepsilon = 0.001$ drops accuracy from 99.6\% to 0.65\%, overturning the assumption that ``RF is naturally robust.'' Reason: RF decision boundaries are axis-aligned hyperrectangles; minimal feature value shifts can cross boundaries.
 
 \textbf{(2) PGD > FGSM}: At $\varepsilon = 0.01$, PGD is 28.5pp lower than FGSM (47\% vs 76\%), validating \cite{17}'s theory --- multi-step iterative optimization finds stronger adversarial examples within the $\ell_\infty$ ball.
 
@@ -697,10 +697,10 @@ Even under the strong PGD attack at $\varepsilon = 0.01$, the system-level evasi
 \includegraphics[width=\columnwidth]{../results/E14_robustness_curve.png}
 \end{figure}
 
-\textit{Note (Figure 14 --- Attack Resilience Curves).} The dual charts present the robustness trajectories across Accuracy and W-F1 dimensions under three attack strategies. \textbf{Unexpected RF Fragility}: Under L$\infty$ random noise, RF sharply plummets from 99.6\% to 46.94\% at just $\varepsilon=0.001$, and collapses to 6.45\% at $\varepsilon=0.01$, overturning the intuitive assumption of ``inherent random forest robustness.'' Theoretically, RF's axis-aligned hyper-rectangular decision boundaries allow minuscule feature shifts to cross classification margins. \textbf{PGD's Intensity Advantage}: At $\varepsilon=0.01$, PGD degrades TransECA's accuracy to 47.28\%, while FGSM only drops it to 75.73\% (a 28.5pp gap), perfectly aligning with \cite{17}'s multi-step iteration theory. \textbf{Orthogonal Weakness Observation}: RF is extremely sensitive to random noise but immune to gradient attacks ($\nabla h_1 \approx 0$), whereas TransECA is relatively stable against random noise but sensitive to parameter gradients. \textbf{System-Level Evasion Estimation}: Factoring in the empirically measured Stage 1 (RF) leak rate ($\alpha=0.1525$), the theoretical system-level evasion rate under intense PGD $\varepsilon=0.01$ conditions is mathematically calculated at 8.04\%, drastically lower than the standalone TransECA's 52.72\%.
+\textit{Note (Figure 14 --- Attack Resilience Curves).} The dual charts present the robustness trajectories across Accuracy and W-F1 dimensions under three attack strategies. \textbf{Unexpected RF Fragility}: Under L$\infty$ random noise, RF sharply plummets from 99.6\% to 0.65\% at just $\varepsilon=0.001$, and collapses to 0.49\% at $\varepsilon=0.01$, overturning the intuitive assumption of ``inherent random forest robustness.'' Theoretically, RF's axis-aligned hyper-rectangular decision boundaries allow minuscule feature shifts to cross classification margins. \textbf{PGD's Intensity Advantage}: At $\varepsilon=0.01$, PGD degrades TransECA's accuracy to 47.28\%, while FGSM only drops it to 75.73\% (a 28.5pp gap), perfectly aligning with \cite{17}'s multi-step iteration theory. \textbf{Orthogonal Weakness Observation}: RF is extremely sensitive to random noise but immune to gradient attacks ($\nabla h_1 \approx 0$), whereas TransECA is relatively stable against random noise but sensitive to parameter gradients. \textbf{System-Level Evasion Estimation}: Factoring in the empirically measured Stage 1 (RF) leak rate ($\alpha=0.1525$), the theoretical system-level evasion rate under intense PGD $\varepsilon=0.01$ conditions is mathematically calculated at 8.04\%, drastically lower than the standalone TransECA's 52.72\%.
 
 \begin{enumerate}
-\item \textbf{Robust Anchors}: Heartbleed emerges as the strongest resilient class globally (sustaining a flawless 1.00 even at $\varepsilon=0.05$). Paired with E10's IG extrema analysis (\texttt{Bwd Header Length} IG=5.250), it empirically proves that classes with hyper-concentrated feature signatures possess decision boundaries inherently resistant to localized gradient perturbations.
+\item \textbf{Robust Anchors}: Heartbleed emerges as the strongest resilient class globally (sustaining a flawless 1.00 even at $\varepsilon=0.05$). Paired with E10's IG extrema analysis (\texttt{Bwd Packet Length Max} IG=5.250), it empirically proves that classes with hyper-concentrated feature signatures possess decision boundaries inherently resistant to localized gradient perturbations.
 \item \textbf{Vulnerability Tiers}: ``Early-collapse'' modalities like Benign and the Web Attack family completely destabilize under microscopic perturbations (at $\varepsilon=0.001$, Web Attack plummets to 0.18, Benign to 0.68). These constitute the most severe structural breach points for evasion tactics.
 \item \textbf{Non-Monotonic Anomalies (Unverified Hypothesis)}: Classes such as Bot, DDoS, and DoS Slowhttpstest exhibit paradoxical accuracy rebounds at higher perturbations (e.g., Slowhttpstest spiking to 0.83 at $\varepsilon=0.1$). One possible explanation is that severe perturbations project these samples into the dense decision sub-regions of adjacent attack categories, generating ``false positive hits'' rather than true defensive resilience. However, this hypothesis has not been verified with per-class confusion matrix analysis under adversarial conditions and is flagged as a direction for future investigation.
 \end{enumerate}
@@ -719,7 +719,7 @@ Even under the strong PGD attack at $\varepsilon = 0.01$, the system-level evasi
 
 Consolidating the empirical observations and stringent theoretical projections derived from the dual charts, E14 does not merely juxtapose two individually flawed models. Rather, it formally establishes the pinnacle real-world security dividend of this architecture---\textbf{``Structural Orthogonality Defense''}.
 \begin{enumerate}
-\item \textbf{Physical Isolation of Algorithmic Vulnerabilities}: The evaluations empirically reveal that the fundamentally distinct mathematical substrates of the two stages geometrically isolate their attack surfaces. Stage 1 (RF) is hypersensitive to random noise (degrading to 6.45\% at $\varepsilon=0.01$), yet its discontinuous, non-differentiable step-function axis splits ($\nabla h_1 \approx 0$) render it intrinsically immune to gradient-resolving attacks that rely on back-propagation. Conversely, Stage 2 (TransECA-Net) is uniquely susceptible to hyper-precise PGD gradient manipulation (degrading to 47.28\%), but acts as a robust sponge to smoothly filter out macroscopic random uniform noise.
+\item \textbf{Physical Isolation of Algorithmic Vulnerabilities}: The evaluations empirically reveal that the fundamentally distinct mathematical substrates of the two stages geometrically isolate their attack surfaces. Stage 1 (RF) is hypersensitive to random noise (degrading to 0.49\% at $\varepsilon=0.01$), yet its discontinuous, non-differentiable step-function axis splits ($\nabla h_1 \approx 0$) render it intrinsically immune to gradient-resolving attacks that rely on back-propagation. Conversely, Stage 2 (TransECA-Net) is uniquely susceptible to hyper-precise PGD gradient manipulation (degrading to 47.28\%), but acts as a robust sponge to smoothly filter out macroscopic random uniform noise.
 \item \textbf{Engineering Asymmetrical Attack Barriers}: This diametrical divergence strictly mandates mutually exclusive regions within the attacker's adversarial generation space. Evading the holistic architecture dictates an unprecedented complexity: an attacker's single continuous network flow payload must synchronously encapsulate a barrage of ``macro-dispersion discrete noise (to blind S1)'' while retaining a matrix of ``hyper-precise localized back-propagation fine-tuning (to crack S2).'' This mathematically contradictory demand---an \textbf{``impossible evasion triangle'' rooted in the principle of Security Diversity \cite{15}}---serves as the explicit architectural logic anchoring the theoretical compression of our cascaded global evasion probability to roughly 8\% ($0.1525 \times 0.5272$).
 \end{enumerate}
 
@@ -752,9 +752,14 @@ RF Learning Curve & Gap@1\% = 0.0106, Gap@100\% = \textbf{0.0016} (low Variance)
 \toprule
 \textbf{Prediction} & \textbf{Theoretical Source} & \textbf{Experimental Result} & \textbf{Verified?} \\
 \midrule
-RF Low Variance & \cite{11}: Bagging $\uparrow B$ reduces Var & OOB 50$\to$200 nearly unchanged & Verified \\
-RF Low Bias & Decision trees are strong learners & L-Curve Gap@100\% = 0.0016 & Verified \\
-DL High Variance & \cite{5} & Gen Gap = +0.006 (low) & \textbf{Overturned} \\
+Bagging reduces RF Variance & \cite{11} & E4: OOB 50$\to$200 nearly unchanged & Verified \\
+DL High Variance & \cite{5} & E4: Gen Gap = 0.006 (low) & Overturned \\
+RF robust to perturbation & Prior belief (ensemble stability) & E14: RF $\varepsilon$=0.001 $\to$ 0.65\% & Overturned \\
+PGD stronger than FGSM & \cite{17} & E14: PGD vs FGSM @$\varepsilon$=0.01: 47\% vs 76\% & Verified \\
+SHAP axiomatic uniqueness & \cite{16} & E2: SHAP vs Gini $\rho$=0.94 & Verified \\
+Learned representations outperform raw features & \cite{5} & E12: Silhouette +59\% & Verified \\
+Hierarchical reduces expected cost & Mathematical derivation & E11+E17: 6.07$\times$ speedup & Verified \\
+Cross-domain generalization limited by domain distance & \cite{10} & E15: UNSW 64\% < CIC 93\% & Verified \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -836,7 +841,6 @@ UMAP (Embedding) & \textbf{-0.0668} \\
 \midrule
 Mean Silhouette & -0.1985 & \textbf{-0.0814} \\
 \textbf{Improvement} & --- & \textbf{+59\%} \\
-\bottomrule
 \end{tabular}
 \end{table}
 
@@ -945,9 +949,9 @@ Beyond macro-architectural performance, our evaluations are strictly underwritte
 $$ \text{Var}_{\text{ensemble}} = \rho\sigma^2 + \frac{1-\rho}{B}\sigma^2 $$
 Our E4 evaluation demonstrated that the OOB Error converges perfectly at $0.00171$ after $B=50$ trees. \textbf{Conclusion Verification}: As $B$ increases, the term $\frac{1-\rho}{B}$ diminishes to zero, locking the system bottleneck to the intrinsic tree correlation $\rho$. This mathematically proves that deploying a tiny-scale RF ($B \approx 50$) as the Phase-1 high-speed filter is theoretically optimal and saturated in performance.
 
-\textbf{2. Confidence Interval Behavior Under Extreme Imbalance (Binomial Asymptotics)}: In E6, extreme minority classes (e.g., Heartbleed with only 11 samples) exhibited a very wide Bootstrap confidence interval (CI = 0.074). This is not an architectural liability; it stems from the asymptotic variance of multinomial distributions:
+\textbf{2. Confidence Interval Behavior Under Extreme Imbalance (Binomial Asymptotics)}: In E6, extreme minority classes (e.g., Heartbleed with only 3 test samples) exhibited a very wide Bootstrap confidence interval (CI = 0.074). This is not an architectural liability; it stems from the asymptotic variance of multinomial distributions:
 $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{n_k} $$
-\textbf{Conclusion Verification}: The formula dictates that interval width is inversely proportional to $\sqrt{n_k}$. When $n_k \to 11$, local variance explodes mathematically. This theoretically proves that minority class jitter is an \textbf{unsurpassable mathematical noise floor}, entirely resolving any misconceptions about ``model fitting deficiency.''
+\textbf{Conclusion Verification}: The formula dictates that interval width is inversely proportional to $\sqrt{n_k}$. When $n_k \to 3$, local variance explodes mathematically. This theoretically proves that minority class jitter is an \textbf{unsurpassable mathematical noise floor}, entirely resolving any misconceptions about ``model fitting deficiency.''
 
 
 \begin{table*}[!t]
@@ -959,7 +963,7 @@ $$ \text{Var}(\text{M-F1}) \approx \frac{1}{K^2} \sum_{k=1}^K \frac{p_k(1-p_k)}{
 \midrule
 Bagging reduces RF Variance & \cite{11} & E4: OOB 50$\to$200 trees nearly unchanged & Verified \\
 DL High Variance & \cite{5} & E4: Gen Gap = 0.006 (low) & Overturned \\
-RF robust to perturbation & Prior belief (ensemble stability) & E14: RF $\varepsilon$=0.001 $\to$ 47\% & Overturned \\
+RF robust to perturbation & Prior belief (ensemble stability) & E14: RF $\varepsilon$=0.001 $\to$ 0.65\% & Overturned \\
 PGD stronger than FGSM & \cite{17} & E14: PGD vs FGSM @$\varepsilon$=0.01: 47\% vs 76\% & Verified \\
 SHAP axiomatic uniqueness & \cite{16} & E2: SHAP vs Gini $\rho$=0.94 & Verified \\
 Learned representations outperform raw features & \cite{5} & E12: Silhouette +59\% & Verified \\
@@ -978,7 +982,7 @@ M-F1 CI dominated by minority class samples & $\text{Var} \propto 1/n_k$ & E6: M
 \begin{enumerate}
 \item \textbf{DL High Variance (\cite{5}) $\to$ Overturned}: TransECA-Net showed a microscopic Generalization Gap of +0.006 in E4, indicating extremely low variance. Root Cause: \cite{3}'s observation assumes insufficient data or weak regularization. By leveraging a massive dataset (235K hard examples) combined with modern explicit sparse regularization (AdamW weight decay + Cosine Annealing + Dropout), our model successfully suppresses high variance while maintaining high representational capacity.
 
-\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 46.94\%. This expectation was an informal prior belief based on ensemble stability (Breiman \cite{11} proves variance reduction via bagging but does not claim robustness to uniform additive noise). Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
+\item \textbf{RF is Naturally Robust to Micro-noise (Bagging Principle) $\to$ Overturned}: Under a tiny $L_\infty$ uniform noise ($\varepsilon = 0.001$) in E14, RF accuracy collapsed precipitously from 99.59\% to 0.65\%. This expectation was an informal prior belief based on ensemble stability (Breiman \cite{11} proves variance reduction via bagging but does not claim robustness to uniform additive noise). Root Cause: The decision boundaries of an RF in high dimensions are axis-aligned hyper-rectangles with step-function (non-smooth) splits. A tiny uniform additive noise easily pushes samples across these rigid boundaries. This reveals a fundamental fragility of tree-based models to simple additive noise (even though they are immune to gradient-based attacks).
 \end{enumerate}
 
 \textbf{Strategic System Significance (Orthogonal Weaknesses)}: If we solely relied on Stage 1 (RF), the system would collapse under simple noise. If we solely relied on Stage 2 (DL), the system would be easily evaded by PGD gradient attacks and computationally infeasible. In our \textbf{two-stage architecture}, RF is immune to gradients, and DL resists simple noise. Because an attacker cannot craft a payload that is simultaneously pure uniform noise and an exact adversarial gradient, the overall system evasion rate is suppressed to a mere 8.04\%. This is the ultimate experimental justification for the hierarchical design.
