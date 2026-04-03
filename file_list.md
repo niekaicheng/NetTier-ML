@@ -307,7 +307,7 @@
 | `notebooks/experiment_report_zh.md` | Markdown 格式实验报告（中文） |
 | `notebooks/experiment_report_en.docx` | Word 格式实验报告（英文） `[草稿]` md 的衍生版本 |
 | `notebooks/experiment_report_zh.docx` | Word 格式实验报告（中文） `[草稿]` md 的衍生版本 |
-| `notebooks/experiment_E1_nested_cv.md` | E1 嵌套CV实验详细记录 |
+| `notebooks/deep_learning_feasibility_analysis.md` | 深度学习可行性分析报告（从根目录迁入） |
 | `notebooks/verification_logic_chain.md` | 实验验证逻辑链文档（中文） |
 | `notebooks/verification_logic_chain_en.md` | 实验验证逻辑链文档（英文） |
 | `notebooks/verification_logic_chain.docx` | 验证逻辑链 Word 文档（中文） `[草稿]` md 的衍生版本 |
@@ -315,6 +315,20 @@
 | `notebooks/literature_analysis.md` | 文献综述分析 |
 | `notebooks/experimentalRank` | 实验优先级排序文档（中文） |
 | `notebooks/experimentalRank_en` | 实验优先级排序文档（英文） |
+
+### 实验详细记录 (`notebooks/experiments/`)
+
+| 文件 | 介绍 |
+|------|------|
+| `notebooks/experiments/experiment_E1_nested_cv.md` | E1 嵌套交叉验证实验详细记录 |
+| `notebooks/experiments/experiment_E2_shap.md` | E2 SHAP 特征重要性分析记录 |
+| `notebooks/experiments/experiment_E4_bias_variance.md` | E4 偏差-方差分析记录 |
+| `notebooks/experiments/experiment_E8_ablation.md` | E8 TransECA-Net 消融实验记录 |
+| `notebooks/experiments/experiment_E10_interpretability.md` | E10 可解释性分析记录（IG + Attention） |
+| `notebooks/experiments/experiment_E14_adversarial.md` | E14 对抗鲁棒性测试记录 |
+| `notebooks/experiments/experiment_E15_generalization.md` | E15 跨数据集泛化测试记录 |
+| `notebooks/experiments/experiment_E17_threshold.md` | E17 决策阈值调优记录 |
+| `notebooks/experiments/STAGE2_DL_SUMMARY.md` | Stage 2 深度学习阶段总结（从根目录迁入） |
 
 ---
 
@@ -355,8 +369,6 @@
 | `.vscode/settings.json` | VS Code 编辑器配置 |
 | `data_manifest.md` | 数据集清单，记录各数据文件来源与描述 |
 | `file_guide_en.md` | 项目文件结构导航指南（英文） |
-| `deep_learning_feasibility_analysis.md` | 深度学习可行性分析报告 |
-| `STAGE2_DL_SUMMARY.md` | Stage 2 深度学习阶段总结 |
 | `cite6800G.txt` | 引用格式参考文本 |
 | `paperlist.txt` | 参考论文列表 |
 | `paperref.txt` | 参考文献引用字符串 |

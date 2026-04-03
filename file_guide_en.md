@@ -30,9 +30,16 @@ Files used to showcase work results.
 *   **`results/`**: Stores generated charts (confusion matrices, feature importance) and text reports.
     *   `stage1_cm.png`, `stage1_report.txt`, etc.
 
-## 4. Auxiliary Docs (Auxiliary Docs) —— **[Reference]**
-*   **`notebooks/`**: Contains some text notes you created previously (such as `firstrunreport.txt`, etc.). The content has been integrated into the above formal reports and can be retained as a backup.
-*   **`requirement.txt`**: Original requirements document.
+## 4. Auxiliary Docs (Auxiliary Docs) — **[Reference]**
+*   **`notebooks/`**: Documentation hub for the project.
+    *   `experimental_design.md/en.md`: Experiment design specifications (CN/EN).
+    *   `experiment_report_en.md / zh.md`: Full experiment reports (EN/CN).
+    *   `verification_logic_chain.md/en.md`: Evidence chain documentation.
+    *   `literature_analysis.md`: Literature review.
+    *   `experimentalRank / experimentalRank_en`: Experiment priority rankings.
+    *   **`experiments/`**: Detailed per-experiment records (E1, E2, E4, E8, E10, E14, E15, E17) — each documenting objectives, methodology, parameters, results, and analysis.
+*   **`REPRODUCIBILITY.md`**: Complete guide for reproducing all experiments.
+*   **`requirement_en.txt`**: Original project requirements document.
 
 ## 5. Temporary Files (Temporary) —— **[Can Delete / Archived]**
 *   **`temp/`**: Intermediate temporary files organized into it just now (such as `read_pdf.py`, `debug_etl.py`, etc.). If you no longer need debugging, you can delete the entire folder.
