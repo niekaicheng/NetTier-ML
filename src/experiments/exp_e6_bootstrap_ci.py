@@ -137,7 +137,11 @@ def bootstrap_metrics(y_true, y_pred, n_bootstrap=1000, confidence=0.95,
     mf1_arr = mf1_arr[:valid_count]
     wp_arr = wp_arr[:valid_count]
     wr_arr = wr_arr[:valid_count]
-    
+
+    if valid_count < n_bootstrap * 0.95:
+        print(f"  ⚠ Warning: Only {valid_count}/{n_bootstrap} bootstrap iterations were valid "
+              f"({valid_count / n_bootstrap * 100:.1f}%). CI reliability may be reduced.")
+
     def _ci(vals):
         return {
             'mean': float(np.mean(vals)),

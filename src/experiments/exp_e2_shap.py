@@ -58,15 +58,8 @@ def sample_balanced_data(data_dir, preprocessor, n_per_class=500, random_state=4
     df_all = pd.concat(dfs, ignore_index=True)
     print(f"  ✓ Total loaded: {df_all.shape[0]:,} samples")
 
-    # 分层抽样
+    # 分层抽样（保留 Label 列供后续使用）
     print(f"  Stratified sampling: max {n_per_class} per class ...")
-    sampled = df_all.groupby('Label', observed=True).apply(
-        lambda x: x.sample(n=min(len(x), n_per_class), random_state=random_state),
-        include_groups=False
-    ).reset_index(drop=True)
-
-    # 重新附上 Label 列 (groupby 可能丢失)
-    # 由于 include_groups=False 会去掉 Label 列，需要重新合并
     sampled_with_label = df_all.groupby('Label', observed=True).apply(
         lambda x: x.sample(n=min(len(x), n_per_class), random_state=random_state)
     ).reset_index(drop=True)

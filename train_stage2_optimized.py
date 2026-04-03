@@ -31,6 +31,17 @@ import seaborn as sns
 sys.path.append(os.path.join(os.getcwd(), 'src'))
 sys.stdout.reconfigure(encoding='utf-8')
 
+# ── 随机种子固定（保证实验可重现性）──────────────────────────────────────
+import random
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+# ─────────────────────────────────────────────────────────────────────────
+
 from processing.preprocess import DataPreprocessor
 from models.stage2_transeca import TransECANet
 from utils.training_logger import TrainingLogger
@@ -242,7 +253,7 @@ def main():
     y_test_t = torch.tensor(y_test_enc, dtype=torch.long)
     
     batch_size = 512
-    num_workers = 4  # GPU内存充足时可用多线程加载
+    num_workers = 0  # 固定为 0，确保多进程不破坏随机种子的确定性
     train_loader = DataLoader(
         TensorDataset(X_train_t, y_train_t),
         batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True,
@@ -422,7 +433,7 @@ def main():
         )
         
         # 学习率调度
-        scheduler.step(epoch + 1)
+        scheduler.step()
         
         # Early Stopping
         early_stopping(val_loss, val_acc, model, "models_chk/stage2_transeca_best.pth")
@@ -493,6 +504,20 @@ def main():
     # 保存最终模型
     torch.save(model.state_dict(), "models_chk/stage2_transeca.pth")
     print(f"  ✓ Model → models_chk/stage2_transeca.pth")
+
+    # 保存模型配置（供 run_pipeline.py 加载时使用，避免 num_classes 不匹配）
+    import json
+    model_config = {
+        "num_features": num_features,
+        "num_classes": num_classes,
+        "d_model": 128,
+        "nhead": 8,
+        "num_layers": 3,
+        "class_names": class_names
+    }
+    with open("models_chk/stage2_config.json", "w", encoding="utf-8") as f:
+        json.dump(model_config, f, indent=2, ensure_ascii=False)
+    print(f"  ✓ Config → models_chk/stage2_config.json")
     
     # 记录结果和产物
     logger.set_results(

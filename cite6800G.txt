@@ -8,7 +8,7 @@ classification. Applied Sciences, 15(6), 2977. https://doi.org/10.3390/app150629
 detection data sets. Computers & Security, 86, 147–167. https://doi.org/10.1016/j.cose.2019.06.005
 5. Ahmad, A., & Adnane, A. (2025). Federated learning augmented cybersecurity for SDN-based aeronautical
 communication network. Electronics, 14(8), 1535. https://doi.org/10.3390/electronics14081535
-6. Doula, S. A., & Al-Zewairi, M. (2025). Analysis of machine learning-based methods for network traffic anomaly detection and prediction. Proceedings of the 21st International Conference on Web Information Systems and Technologies (WEBIST). https://www.scitepress.org/Papers/2025/137018/137018.pdf 
+6. Wang, J. (2025). Analysis of Machine Learning-Based Methods for Network Traffic Anomaly Detection and Prediction. Proceedings of the 2nd International Conference on Data Science and Engineering (ICDSE 2025), 550-554. https://doi.org/10.5220/0013701800004670
 7. Abu Al-Haija, Q., Krichen, M., & Abu Elhaija, W. (2022). Machine-Learning-Based Darknet Traffic Detection
 System for IoT Applications. Electronics, 11(4), 556. https://doi.org/10.3390/electronics11040556
 8. Kaur, H., & Singh, G. (2021). Machine learning techniques for anomaly detection in network traffic. 2021

@@ -91,9 +91,7 @@ def main():
     if 'Benign' in classes:
         benign_idx = list(classes).index('Benign')
     else:
-        # Fallback/Check
-        print("Warning: 'Benign' class not found in LabelEncoder? Mapping anyway.")
-        benign_idx = 0 
+        raise ValueError(f"'Benign' class not found in label encoder. Available classes: {list(classes)}")
         
     # Convert to Binary
     # Benign -> 0

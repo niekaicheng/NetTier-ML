@@ -236,19 +236,20 @@ def compute_integrated_gradients(model, X_tensor, y_enc, class_names,
     # Baseline = zero vector (represents "absence of information")
     baseline = torch.zeros_like(X_sample[0:1]).to(device)
 
-    # Compute IG for each sample targeting its true class
+    # Compute IG for each sample targeting its predicted class
+    # (使用预测类别而非真实类别，反映模型的实际决策归因)
     all_attr = torch.zeros(len(sample_idx), X_tensor.shape[1])
 
     batch_size = 64
     for start in range(0, len(sample_idx), batch_size):
         end = min(start + batch_size, len(sample_idx))
         x_batch = X_sample[start:end]
-        y_batch = y_sample[start:end]
 
         # IG per sample
         for i in range(len(x_batch)):
             xi = x_batch[i:i+1]
-            target_class = int(y_batch[i])
+            with torch.no_grad():
+                target_class = int(model(xi).argmax(dim=1).item())
             bl = baseline.expand_as(xi)
 
             attr = ig.attribute(xi, baselines=bl, target=target_class,

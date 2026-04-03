@@ -118,8 +118,16 @@ def load_dl_training_curves():
     Load TransECA-Net training history from training_log.json.
     Returns epoch-level train_loss, val_loss, train_acc, val_acc.
     """
-    with open("results/training_log.json", 'r', encoding='utf-8') as f:
-        log = json.load(f)
+    log_path = "results/training_log.json"
+    if not os.path.exists(log_path):
+        raise FileNotFoundError(
+            f"{log_path} not found. Please run train_stage2_optimized.py first."
+        )
+    with open(log_path, 'r', encoding='utf-8') as f:
+        try:
+            log = json.load(f)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Failed to parse {log_path}: {e}") from e
 
     # training_log.json is a list of run dicts
     if isinstance(log, dict):

@@ -11,7 +11,7 @@ class HierarchicalIDS:
         
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.stage2 = TransECANet(**stage2_params).to(self.device)
-        self.stage2.load_state_dict(torch.load(stage2_path, map_location=self.device))
+        self.stage2.load_state_dict(torch.load(stage2_path, map_location=self.device, weights_only=True))
         self.stage2.eval()
         
     def predict(self, X_numpy, X_torch):

@@ -69,17 +69,27 @@ def main():
         print("Models not ready yet.")
         return
 
-    # Stage 2 params need to match training (num_features, num_classes)
-    # Limitation: we don't know exact num_classes from training without metadata.
-    # We assume 'train_stage2' used similar data or we hardcode.
-    # Let's infer from current data (dangerous if test set has fewer classes)
-    # For robust demo, we assume the test set covers the classes or we strictly define them.
-    stage2_params = {
-        "num_features": X_scaled.shape[1],
-        "num_classes": len(classes) # This might mismatch if training had more classes!
-    }
-    
-    # Ideally we save model config json. For this script, we proceed.
+    # 从训练时保存的配置文件读取 Stage 2 参数，避免从测试数据推断 num_classes 导致维度不匹配
+    import json
+    config_path = "models_chk/stage2_config.json"
+    if os.path.exists(config_path):
+        with open(config_path, "r", encoding="utf-8") as f:
+            model_config = json.load(f)
+        stage2_params = {
+            "num_features": model_config["num_features"],
+            "num_classes": model_config["num_classes"],
+            "d_model": model_config.get("d_model", 128),
+            "nhead": model_config.get("nhead", 8),
+            "num_layers": model_config.get("num_layers", 3),
+        }
+        print(f"Loaded Stage 2 config: {model_config['num_classes']} classes, {model_config['num_features']} features")
+    else:
+        # 兼容旧版本（无配置文件时从当前数据推断，存在类别不匹配风险）
+        print("Warning: stage2_config.json not found, inferring num_classes from test data (may mismatch training).")
+        stage2_params = {
+            "num_features": X_scaled.shape[1],
+            "num_classes": len(classes),
+        }
     
     ids = HierarchicalIDS(stage1_path, stage2_path, stage2_params)
     
