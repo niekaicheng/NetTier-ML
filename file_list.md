@@ -1,13 +1,12 @@
 # 项目文件清单
 
-> 生成日期：2026-04-02  
+> 最后更新：2026-04-02  
 > 项目：6800GNetTier-ML — 网络入侵检测系统（NIDS）两阶段机器学习研究
 
 ### 标记说明
 
 | 标记 | 含义 |
 |------|------|
-| `[待删-H]` | 确定未使用，可安全删除（高优先级） |
 | `[待删-M]` | 过时版本或未被论文引用，建议删除（中优先级） |
 | `[待删-L]` | 一次性工具脚本，任务已完成（低优先级） |
 | `[重复]` | 与其他目录下的文件内容完全相同 |
@@ -21,11 +20,11 @@
 
 | 文件 | 介绍 |
 |------|------|
-| `main.py` | 主程序入口，协调整个 ML 流水线执行 `[待删-M]` 仅有 TODO 骨架，无实际实现，未被任何脚本调用 |
+| `main.py` | 主程序入口 `[待删-M]` 仅有 TODO 骨架，无实际实现，未被任何脚本调用 |
 | `run_pipeline.py` | 完整实验流水线运行脚本，按序执行各实验 |
 | `train_stage1.py` | 第一阶段训练脚本：训练随机森林分类器 |
 | `train_stage2.py` | 第二阶段训练脚本：训练 TransECA-Net Transformer 模型 |
-| `train_stage2_optimized.py` | 优化版 Stage 2 训练，含超参数调优 |
+| `train_stage2_optimized.py` | 优化版 Stage 2 训练，含超参数调优（主用版本） |
 | `run_dashboard.bat` | Windows 批处理文件，启动可视化 Dashboard |
 
 ---
@@ -47,10 +46,10 @@
 |------|------|
 | `src/processing/loader.py` | 标准数据加载器，读取 parquet 格式数据集 |
 | `src/processing/loader_stratified.py` | 分层采样数据加载器，处理类别不平衡 |
-| `src/processing/loader_time_aware.py` | 时间感知数据加载器，保持时序特性 `[待删-L]` 为不存在的 E16 实验设计，无任何调用方 |
+| `src/processing/loader_time_aware.py` | 时间感知数据加载器 `[待删-L]` 为不存在的 E16 实验设计，无任何调用方 |
 | `src/processing/preprocess.py` | 特征工程与数据预处理（归一化、编码等） |
 | `src/processing/pipeline_utils.py` | 流水线通用工具函数 |
-| `src/processing/convert_csv_to_parquet.py` | 将原始 CSV 数据集转换为 Parquet 格式 `[待删-L]` 数据已完成转换，不再需要 |
+| `src/processing/convert_csv_to_parquet.py` | 将原始 CSV 数据集转换为 Parquet 格式 `[待删-L]` 数据已完成转换 |
 
 ### 实验 (`src/experiments/`)
 
@@ -86,7 +85,7 @@
 | `analyze_results.py` | 汇总分析所有实验结果，生成报告 |
 | `check_data_suitability.py` | 检查数据集是否适合研究目标 |
 | `fix_figures.py` | 修复/重新生成论文所需图表 `[待删-M]` 未被任何脚本调用 |
-| `convert_to_single_col.py` | 将双栏 LaTeX 转换为单栏格式（v1） `[待删-M]` v2 已替代，且两者均未被调用 |
+| `convert_to_single_col.py` | 将双栏 LaTeX 转换为单栏格式（v1） `[待删-M]` v2 已替代 |
 | `convert_to_single_col_v2.py` | 单栏转换脚本 v2，功能更完善 |
 
 ---
@@ -103,9 +102,12 @@
 | `archive/Botnet-Friday-no-metadata.parquet` | CIC-IDS2017：周五僵尸网络 |
 | `archive/DDoS-Friday-no-metadata.parquet` | CIC-IDS2017：周五 DDoS 攻击 |
 | `archive/Portscan-Friday-no-metadata.parquet` | CIC-IDS2017：周五端口扫描 |
-| `archive/UNSW_NB15_training-set.parquet` | UNSW-NB15 训练集（跨数据集泛化测试用） |
+| `archive/UNSW_NB15_training-set.parquet` | UNSW-NB15 训练集（E15 跨数据集泛化测试用） |
 | `archive/UNSW_NB15_testing-set.parquet` | UNSW-NB15 测试集 |
-| `data/stage2_train_data.parquet` | Stage 1 输出后用于训练 Stage 2 的中间数据 `[待删-M]` 已被 data/stage2/ 目录下的 train/val/test 分割版本取代 |
+| `data/stage2/train.parquet` | Stage 2 训练集（Stage 1 CV Mining 输出的难例） |
+| `data/stage2/val.parquet` | Stage 2 验证集 |
+| `data/stage2/test.parquet` | Stage 2 测试集 |
+| `data/stage2_train_data.parquet` | 旧版 Stage 2 中间数据 `[待删-M]` 已被 data/stage2/ 取代 |
 
 ---
 
@@ -114,35 +116,55 @@
 | 文件 | 介绍 |
 |------|------|
 | `models_chk/stage1_rf.joblib` | Stage 1 随机森林模型（标准版） |
-| `models_chk/stage1_rf_stratified.joblib` | Stage 1 随机森林模型（分层采样版） |
-| `models_chk/stage1_rf_best.pkl` | Stage 1 最优随机森林模型 |
-| `models_chk/stage2_transeca.pth` | Stage 2 TransECA-Net 模型权重 |
+| `models_chk/stage1_rf_stratified.joblib` | Stage 1 随机森林模型（分层采样版，主用） |
+| `models_chk/stage1_rf_best.pkl` | Stage 1 最优随机森林模型（E1 输出，供 E11/E17 使用） |
+| `models_chk/stage2_transeca.pth` | Stage 2 TransECA-Net 最终模型权重 |
+| `models_chk/stage2_transeca_best.pth` | Stage 2 Early Stopping 保存的最优权重 |
 | `models_chk/stage2_config.json` | Stage 2 模型配置（num_features/num_classes/超参数），训练后自动生成 |
-| `models_chk/stage2_transeca_best.pth` | Stage 2 最优模型权重（early stopping 保存点） |
 | `models_chk/e15_transeca_unsw.pth` | E15 跨数据集实验的 UNSW 微调模型 |
 | `models_chk/preprocessor.joblib` | 标准数据预处理器（scaler/encoder） |
-| `models_chk/preprocessor_stratified.joblib` | 分层采样版预处理器 |
+| `models_chk/preprocessor_stratified.joblib` | 分层采样版预处理器（主用） |
 | `models_chk/label_encoder_e1.joblib` | E1 实验的标签编码器 |
 
 ---
 
 ## 论文 / LaTeX (`acmart-primary/`)
 
+### 主要文件
+
 | 文件 | 介绍 |
 |------|------|
 | `acmart-primary/experiment_report.tex` | 主 LaTeX 论文源文件（当前版本） |
-| `acmart-primary/experiment_report copy.tex` | 论文草稿备份 `[草稿]` 已被 experiment_report.tex 取代 |
-| `acmart-primary/experiment_report copy 2.tex` | 论文草稿备份 v2 `[草稿]` 已被 experiment_report.tex 取代 |
+| `acmart-primary/experiment_report copy.tex` | 论文草稿备份 `[草稿]` |
+| `acmart-primary/experiment_report copy 2.tex` | 论文草稿备份 v2 `[草稿]` |
 | `acmart-primary/experiment_report.pdf` | 编译后的论文 PDF（当前版本） |
-| `acmart-primary/experiment_report_v24.pdf` | 论文第 24 版 PDF |
 | `acmart-primary/experiment_report_final.pdf` | 论文 final 版 PDF |
+| `acmart-primary/experiment_report_v24.pdf` | 论文第 24 版 PDF |
 | `acmart-primary/experiment_report_v24.aux` | LaTeX 辅助文件（v24） `[编译产物]` |
 | `acmart-primary/experiment_report_v24.log` | LaTeX 编译日志（v24） `[编译产物]` |
 | `acmart-primary/experiment_report_v24.out` | hyperref 信息文件（v24） `[编译产物]` |
 | `acmart-primary/acmart.bib` | BibTeX 参考文献数据库 |
 | `acmart-primary/acmart.cls` | ACM 论文模板样式文件 |
 | `acmart-primary/acmart-tagged.cls` | ACM 论文模板（tagged 版） |
+| `acmart-primary/acmart.dtx` | ACM 模板文档源文件 |
+| `acmart-primary/acmart.ins` | ACM 模板安装脚本 |
+| `acmart-primary/acmart.pdf` | ACM 模板说明文档 |
+| `acmart-primary/acmguide.pdf` | ACM 投稿指南 |
 | `acmart-primary/Makefile` | LaTeX 编译自动化 |
+| `acmart-primary/README` | ACM 模板说明 |
+| `acmart-primary/dockerrun.txt` | Docker 编译环境说明 |
+| `acmart-primary/ACM-Reference-Format.bst` | ACM 参考文献格式文件 |
+| `acmart-primary/acmauthoryear.bbx` | ACM author-year 参考文献样式 |
+| `acmart-primary/acmauthoryear.cbx` | ACM author-year 引用样式 |
+| `acmart-primary/acmdatamodel.dbx` | ACM 数据模型定义 |
+| `acmart-primary/acmnumeric.bbx` | ACM numeric 参考文献样式 |
+| `acmart-primary/acmnumeric.cbx` | ACM numeric 引用样式 |
+| `acmart-primary/acm-jdslogo.png` | ACM JDS 徽标 |
+
+### 论文图表
+
+| 文件 | 介绍 |
+|------|------|
 | `acmart-primary/E_LogicFlow.png` | 实验逻辑流程图（中文版） |
 | `acmart-primary/performance_radar_chart.png` | 性能雷达图 |
 | `acmart-primary/E10_attention_heatmap.png` | E10 Attention 热图 |
@@ -169,6 +191,23 @@
 | `acmart-primary/E6_bootstrap_distributions.png` | E6 Bootstrap 分布图 |
 | `acmart-primary/E8_ablation_bar.png` | E8 消融实验柱状图 |
 | `acmart-primary/E8_ablation_comparison.png` | E8 消融实验对比图 |
+
+### ACM 模板示例 (`acmart-primary/samples/`)
+
+| 文件 | 介绍 |
+|------|------|
+| `samples/sample-sigconf.tex` / `.pdf` | ACM SIGCONF 格式示例 |
+| `samples/sample-acmsmall.tex` / `.pdf` | ACM Small 格式示例 |
+| `samples/sample-acmlarge.tex` / `.pdf` | ACM Large 格式示例 |
+| `samples/sample-manuscript.tex` / `.pdf` | 手稿格式示例 |
+| `samples/sample-acmtog.tex` / `.pdf` | ACM TOG 格式示例 |
+| `samples/sample-acmcp.tex` / `.pdf` | ACM CP 格式示例 |
+| `samples/sample-sigplan.tex` / `.pdf` | SIGPLAN 格式示例 |
+| `samples/` *(其余变体)* | biblatex、tagged、lualatex、xelatex 等格式示例 |
+| `samples/abbrev.bib` / `sample-base.bib` / `software.bib` | 示例参考文献库 |
+| `samples/sample-franklin.png` | 示例图片 |
+| `samples/samples.dtx` / `.ins` | 示例文档源文件 |
+| `samples/acmengage.dtx` | ACM Engage 扩展 |
 
 ---
 
@@ -220,7 +259,7 @@
 | 文件 | 介绍 |
 |------|------|
 | `results/E2_shap_summary.png` | E2 SHAP 汇总图 |
-| `results/E2_shap_bar.png` | E2 SHAP 柱状图 `[待删-M]` 已被 E2_shap_summary.png 取代，未在论文中使用 |
+| `results/E2_shap_bar.png` | E2 SHAP 柱状图 `[待删-M]` 已被 E2_shap_summary.png 取代 |
 | `results/E2_shap_vs_rf.png` | E2 SHAP 与 RF 重要性对比图 |
 | `results/E4_complexity_vs_perf.png` | E4 复杂度与性能关系图 |
 | `results/E4_dl_learning_curves.png` | E4 深度学习学习曲线 |
@@ -233,7 +272,7 @@
 | `results/E10_eca_channel_weights.png` | E10 ECA 通道权重图 |
 | `results/E10_ig_global_importance.png` | E10 全局特征重要性图 |
 | `results/E10_ig_per_class.png` | E10 各类别特征重要性图 |
-| `results/E12_binary_view.png` | E12 二分类视角可视化 `[待删-M]` 未被论文采纳的中间产物 |
+| `results/E12_binary_view.png` | E12 二分类视角可视化 `[待删-M]` 未被论文采纳 |
 | `results/E12_tsne_embedding.png` | E12 t-SNE 嵌入空间图 |
 | `results/E12_tsne_raw.png` | E12 t-SNE 原始空间图 |
 | `results/E12_umap_embedding.png` | E12 UMAP 嵌入空间图 |
@@ -244,7 +283,7 @@
 | `results/E15_cross_dataset_comparison.png` | E15 跨数据集对比图 |
 | `results/E15_unsw_confusion_matrix.png` | E15 UNSW 混淆矩阵 |
 | `results/E15_unsw_training_curves.png` | E15 UNSW 训练曲线 |
-| `results/E17_threshold_tuning_20260218_144007.png` | E17 阈值调优图（第1次） `[待删-M]` 已被 202157 更新版本取代 |
+| `results/E17_threshold_tuning_20260218_144007.png` | E17 阈值调优图（第1次） `[待删-M]` 已被 202157 版本取代 |
 | `results/E17_threshold_tuning_20260218_202157.png` | E17 阈值调优图（第2次，最新） |
 | `results/E_LogicFlow.png` | 实验逻辑流程图（中文） |
 | `results/E_LogicFlow_en.png` | 实验逻辑流程图（英文） |
@@ -264,10 +303,8 @@
 | `notebooks/project_proposal.md` | 项目提案，研究目标与背景 |
 | `notebooks/experimental_design.md` | 实验设计文档（中文） |
 | `notebooks/experimental_design_en.md` | 实验设计文档（英文） |
-| `notebooks/experiment_report.md` | Markdown 格式实验报告 |
-| `notebooks/experiment_report_en.md` | Markdown 格式实验报告（英文） |
-| `notebooks/experiment_report_zh.md` | Markdown 格式实验报告（中文） `[草稿]` 与 experiment_report.md 内容高度重叠 |
-| `notebooks/experiment_report.docx` | Word 格式实验报告 `[草稿]` md 的衍生版本，主版本为 .tex |
+| `notebooks/experiment_report_en.md` | Markdown 格式实验报告（英文，与 tex 引用编号同步） |
+| `notebooks/experiment_report_zh.md` | Markdown 格式实验报告（中文） |
 | `notebooks/experiment_report_en.docx` | Word 格式实验报告（英文） `[草稿]` md 的衍生版本 |
 | `notebooks/experiment_report_zh.docx` | Word 格式实验报告（中文） `[草稿]` md 的衍生版本 |
 | `notebooks/experiment_E1_nested_cv.md` | E1 嵌套CV实验详细记录 |
@@ -276,7 +313,6 @@
 | `notebooks/verification_logic_chain.docx` | 验证逻辑链 Word 文档（中文） `[草稿]` md 的衍生版本 |
 | `notebooks/verification_logic_chain_en.docx` | 验证逻辑链 Word 文档（英文） `[草稿]` md 的衍生版本 |
 | `notebooks/literature_analysis.md` | 文献综述分析 |
-| `notebooks/report.md` | 综合报告 |
 | `notebooks/experimentalRank` | 实验优先级排序文档（中文） |
 | `notebooks/experimentalRank_en` | 实验优先级排序文档（英文） |
 
@@ -295,24 +331,26 @@
 | `referencepapers/Analysis of Machine Learning-Based Methods...pdf` | 基于 ML 的网络流量分析方法综述 |
 | `referencepapers/Intelligent_network_traffic_analysis...pdf` | 面向网络安全的智能流量分析 |
 | `referencepapers/Machine_Learning_in_Network_Anomaly_Detection_A_Survey.pdf` | 网络异常检测 ML 综述 |
-| `referencepapers/paper/1Toward Generating...pdf` | CIC-IDS2017 数据集论文 `[重复]` 与 referencepapers/ 下同名文件完全相同 |
-| `referencepapers/paper/2applsci-15-02977TransECA-Net...pdf` | TransECA-Net 论文 `[重复]` 与 referencepapers/ 下同名文件完全相同 |
+| `referencepapers/paper/1Toward Generating...pdf` | `[重复]` 与上级目录同名文件完全相同 |
+| `referencepapers/paper/2applsci-15-02977TransECA-Net...pdf` | `[重复]` 与上级目录同名文件完全相同 |
 | `referencepapers/paper/3A survey of deep learning-based network anomaly detection.txt` | 基于深度学习的网络异常检测综述（文本） |
 | `referencepapers/paper/4S016740481930118X-main.pdf` | 参考文献 4 |
 | `referencepapers/paper/6.pdf` | 参考文献 6 |
 | `referencepapers/paper/7electronics-11-00556.pdf` | 参考文献 7（Electronics 期刊） |
-| `referencepapers/paper/8Machine_Learning_Techniques...pdf` | 网络异常检测机器学习综述 `[重复]` 与 referencepapers/ 下同名文件完全相同 |
-| `referencepapers/paper/10UNSW-NB15...pdf` | UNSW-NB15 数据集论文 `[重复]` 与 referencepapers/ 下同名文件完全相同 |
+| `referencepapers/paper/8Machine_Learning_Techniques...pdf` | `[重复]` 与上级目录同名文件完全相同 |
+| `referencepapers/paper/10UNSW-NB15...pdf` | `[重复]` 与上级目录同名文件完全相同 |
 | `referencepapers/paper/no2.pdf` ~ `no25.pdf` | 编号参考文献（no2/3/4/6/12/13/22/23/24/25） |
 
 ---
 
-## 配置与其他
+## 配置与文档
 
 | 文件 | 介绍 |
 |------|------|
-| `requirements.txt` | Python 依赖包列表 |
-| `requirement_en.txt` | 英文版项目需求说明文档 |
+| `requirements.txt` | Python 依赖包列表（宽松版本） |
+| `requirements-lock.txt` | Python 依赖精确版本锁定（用于复现实验） |
+| `REPRODUCIBILITY.md` | 实验复现完整指南（环境、顺序、预期结果） |
+| `file_list.md` | 本文件，项目文件清单 |
 | `.gitignore` | Git 忽略规则 |
 | `.vscode/settings.json` | VS Code 编辑器配置 |
 | `data_manifest.md` | 数据集清单，记录各数据文件来源与描述 |
@@ -322,19 +360,5 @@
 | `cite6800G.txt` | 引用格式参考文本 |
 | `paperlist.txt` | 参考论文列表 |
 | `paperref.txt` | 参考文献引用字符串 |
-| `CIC_IDS2017_Presentation.pptx` | 项目演示文稿（PowerPoint） |
 | `acmart-primary.zip` | LaTeX 论文目录的压缩备份 |
-
----
-
-## 待删除汇总
-
-| 优先级 | 文件数 | 说明 |
-|--------|--------|------|
-| `[待删-H]` | 0 | （已升级为 M/L，按实际情况分类） |
-| `[编译产物]` | 11 | acmart-primary/ 下 .aux/.log/.out/.bbl/.blg |
-| `[草稿]` | 9 | 论文草稿 copy.tex、notebooks/ 下 docx 及重复 md |
-| `[重复]` | 4 | referencepapers/paper/ 下与上级目录完全相同的 PDF |
-| `[待删-M]` | 11 | 过时图表、data/stage2_train_data.parquet、main.py 等 |
-| `[待删-L]` | 4 | 一次性工具脚本（loader_time_aware、count_rows 等） |
-| **合计** | **39** | |
+| `requirement_en.txt` | 英文版项目需求说明文档 |
