@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "1dbce3516aff3f94",
+    "type": "split",
+    "children": [
+      {
+        "id": "fee4921840a7b7bf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "96e34278479132b4",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "论文知识图谱-网络入侵检测.canvas",
+                "viewState": {
+                  "x": 430,
+                  "y": 310,
+                  "zoom": -1.674391282467228
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "论文知识图谱-网络入侵检测"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "13fb6ba155b57da2",
+    "type": "split",
+    "children": [
+      {
+        "id": "b9c814ad3f276b75",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ac4a5fad3ec35f51",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "71b844530ef849f5",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "9420324468380da9",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "900170d2d5c3fb1f",
+    "type": "split",
+    "children": [
+      {
+        "id": "ffc1eeba0a5ba71c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "556f4ef8bf2224a1",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "论文知识图谱-网络入侵检测.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 论文知识图谱-网络入侵检测"
+            }
+          },
+          {
+            "id": "04bc5a1a3bd14aef",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "论文知识图谱-网络入侵检测.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 论文知识图谱-网络入侵检测"
+            }
+          },
+          {
+            "id": "0239deeaf837ee1d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "a5cbd48439494427",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "51e682ffb261b1bf",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "论文知识图谱-网络入侵检测.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 论文知识图谱-网络入侵检测"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "96e34278479132b4",
+  "lastOpenFiles": [
+    "网络流量的自相似性.md",
+    "异常检测的误差代价.md",
+    "NIDS - A Systematic Study of ML and DL (Ahmad et al. 2020).md",
+    "NIDS 数据集 15 项评估属性 (15 Properties).md",
+    "基于包与基于流的数据对比 (Packet vs Flow-based Data).md",
+    "A Survey of NIDS Data Sets (Ring et al. 2019).md",
+    "深层信念网络在流量检测的应用 (DBN - RBM).md",
+    "A Survey of DL-based Network Anomaly Detection (Kwon et al. 2017).md",
+    "加密流量分类 (Encrypted Traffic Classification).md",
+    "ECANet 注意力机制在 NIDS 的应用.md",
+    "ISCX VPN-nonVPN 数据集.md",
+    "Transformer 对比 LSTM在流量检测中的优势.md",
+    "TransECA-Net for Encrypted Traffic Classification (Liu et al. 2025).md",
+    "IDS 数据集11项评估标准 (11 Criteria).md",
+    "CIC-IDS2017 数据集.md",
+    "Toward Generating CIC-IDS2017 Dataset (Sharafaldin et al. 2018).md",
+    "NIDS与机器学习技术演进综述 (Draft).md",
+    "深度学习与机器学习比较 (ML vs DL in NIDS).md",
+    "NIDS",
+    "贝叶斯增强可解释性 (Bayesian Inference).md",
+    "安全事件概化 (Event Profiling).md",
+    "Cyber Threat Detection using Event Profiles (Reddy & Bell 2025).md",
+    "CNN 网络入侵检测.md",
+    "UNSW-NB15 数据集.md",
+    "NIDS using Deep Learning (Ashiku & Dagli 2021).md",
+    "eBPF 与模型落地部署.md",
+    "AB-TRAP 框架.md"
+  ]
+}

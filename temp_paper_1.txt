@@ -1,0 +1,473 @@
+
+--- Page 1 ---
+
+IEEE Symposium on Security and Privacy
+May 2010
+Robin Sommer
+International Computer Science Institute, &
+Lawrence Berkeley National Laboratory 
+Vern Paxson
+International Computer Science Institute, &
+University of California, Berkeley
+Outside the Closed World:  
+On Using Machine Learning for 
+Network Intrusion Detection
+--- Page 2 ---
+
+IEEE Symposium on Security and Privacy
+Network Intrusion Detection
+2
+
+--- Page 3 ---
+
+IEEE Symposium on Security and Privacy
+Network Intrusion Detection
+2
+NIDS
+--- Page 4 ---
+
+IEEE Symposium on Security and Privacy
+Network Intrusion Detection
+2
+NIDS
+Detection Approaches: Misuse vs.  Anomaly
+--- Page 5 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection
+3
+Session VolumeSessionDuration
+--- Page 6 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection
+3
+Session VolumeSessionDuration
+Training Phase: Building a proﬁle of normal activity.
+--- Page 7 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection
+3
+Session VolumeSessionDuration
+Training Phase: Building a proﬁle of normal activity.
+Detection Phase: Matching observations against proﬁle.
+--- Page 8 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection
+3
+Session VolumeSessionDuration
+Training Phase: Building a proﬁle of normal activity.
+Detection Phase: Matching observations against proﬁle.
+--- Page 9 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection
+3
+Session VolumeSessionDuration
+Training Phase: Building a proﬁle of normal activity.
+Detection Phase: Matching observations against proﬁle.
+--- Page 10 ---
+
+IEEE Symposium on Security and Privacy•Assumption:  Attacks exhibit characteristics that are different than those of normal trafﬁc.•Originally introduced by Dorothy Denning in1987.•IDES: Host-level system building per-user proﬁles of activity.•Login frequency, password failures, session duration, resource consumption.
+Anomaly Detection (2)
+4
+--- Page 11 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection (2)
+414·Chandola, Banerjee and KumarTechnique UsedSectionReferencesStatistical Proﬁlingusing HistogramsSection 7.2.1NIDES [Anderson et al. 1994; Anderson et al. 1995;Javitz and Valdes 1991], EMERALD [Porras andNeumann 1997], Yamanishi et al [2001; 2004], Hoet al. [1999], Kruegel at al [2002; 2003], Mahoneyet al [2002; 2003; 2003; 2007], Sargor [1998]Parametric Statisti-cal ModelingSection 7.1Gwadera et al [2005b; 2004], Ye and Chen [2001]Non-parametric Sta-tistical ModelingSection 7.2.2Chow and Yeung [2002]Bayesian NetworksSection 4.2Siaterlis and Maglaris [2004], Sebyala et al. [2002],Valdes and Skinner [2000], Bronstein et al. [2001]Neural NetworksSection 4.1HIDE [Zhang et al. 2001], NSOM [Labib and Ve-muri 2002], Smith et al. [2002], Hawkins et al.[2002], Kruegel et al. [2003], Manikopoulos and Pa-pavassiliou [2002], Ramadas et al. [2003]Support Vector Ma-chinesSection 4.3Eskin et al. [2002]Rule-based SystemsSection 4.4ADAM [Barbara et al. 2001a; Barbara et al. 2003;Barbara et al. 2001b], Fan et al. [2001], Helmeret al. [1998], Qin and Hwang [2004], Salvador andChan [2003], Otey et al. [2003]Clustering BasedSection 6ADMIT [Sequeira and Zaki 2002], Eskin et al.[2002], Wu and Zhang [2003], Otey et al. [2003]Nearest NeighborbasedSection 5MINDS [Ertoz et al. 2004; Chandola et al. 2006],Eskin et al. [2002]SpectralSection 9Shyu et al. [2003], Lakhina et al. [2005], Thottanand Ji [2003],Sun et al. [2007]Information Theo-reticSection 8Lee and Xiang [2001],Noble and Cook [2003]Table III. Examples of anomaly detection techniques used for network intrusion detection.Technique UsedSectionReferencesNeural NetworksSection 4.1CARDWATCH [Aleskerov et al. 1997], Ghosh andReilly [1994],Brause et al. [1999],Dorronsoro et al.[1997]Rule-based SystemsSection 4.4Brause et al. [1999]ClusteringSection 6Bolton and Hand [1999]Table IV. Examples of anomaly detection techniques used for credit card fraud detection.detection techniques is to maintain a usage proﬁle for each customer and monitorthe proﬁles to detect any deviations. Some of the speciﬁc applications of frauddetection are discussed below.3.2.1Credit Card Fraud Detection.In this domain, anomaly detection tech-niques are applied to detect fraudulent credit card applications or fraudulent creditcard usage (associated with credit card thefts). Detecting fraudulent credit cardapplications is similar to detecting insurance fraud [Ghosh and Reilly 1994].To Appear in ACM Computing Surveys, 09 2009.Source: Chandola et al. 2009
+--- Page 12 ---
+
+IEEE Symposium on Security and Privacy
+Anomaly Detection (2)
+414·Chandola, Banerjee and KumarTechnique UsedSectionReferencesStatistical Proﬁlingusing HistogramsSection 7.2.1NIDES [Anderson et al. 1994; Anderson et al. 1995;Javitz and Valdes 1991], EMERALD [Porras andNeumann 1997], Yamanishi et al [2001; 2004], Hoet al. [1999], Kruegel at al [2002; 2003], Mahoneyet al [2002; 2003; 2003; 2007], Sargor [1998]Parametric Statisti-cal ModelingSection 7.1Gwadera et al [2005b; 2004], Ye and Chen [2001]Non-parametric Sta-tistical ModelingSection 7.2.2Chow and Yeung [2002]Bayesian NetworksSection 4.2Siaterlis and Maglaris [2004], Sebyala et al. [2002],Valdes and Skinner [2000], Bronstein et al. [2001]Neural NetworksSection 4.1HIDE [Zhang et al. 2001], NSOM [Labib and Ve-muri 2002], Smith et al. [2002], Hawkins et al.[2002], Kruegel et al. [2003], Manikopoulos and Pa-pavassiliou [2002], Ramadas et al. [2003]Support Vector Ma-chinesSection 4.3Eskin et al. [2002]Rule-based SystemsSection 4.4ADAM [Barbara et al. 2001a; Barbara et al. 2003;Barbara et al. 2001b], Fan et al. [2001], Helmeret al. [1998], Qin and Hwang [2004], Salvador andChan [2003], Otey et al. [2003]Clustering BasedSection 6ADMIT [Sequeira and Zaki 2002], Eskin et al.[2002], Wu and Zhang [2003], Otey et al. [2003]Nearest NeighborbasedSection 5MINDS [Ertoz et al. 2004; Chandola et al. 2006],Eskin et al. [2002]SpectralSection 9Shyu et al. [2003], Lakhina et al. [2005], Thottanand Ji [2003],Sun et al. [2007]Information Theo-reticSection 8Lee and Xiang [2001],Noble and Cook [2003]Table III. Examples of anomaly detection techniques used for network intrusion detection.Technique UsedSectionReferencesNeural NetworksSection 4.1CARDWATCH [Aleskerov et al. 1997], Ghosh andReilly [1994],Brause et al. [1999],Dorronsoro et al.[1997]Rule-based SystemsSection 4.4Brause et al. [1999]ClusteringSection 6Bolton and Hand [1999]Table IV. Examples of anomaly detection techniques used for credit card fraud detection.detection techniques is to maintain a usage proﬁle for each customer and monitorthe proﬁles to detect any deviations. Some of the speciﬁc applications of frauddetection are discussed below.3.2.1Credit Card Fraud Detection.In this domain, anomaly detection tech-niques are applied to detect fraudulent credit card applications or fraudulent creditcard usage (associated with credit card thefts). Detecting fraudulent credit cardapplications is similar to detecting insurance fraud [Ghosh and Reilly 1994].To Appear in ACM Computing Surveys, 09 2009.Source: Chandola et al. 2009
+Features usedpacket sizesIP addresses portsheader ﬁeldstimestampsinter-arrival timessession sizesession durationsession volumepayload frequenciespayload tokenspayload pattern...
+--- Page 13 ---
+
+IEEE Symposium on Security and Privacy
+The Holy Grail ...
+5
+
+--- Page 14 ---
+
+IEEE Symposium on Security and Privacy
+The Holy Grail ...
+5•Anomaly detection is extremely appealing.•Promises to ﬁnd novel attacks without anticipating speciﬁcs. •It’s plausible: machine learning works so well in other domains. 
+
+--- Page 15 ---
+
+IEEE Symposium on Security and Privacy
+The Holy Grail ...
+5•Anomaly detection is extremely appealing.•Promises to ﬁnd novel attacks without anticipating speciﬁcs. •It’s plausible: machine learning works so well in other domains. •But guess what’s used in operation? Snort.•We ﬁnd hardly any machine learning NIDS in real-world deployments.
+
+--- Page 16 ---
+
+IEEE Symposium on Security and Privacy
+The Holy Grail ...
+5•Anomaly detection is extremely appealing.•Promises to ﬁnd novel attacks without anticipating speciﬁcs. •It’s plausible: machine learning works so well in other domains. •But guess what’s used in operation? Snort.•We ﬁnd hardly any machine learning NIDS in real-world deployments.•Could using machine learning be harder than it appears?
+
+--- Page 17 ---
+
+IEEE Symposium on Security and Privacy
+Why is Anomaly Detection Hard?
+6The intrusion detection domain faces challenges that make it fundamentally different from other ﬁelds.
+--- Page 18 ---
+
+IEEE Symposium on Security and PrivacyOutlier detection and the high costs of errors!How do we ﬁnd the opposite of normal?Interpretation of results!What does that anomaly mean?Evaluation!!How do we make sure it actually works? Training data!What do we train our system with?Evasion risk!Can the attacker mislead our system?
+Why is Anomaly Detection Hard?
+6The intrusion detection domain faces challenges that make it fundamentally different from other ﬁelds.
+--- Page 19 ---
+
+IEEE Symposium on Security and PrivacyOutlier detection and the high costs of errors!How do we ﬁnd the opposite of normal?Interpretation of results!What does that anomaly mean?Evaluation!!How do we make sure it actually works? Training data!What do we train our system with?Evasion risk!Can the attacker mislead our system?
+Why is Anomaly Detection Hard?
+6The intrusion detection domain faces challenges that make it fundamentally different from other ﬁelds.
+--- Page 20 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+Feature XFeature Y
+--- Page 21 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 22 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 23 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 24 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 25 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 26 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+--- Page 27 ---
+
+IEEE Symposium on Security and Privacy
+Machine Learning for Classiﬁcation
+7
+A
+B
+CFeature XFeature Y
+Classiﬁcation ProblemsOptical Character RecognitionGoogle’s Machine TranslationAmazon’s Recommendations Spam Detection
+--- Page 28 ---
+
+IEEE Symposium on Security and Privacy
+Outlier Detection
+8
+Feature XFeature Y
+--- Page 29 ---
+
+IEEE Symposium on Security and Privacy
+Outlier Detection
+8
+Feature XFeature Y
+--- Page 30 ---
+
+IEEE Symposium on Security and Privacy
+Outlier Detection
+8
+Feature XFeature Y
+--- Page 31 ---
+
+IEEE Symposium on Security and Privacy
+Outlier Detection
+8
+Feature XFeature Y
+Closed World AssumptionSpecify only positive examples.Adopt standing assumption that the rest is negative.Can work well if the model is very precise, or mistakes are cheap.
+--- Page 32 ---
+
+IEEE Symposium on Security and Privacy
+What 
+is
+ Normal?•Finding a stable notion of normal is hard for networks. •Network trafﬁc is composed of many individual sessions.•Leads to enormous variety and unpredictable behavior. •Observable on all layers of the protocol stack.
+9
+--- Page 33 ---
+
+IEEE Symposium on Security and Privacy
+Self-Similarity of Ethernet Trafﬁc 
+10
+0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication ReviewSource: LeLand et al. 1995
+--- Page 34 ---
+
+IEEE Symposium on Security and Privacy
+Self-Similarity of Ethernet Trafﬁc 
+10
+0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication ReviewSource: LeLand et al. 1995
+--- Page 35 ---
+
+IEEE Symposium on Security and Privacy
+Self-Similarity of Ethernet Trafﬁc 
+10
+0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication ReviewSource: LeLand et al. 1995
+--- Page 36 ---
+
+IEEE Symposium on Security and Privacy
+Self-Similarity of Ethernet Trafﬁc 
+10
+0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication ReviewSource: LeLand et al. 1995
+--- Page 37 ---
+
+IEEE Symposium on Security and Privacy
+Self-Similarity of Ethernet Trafﬁc 
+10
+0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication Review0 100 200 300 400 500 600 700 800 900 1000020000    40000    60000    
+Time Units, Unit = 100 Seconds  (a)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 100002000   4000   6000   
+Time Units, Unit = 10 Seconds  (b)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 10000200 400 600 800 
+Time Units, Unit = 1 Second  (c)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000020406080100 
+Time Units, Unit = 0.1 Second  (d)Packets/Time Unit
+0 100 200 300 400 500 600 700 800 900 1000051015
+Time Units, Unit = 0.01 Second  (e)Packets/Time UnitFigure 1 (a)—(e).Pictorial "proof" of self-similarity:Ethernet trafﬁc (packets per time unit for the August’89 trace) on 5 different time scales. (Different graylevels are used to identify the same segments of trafﬁcon the different time scales.)3.2 THE MATHEMATICS OF SELF-SIMILARITYThe notion of self-similarity is not merely an intuitivedescription, but a precise concept captured by the followingrigorous mathematical deﬁnition. LetX=(Xt:t=0, 1, 2,...) beacovariance stationary(sometimes calledwide-sensestationary) stochastic process; that is, a process with constantmeanµ=E[Xt], ﬁnite variance!2=E[(Xt"µ)2], and anautocorrelation functionr(k)=E[(Xt"µ)(Xt+k"µ)]/E[(Xt"µ)2](k=0, 1, 2,...) that depends only onk. Inparticular, we assume thatXhas an autocorrelation function ofthe formr(k)#a1k"$,as k%&, (3.2.1)where 0<$<1 (here and below,a1,a2,...denote ﬁnitepositive constants). For eachm=1, 2, 3,..., letX(m)=(Xk(m):k=1, 2, 3,...) denote a new time series obtainedby averaging the original seriesXover non-overlapping blocksof sizem. That is, for eachm=1, 2, 3,...,X(m)is given byXk(m)=1/m(Xkm"m+1+...+Xkm), (k'1). Note that foreachm, the aggregated time seriesX(m)deﬁnes a covariancestationary process; letr(m)denote the correspondingautocorrelation function.The processXis calledexactly (second-order) self-similarwithself-similarity parameterH=1"$/2 if the correspondingaggregated processesX(m)have the same correlation structure asX, i.e.,r(m)(k)=r(k), for allm=1, 2,...(k=1, 2, 3,...).In other words,Xis exactly self-similar if the aggregatedprocessesX(m)are indistinguishable fromX—at least withrespect to their second order statistical properties. An exampleof an exactly self-similar process with self-similarity parameterHisfractional Gaussian noise(FGN) with parameter1/2<H<1, introduced by Mandelbrot and Van Ness (1968).A covariance stationary processXis calledasymptotically(second-order) self-similarwith self-similarity parameterH=1"$/2 ifr(m)(k) agrees asymptotically (i.e., for largemandlargek) with the correlation structurer(k) ofXgiven by (3.2.1).Thefractional autoregressive integrated moving-averageprocesses(fractional ARIMA(p,d,q) processes) with0<d<1/2 are examples of asymptotically second-order self-similar processes with self-similarity parameterd+1/2. (Formore details, see Granger and Joyeux (1980), and Hosking(1981).)Intuitively, the most striking feature of (exactly orasymptotically) self-similar processes is that their aggregatedprocessesX(m)possess a nondegenerate correlation structure asm%&. This behavior is precisely the intuition illustrated withthe sequence of plots in Figure 1; if the original time seriesXrepresents the number of Ethernet packets per 10 milliseconds(plot (e)), then plots (a) to (d) depict segments of the aggregatedtime seriesX(10000),X(1000),X(100), andX(10), respectively. All ofthe plots look "similar", suggesting a nearly identicalautocorrelation function for all of the aggregated processes.Mathematically, self-similarity manifests itself in a number ofequivalent ways (see Cox (1984)): (i) the variance of the samplemean decreases more slowly than the reciprocal of the samplesize (slowly decaying variances), i.e.,var(X(m))#a2m"$,asm%&, with 0<$<1; (ii) the autocorrelations decayhyperbolically rather than exponentially fast, implying a non-summable autocorrelation function(kr(k)=&(long-rangedependence), i.e.,r(k) satisﬁes relation (3.2.1); and (iii) thespectral densityf(.) obeys a power-law behavior near theorigin (1/f-noise), i.e.,f())#a3)"*,as)%0 , with 0<*<1and*=1"$.The existence of a nondegenerate correlation structure for theaggregated processesX(m)asm%&is in stark contrast totypical packet trafﬁc models currently considered in theliterature, all of which have the property that their aggregatedACM SIGCOMM –206– Computer Communication ReviewSource: LeLand et al. 1995
+--- Page 38 ---
+
+IEEE Symposium on Security and Privacy
+One Day of Crud at ICSI
+11Postel’s Law: Be strict in what you send and liberal in what you accept ...
+--- Page 39 ---
+
+IEEE Symposium on Security and Privacy
+One Day of Crud at ICSI
+11Postel’s Law: Be strict in what you send and liberal in what you accept ...active-connection-reuseDNS-label-len-gt-pktHTTP-chunked-multipartpossible-split-routingbad-Ident-replyDNS-label-too-longHTTP-version-mismatchSYN-after-closebad-RPCDNS-RR-length-mismatchillegal-%-at-end-of-URISYN-after-resetbad-SYN-ackDNS-RR-unknown-typeinappropriate-FINSYN-inside-connectionbad-TCP-header-lenDNS-truncated-answerIRC-invalid-lineSYN-seq-jumpbase64-illegal-encodingDNS-len-lt-hdr-lenline-terminated-with-single-CRtruncated-NTPconnection-originator-SYN-ackDNS-truncated-RR-rdlengthmalformed-SSH-identificationunescaped-%-in-URIdata-after-resetdouble-%-in-URIno-login-promptunescaped-special-URI-chardata-before-establishedexcess-RPCNUL-in-lineunmatched-HTTP-replytoo-many-DNS-queriesFIN-advanced-last-seqPOP3-server-sending-client-commandswindow-recisionDNS-label-forward-compress-offsetfragment-with-DF155K in total!
+--- Page 40 ---
+
+IEEE Symposium on Security and Privacy
+What 
+is
+ Normal?•Finding a stable notion of normal is hard for networks. •Network trafﬁc is composed of many individual sessions.•Leads to enormous variety and unpredictable behavior. •Observable on all layers of the protocol stack.•Violates an implicit assumption:  Outliers are attacks!•Ignoring this leads to a semantic gap•Disconnect between what the system reports and what the operator wants.•Root cause for the common complaint of  “too many false positives”.  •Each mistake costs scarce analyst time.
+12
+--- Page 41 ---
+
+IEEE Symposium on Security and Privacy
+Mistakes in Other Domains
+13OCRSpell CheckerImage AnalysisHuman EyeTranslationLow ExpectationCollaborative FilteringNot much impact.
+--- Page 42 ---
+
+IEEE Symposium on Security and Privacy
+Mistakes in Other Domains
+13OCRSpell CheckerImage AnalysisHuman EyeTranslationLow ExpectationCollaborative FilteringNot much impact.
+“ [Recommendations are] guess work. Our error rate will always be high.”- Greg Linden (Amazon)
+--- Page 43 ---
+
+IEEE Symposium on Security and Privacy
+Building  a Good Anomaly Detector•Limit the detector’s scope.•What concrete attack is the system to ﬁnd?•Deﬁne a problem for which machine learning makes less mistakes.•Gain insight into capabilities and limitations.•What exactly does it detect and why? What not and why not?•What are the features conceptually able to capture? •When exactly does it break?•Acknowledge shortcomings.•Examine false and true positives/negatives.
+14
+--- Page 44 ---
+
+IEEE Symposium on Security and Privacy
+Image Analysis with Neural Networks
+15
+Tank
+--- Page 45 ---
+
+IEEE Symposium on Security and Privacy
+Image Analysis with Neural Networks
+15
+TankNo Tank
+
+--- Page 46 ---
+
+IEEE Symposium on Security and Privacy
+What Can we Do?•Limit the detector’s scope.•What concrete attack is the system to ﬁnd?•Deﬁne a problem for which machine learning makes less mistakes.•Gain insight into capabilities and limitations.•What exactly does it detect and why? What not and why not?•What are the features conceptually able to capture?  •When exactly does it break?•Acknowledge shortcomings.•Examine false and true positives/negatives.•Assume the perspective of a network operator.•How does the detector help with operations? •Gold standard: work with operators. If they deem it useful, you got it right.
+16
+--- Page 47 ---
+
+IEEE Symposium on Security and Privacy
+What Can we Do?•Limit the detector’s scope.•What concrete attack is the system to ﬁnd?•Deﬁne a problem for which machine learning makes less mistakes.•Gain insight into capabilities and limitations.•What exactly does it detect and why? What not and why not?•What are the features conceptually able to capture?  •When exactly does it break?•Acknowledge shortcomings.•Examine false and true positives/negatives.•Assume the perspective of a network operator.•How does the detector help with operations? •Gold standard: work with operators. If they deem it useful, you got it right.
+16
+ Once you have done all this ...... you might notice that you now know enough about the activity you’re looking for that you don’t need any machine learning. 
+--- Page 48 ---
+
+IEEE Symposium on Security and Privacy
+Why is Anomaly Detection Hard?
+17The intrusion detection domain faces challenges that make it fundamentally different from other ﬁelds.•  Outlier detection and the high costs of errors•  Interpretation of results•  Evaluation!•  Training data•  Evasion riskCan we still make it work?
+--- Page 49 ---
+
+IEEE Symposium on Security and Privacy
+Conclusion•Machine learning for intrusion detection is challenging.•Reasonable and possible, but needs care.•Consider fundamental differences to other domains.  •There is some good anomaly detection work out there.•If you do anomaly detection, understand and explain.•If you are given an anomaly detector, ask questions. 
+18
+--- Page 50 ---
+
+IEEE Symposium on Security and Privacy
+Conclusion•Machine learning for intrusion detection is challenging.•Reasonable and possible, but needs care.•Consider fundamental differences to other domains.  •There is some good anomaly detection work out there.•If you do anomaly detection, understand and explain.•If you are given an anomaly detector, ask questions. 
+18
+“Open questions: [...] Soundness of Approach: Does the approach actually detect intrusions? Is it possible to distinguish anomalies related to intrusions from those related to other factors?”-Denning, 1987
+--- Page 51 ---
+
+Robin Sommer
+International Computer Science Institute, &
+Lawrence Berkeley National Laboratory
+robin@icsi.berkeley.eduhttp://www.icir.org
+Thanks for your attention.
+
+--- Page 52 ---
+
+Robin Sommer
+International Computer Science Institute, &
+Lawrence Berkeley National Laboratory
+robin@icsi.berkeley.eduhttp://www.icir.org
+Thanks for your attention.

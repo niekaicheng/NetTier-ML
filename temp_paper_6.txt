@@ -1,0 +1,1332 @@
+
+--- Page 1 ---
+
+Received: 20 May 2020 Revised: 31 August 2020 Accepted: 29 September 2020
+DOI:10.1002/ett.4150
+SURVEY PAPER
+Network intrusion detection system: A systematic study of
+machine learning and deep learning approaches
+Zeeshan Ahmad1,2Adnan Shahid Khan1Cheah Wai Shiang1
+Johari Abdullah1Farhan Ahmad3,4
+1FacultyofComputerScienceand
+InformationTechnology,UniversitiMalaysiaSarawak,Sarawak,Malaysia
+2DepartmentofElectricalEngineering,
+CollegeofEngineering,KingKhalidUniversity,Abha,KingdomofSaudiArabia
+3CyberSecurityResearchGroup,College
+ofEngineeringandTechnology,
+UniversityofDerby,Derby,UK
+4InstituteforFutureTransportandCities,
+CoventryUniversity,Coventry,UK
+Correspondence
+AdnanShahidKhan,FacultyofComputer
+ScienceandInformationTechnology,UniversitiMalaysiaSarawak,94300KotaSamarahan,Malaysia.Email:skadnan@unimas.myAbstract
+Therapidadvancesintheinternetandcommunicationfieldshaveresultedina
+hugeincreaseinthenetworksizeandthecorrespondingdata.Asaresult,manynovelattacksarebeinggeneratedandhaveposedchallengesfornetworksecu-
+ritytoaccuratelydetectintrusions.Furthermore,thepresenceoftheintruders
+withtheaimtolaunchvariousattackswithinthenetworkcannotbeignored.Anintrusiondetectionsystem(IDS)isonesuchtoolthatpreventsthenetworkfrom
+possibleintrusionsbyinspectingthenetworktraffic,toensureitsconfidential-
+ity,integrity,andavailability.Despiteenormouseffortsbytheresearchers,IDSstillfaceschallengesinimprovingdetectionaccuracywhilereducingfalsealarm
+rates and in detecting novel intrusions. Recently, machine learning (ML) and
+deeplearning(DL)-basedIDSsystemsarebeingdeployedaspotentialsolutionstodetectintrusionsacrossthenetworkinanefficientmanner.Thisarticlefirst
+clarifiestheconceptofIDSandthenprovidesthetaxonomybasedonthenotable
+ML and DL techniques adopted in designing network-based IDS (NIDS) sys-tems.AcomprehensivereviewoftherecentNIDS-basedarticlesisprovidedby
+discussingthestrengthsandlimitationsoftheproposedsolutions.Then,recent
+trendsandadvancementsofMLandDL-basedNIDSareprovidedintermsoftheproposedmethodology,evaluationmetrics,anddatasetselection.Usingthe
+shortcomings of the proposed methods, we highlighted various research chal-
+lenges and provided the future scope for the research in improving ML andDL-basedNIDS.
+KEYWORDS
+Deeplearning,Machinelearning,Networkanomalydetection,Networkintrusiondetection
+system,Networksecurity
+1 INTRODUCTION
+With the recent interest and progress in the development of internet and communication technologies over the last
+decade,networksecurityhasemergedasavitalresearchdomain.Itemploystoolslikefirewall,antivirussoftware,and
+ThisisanopenaccessarticleunderthetermsoftheCreativeCommonsAttributionLicense,whichpermitsuse,distributionandreproductioninanyme dium,providedthe
+originalworkisproperlycited.©2020TheAuthors. Transactions on Emerging Telecommunications Technologies publishedbyJohnWiley&SonsLtd.
+Trans Emerging Tel Tech .2021;32:e4150. wileyonlinelibrary.com/journal/ett 1o f2 9
+https://doi.org/10.1002/ett.4150
+
+--- Page 2 ---
+
+2o f2 9 AHMADetal.
+intrusiondetectionsystem(IDS)toensurethesecurityofthenetworkandallitsassociatedassetswithinacyberspace.1
+Among these, network-based intrusion detection system (NIDS) is the attack detection mechanism that provides the
+desiredsecuritybyconstantlymonitoringthenetworktrafficformaliciousandsuspiciousbehavior.2,3
+TheideaofIDSwasfirstproposedbyJimAndersonin1980.4Sincethen,manyIDSproductsweredevelopedand
+maturedtosatisfytheneedsofnetworksecurity.5However,theimmenseevolutioninthetechnologiesoverthelastdecade
+hasresultedinalargeexpansioninthenetworksize,andthenumberofapplicationshandledbythenetworknodes.As
+aresult,ahugeamountofimportantdataisbeinggeneratedandsharedacrossdifferentnetworknodes.Thesecurityof
+thesedataandnetworknodeshasbecomeachallengingtaskduetothegenerationofalargenumberofnewattackseither
+throughthemutationofanoldattackoranovelattack.Almosteverynodewithinanetworkisvulnerabletosecuritythreats.Forinstance,thedatanodemaybeveryimportantforanorganization.Anycompromisetothenode’sinforma-
+tionmaycauseahugeimpactonthatorganizationintermsofitsmarketreputationandfinanciallosses.ExistingIDSs
+haveshowninefficiencyindetectingvariousattacksincludingzero-dayattacksandreducingthefalsealarmrates(FAR).
+6
+Thiseventuallyresultsinademandforanefficient,accurate,andcost-effectiveNIDStoprovidestrongsecuritytothenetwork.
+To fulfill the requirements of an effective IDS, the researchers have explored the possibility of using machine
+learning (ML) and deep learning (DL) techniques. Both ML and DL come under the big umbrella of artificial intel-
+ligence (AI) and aim at learning useful information from the big data.
+7These techniques have gained enormous
+popularity in the field of network security, over the last decade due to the invention of very powerful graphics pro-cessor units (GPUs).
+8Both ML and DL are powerful tools in learning useful features from the network traffic and
+predicting the normal and abnormal activities based on the learned patterns. The ML-based IDS depends heav-
+ily on feature engineering to learn useful information from the network traffic.9While DL-based IDS do not rely
+on feature engineering and are good at automatically learning complex features from the raw data due to its deep
+structure.10
+Overthelastdecade,variousML-andDL-basedsolutionswereproposedbytheresearcherstomakeNIDSefficient
+in detecting malicious attacks. However, the massive increase in the network traffic and the resulting security threats
+hasposedmanychallengesfortheNIDSsystemstodetectmaliciousintrusionsefficiently.TheresearchonusingtheDL
+methodsforNIDSiscurrentlyinitsearlystageandthereisstillanenormousroomtoexplorethistechnologywithinNIDStoefficientlydetectintruderswithinthenetwork.Thepurposeofthisresearchpaperistoprovideabroadoverviewofthe
+recenttrendsandadvancementsinML-andDL-basedsolutionsforNIDSs.Thekeyideaistofurnishup-to-dateinfor-
+mationonrecentML-andDL-basedNIDStoprovideabaselineforthenewresearcherswhowanttostartexploringthis
+importantdomain.Themaincontributionsofthisarticleare3-fold.(i)Weconductedasystematicstudytoselectrecent
+journalarticlesfocusingonvariousML-andDL-basedNIDSwhicharepublishedduringthelast3years(2017-April2020).
+(ii)Wereviewedeacharticleextensivelyanddiscusseditsvariousfeaturessuchasitsproposedmethodology,strength,
+weakness,evaluationmetrics,andtheuseddatasets.(iii)Basedontheseobservations,weprovidedtherecenttrendsof
+usingAImethodsforNIDSthenhighlightedvariouschallengesinML-/DL-basedNIDsandweprovideddifferentfuture
+directionsinthisimportantdomain.
+TherearemanysurveypapersintheliteraturethatprovidesomeimplementationdetailsontheIDS.Ourarticleis
+differentfromtheotherreviewarticles
+11-16fromthreeaspects:(i)Wefollowedasystematicarticleselectionprocessto
+obtain more focused articles on NIDS design considering AI tools. While the other studies reviewed the general IDS
+system without using the systematic approach. (ii) Our study reviewed the articles published between 2017 and April
+2020.SoitprovidesmoreupdatedinformationandtherecenttrendsfollowedinthedesignofAI-basedNIDS.(iii)In
+ourstudy,anextensivereviewoftherecentNIDSbasedonMLandDLapproachisprovidedwheretheyarecritically
+analyzedaccordingtotheirmethods,techniques,datasets,andevaluationmetrics.ThefocusistoprovideresearcherswithmoreupdatedknowledgeonAI-basedNIDSinoneplace,wheretheycanfindtherecenttrendsandpotentialresearch
+areas in the domain to start exploring it. A detailed comparison of this article with other review articles is provided
+inTable1.
+The rest of the paper is organized as follows: Section 2 describes the research methodology adopted in this study.
+Section 3 provides the basic IDS concept and classification methods. Section 4 elaborates the DL and ML methodolo-
+giesadopted.ThedetailsabouttheevaluationmetricsandthebenchmarkpublicdatasetsisillustratedinSection5and
+Section6,respectively.Observations,recenttrendsinNIDSdesign,researchchallenges,andthefutureresearchscope
+are provided in Section 7. Finally, Section 8 concludes this review article. The abbreviations used in this article are
+summarizedinTable2.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 3 ---
+
+AHMADetal. 3o f2 9
+TABLE 1 Comparisonwithothersimilarreviewarticles:( ✓:Y es, ×:No)
+Review Article Year Systematic Study NIDS Focused AI-based approaches Future Trends
+ML DL
+Vasilomanolakisetal112015 ×× ✓ × ✓
+Buczaketal122015 × × ✓ × ✓
+Thomasetal132018 × ✓✓ × ✓
+Liuetal142019 × ✓ ✓ ✓ ✓
+Khraisatetal152019 ×× ✓ × ✓
+DaCostaetal162019 × × ✓ ✓ ✓
+This Article ✓✓ ✓ ✓ ✓
+Abbreviations:AI,artificialintelligence;NIDS,network-basedintrusiondetectionsystem.
+TABLE 2 Summaryofabbreviations
+Abbreviation Definition Abbreviation Definition
+AE Autoencoder IoT InternetofThings
+AI ArtificialIntelligence KNN K-NearestNeighbor
+AIDS AnomalyIntrusionDetectionSystem LSTM LongShortTermMemory
+ANN ArtificialNeuralNetwork ML MachineLearning
+CIC CanadianInstituteofCybersecurity NIDS NetworkbasedIntrusionDetectionSystem
+CNN ConvolutionalNeuralNetwork PCA PrincipleComponentAnalysis
+CSE CommunicationSecurityEstablishment PSO ParticleSwarmOptimization
+DBN DeepBeliefNetwork R2L RemotetoLocal
+DL DeepLearning RBM RestrictedBoltzmannMachine
+DNN DeepNeuralNetwork ReLU RectifiedLinearUnit
+DoS DenialofService RF RandomForest
+DT DecisionTree RNN RecurrentNeuralNetwork
+ELM ExtremeLearningMachine SCADA SupervisoryControlandDataAcquisition
+FAR FalseAlarmRate SIDS SignaturebasedIntursionDetectionSystem
+FCN FullyConnectedNetworks SMOTE SyntheticMinorityOver-SamplingTechnique
+FLN FastLearningNetwork SVM SupportVectorMachine
+FN FalseNegative TN TrueNegative
+FP FalsePositive TP TruePositive
+FSL Few-shotLearning UAV UnmannedAerialVehicles
+GPU GraphicsProcessingUnit U2R UsertoRoot
+GRU GatedRecurrentUnit VAE VariationalAutoencoder
+HIDS Host-basedIntrusionDetectionSystem WSN WirelessSensorNetwork
+IDS IntrusionDetectionSystem
+2 METHODOLOGY
+This study conducts a systematic literature review of the different ML- and DL-based NIDS and investigates the pub-
+lished journal articles between 2017tofirst quarter of 2020 . A systematic literature review is a methodology followed
+to identify, examine, and extract needful information from the literature related to certain research topics.17We per-
+formedthissystematicreviewintwophases. Phase-1identifiestheinformationresource(searchengine)andkeywords
+toexecuteaquerytoobtainaninitiallistofarticles. Phase-2appliescertaincriteriaontheinitiallisttoselectthemost
+relatedandcorearticlesandstorethemintofinallistwhicharereviewedinthisarticle.Themainpurposeofthisreview
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 4 ---
+
+4o f2 9 AHMADetal.
+FIGURE 1 Research
+methodology:Phase-1
+FIGURE 2 Research
+methodology:Phase-2
+articleistoanswerthefollowingquestions:(i)WhataretherecenttrendsinthedesignofAI-basedNIDS?(ii)Whatare
+therecentMLandDLmethodologiesadoptedforNIDSdesign?(iii)Whatarethemeritsanddemeritsofeachadopted
+methodology?(iv)WhichdatasetsarerecentlyusedfortheAI-basedNIDStestingpurposes?(v)Whatarethemostfre-
+quentperformancemetricsusedforevaluationpurposes?and(vi)WhatisthefuturescopeofresearchinAI-poweredNIDS?
+Inphase-1,firstlysearchenginesandkeywordsareidentifiedforarticlesearch.A Scopus document search
+18ischo-
+sen as a potential search engine due to its ability to search from almost all the well-known databases. We executed a
+searchQUERYusinganinitialkeyword “intrusion detection system” andadjustedthefiltertoshowjournalarticlespub-
+lishedbetween2017and2020.TheinitialsearchQUERYresultedinthearticlesthatproposedtheIDSusingdifferent
+approacheslikeAI-based,watchdog-based,trust-basedandgametheoretic-based,etc.fordifferentdomainareasinclud-
+ingwirelesssensornetwork(WSN),internetofthings(IoT),cloudcomputing,etc.Wethenredefinedourkeywordas
+intrusion detection system ,network anomaly detection ,and signature-based network intrusion detection withthecombina-
+tionof machine learning ordeep learning toobtainmorerelevantarticles.Asaresultofphase-1,relevantarticlesbased
+onthekeywordswereselectedandstoredasaninitiallist.Thedetailedstepsusedinphase-1toobtainaninitiallistare
+summarizedinFigure1.
+In phase-2, we started with the initial list and defined certain criteria to obtain articles that are more focused
+for review. We selected those articles which were written in the English language and proposed a new AI-based
+idea. We did not consider the review and survey articles. Based on these criteria, we were able to identify articles
+for this review, stored them in the final list, and then used them for the analysis purposes. Each selected article
+is analyzed based on the proposed ML- or DL-based methodology and the advantages and disadvantages of each
+methodology. We also analyzed the most frequent used datasets and evaluation metrics used for testing and evalua-
+tion purposes. Finally, we identify the future scope of research and challenges in the design of an efficient AI-basedNIDS.Thedetailedprocessusedinphase-2fortheselectionofarticlesinthefinallistforreviewarticlesissummarized
+inFigure2.
+3 IDS: CONCEPT AND CLASSIFICATION
+ThissectionfirstexplainstheconceptofIDSandthenprovidesthedetailsabouttheclassificationofIDSbasedonitsdeploymentandthedetectionmethodology.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 5 ---
+
+AHMADetal. 5o f2 9
+FIGURE 3 Passivedeployment
+ofnetwork-basedintrusiondetection
+system
+3.1 Concept
+AnIDSisthecombinationoftwowords“intrusion”and“detectionsystem.” Intrusionreferstoanunauthorizedaccess
+totheinformationwithinacomputerornetworksystemstocompromiseitsintegrity,confidentiality,oravailability.19,20
+While detection system is a security mechanism for the detection of such illegal activity. So, IDSis a security tool that
+constantlymonitorsthehostandnetworktraffictodetectanysuspiciousbehaviorthatviolatesthesecuritypolicyand
+compromises its confidentiality, integrity, and availability.11,21The IDS will generate alerts about detected malicious
+behavior to the host or network administrators. Figure 3 depictsa passive deployment of NIDS, where it is connectedtoanetworkswitchconfiguredwiththeportmirroringtechnology.Thetaskistomirroralltheincomingandoutgoing
+networktraffictoNIDSforperformingtrafficmonitoringtodetectintrusions.NIDScanalsobedeployedinbetweenthe
+firewallandthenetworkswitchtoallowallthetraffictopassthroughNIDS.
+2
+3.2 Classification of IDS
+IDScanbeclassifiedwiththeperspectiveofitsdeploymentordetectionmethods.Aclassificationtaxonomyisgivenin
+Figure4.
+3.2.1 Deployment method based IDS
+Fromthedeployment-basedIDSperspective,IDSisfurthersubclassifiedashost-based-IDS(HIDS)orNIDS.19,22HIDSis
+deployedonthesingleinformationhost.Itstaskistomonitoralltheactivitiesonthissinglehostandscansforitssecurity
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 6 ---
+
+6o f2 9 AHMADetal.
+Detection Method based IDS Deployment Method based IDS
+Host based IDS Network based IDS Signature based IDSAnomaly Detection
+based IDSIntrusion Detection System (IDS)
+Machine Learning / Deep Learning ModelsFIGURE 4 Intrusiondetection
+systemclassificationtaxonomy
+policyviolationsandsuspiciousactivities.Themaindrawbackisitsdeploymentonallthehoststhatrequireintrusion
+protection, which results in extra-processing overhead for each node and ultimately degrades the performance of the
+IDS.23,24Incontrast,NIDSisdeployedonthenetworkwiththeaimtoprotectalldevicesandtheentirenetworkfrom
+intrusions.TheNIDSwillconstantlymonitorthenetworktrafficandscansforpotentialsecuritybreachesandviolations.
+ThisarticlefocusesonthedifferentmethodsusedintheNIDS.
+3.2.2 Detection method based IDS
+From the detection IDS perspective, the IDS is further subdivided into “Signature-based intrusion detection (SIDS)”
+and “Anomaly detection-based intrusion detection (AIDS)”. SIDS, also known as the “misuse intrusion detection” or
+“knowledge-basedintrusiondetection,”isbasedontheideaofdefiningasignatureforattackpatterns.Thesesignatures
+arestoredinthesignaturedatabaseandthedatapatternsarematchedwiththesestoredsignaturesforattackdetection.25,26
+Theadvantageincludesthehighdetectionefficiencyfortheknownattacksduetotheavailabilityofsignatureforthoseattacks.Ontheotherhand,thismethodlackstheabilitytodetectthenovelandnewattacksduetotheabsenceofsigna-
+turepatterns.
+23Also,ahugesignaturedatabaseismaintainedandcomparedwiththedatapacketsforpossibleintrusions,
+whichmakesitaresource-consumingapproach.27AIDS,alsocalledthe“behavior-basedIDS,”isbasedontheideaof
+clearlydefiningaprofilefornormalactivity.Anydeviationfromthisnormalprofilewillbeconsideredasananomalyor
+abnormalbehavior.28,29ThemajoradvantagesofAIDSareitsabilitytodetectunknownandnewattacks30andthecus-
+tomizednatureofthenormalactivityprofilefordifferentnetworksandapplications.31However,themaindrawbackisthe
+highFARasitisdifficulttofindtheboundarybetweenthenormalandabnormalprofilesforintrusiondetection.32The
+popularityoftheIoTparadigmduetonetworktechnologiesadvancementhasresultedinexponentialgrowthintheuse
+ofIoTdevices.33,34OneofthevitaltechnologyusedinthedevelopmentofanIoTnetworkistheWSN,whichcomprises
+ofacollectionofsensornodesforinformationcollection.35Ahugeamountofcriticalinformationiscollectedbythese
+IoTsensordevicesandissharedovertheinternet.36ThisbigdataalongwiththecomplexstructureofWSNcomprising
+oftheresource-limitedsensornodescausessecuritychallengesfortheIoTnetwork.37,38Tothisend,IDSisconsidered
+asoneoftheeffectivemechanismforthesecurityofIoTandWSN.ManydifferentIDSapproachesareproposedinthe
+literature,whicharebasedontheefficientuseofwatchdogs,trustmodels,andgame-theoreticconcepts.
+Watchdogs are the network nodes that are assigned the task of watching and monitoring the neighboring nodes’
+networktraffic.Thenadecisionismaderegardingthemisbehavingnodesbyusingsomesetofrules.Manysolutionsare
+proposedfortheanomalyandintrusiondetectionusingwatchdogsinthedomainofWSN,39AdHocnetworks,40andIoT.41
+TrustmodelsareanothertoolusedtoimprovetheperformanceofanIDS.AnIDSbasedonthetrustmodelevaluatesthetrustworthinessoftheirnodestoidentifythemaliciousnodesbyconstantlymentoringthenetworktrafficforabnormal
+behaviors.DifferentimplementationsoftheIDSusingtrustmodelsarebasedonwatchdog,
+42Bayesiantrustmodel,43and
+gametheory-basedtrustmodel.44,45InthecontextofIoT,atrustmanagementschemecanbeusedinadistributedmanner
+toreducethecomputationaloverheadsofresource-constrainedsensornodes.46,47Similarly,gametheoryiswidelyused
+fortheefficientdesigningofIDS.Itisanappliedmathematicalconceptusedtomodelthestrategicinteractionsamong
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 7 ---
+
+AHMADetal. 7o f2 9
+theplayersbydescribingagame.Eachgameincludesthesetofplayersandeachplayerhasasetofstrategiesalongwith
+anactionplanandpayoffforeachactionwithinagame.Thesolutionofthegameisbasedonanequilibriumstatewhich
+isbasedontheplayer’sstrategytomaximizethepayoff.Agamecanbecooperativeornoncooperativedependingupon
+entities’ interaction cooperatively or competitively. From the perspective of IDS for IoT and WSN, a game is modeled
+betweentheattackersandthedefenderseitherbytheirinteractionorbyusingthepredictionstrategyofanattacker.45,48-50
+Inthisarticle,wehavefocusedonreviewingtheAI-basedNIDS,whichcanbedeployedforthesecurityofanIoT
+networkbymonitoringthenetworktrafficenteredthroughtheedgerouter.ThemostcommonAI-basedalgorithmsused
+inthedesignofanefficientNIDSoverthepastthreeyearsarebrieflyexplainedinSection4.
+4 AI METHODS FOR NIDS
+ThissectionprovidesageneralmethodologyoftheAI-basedNIDSalongwiththedetailsofthemostcommonlyusedML
+andDLalgorithmsusedtodesignanefficientNIDS.BothMLandDLarebroadlyclassifiedassupervisedandunsuper-
+visedalgorithms.51Insupervised algorithms ,theusefulinformationisextractedfromthelabeleddata.While unsupervised
+algorithms relyontheunlabeleddatatoextractusefulfeaturesandinformation.52
+4.1 A general AI-based NIDS methodology
+ANIDSdevelopedusingMLandDLmethodsusuallyinvolvesfollowingthreemajorstepsasdepictedinFigure5,that
+is,(i)Datapreprocessingphase,(ii)Trainingphase,and(iii)Testingphase.Foralltheproposedsolutions,thedataset
+is first preprocessed to transform it into the format suitable to be used by the algorithm. This stage typically involves
+encodingandnormalization.Sometimes,thedatasetrequirescleaningintermsofremovingentrieswithmissingdataand
+duplicateentries,whichisalsoperformedduringthisphase.Thepresprocesseddataisthendividedrandomlyintotwo
+portions,the training dataset ,andthe testing dataset .Typically,thetrainingdatasetcomprisesalmost80%oftheoriginal
+datasetsizeandtheremaining20%formstestingdataset.53,54TheMLorDLalgorithmisthentrainedusingthetraining
+datasetinthetrainingphase.Thetimetakenbythealgorithminlearningdependsuponthesizeofthedatasetandthe
+complexityoftheproposedmodel.Normally,thetrainingtimefortheDLmodelsrequiresmoretrainingtimeduetoits
+deepandcomplexstructure.Oncethemodelistrained,itistestedusingthetestingdatasetandevaluatedbasedonthe
+predictionsitmade.InthecaseofNIDSmodels,thenetworktrafficinstancewillbepredictedtobelongtoeitherbenign
+(normal)orattackclass.
+Inthefollowingsection,weprovideanextensiveoverviewofwidelyusedMLandDLalgorithmsforNIDSsystems.
+Further,Figure6highlightsthetaxonomyofrecentML-andDL-basedtechniquesusedforNIDS.
+4.2 ML algorithms
+ML is a subset of AI that includes all the methods and algorithms which enable the machines to learn automatically
+using mathematical models in order to extract useful information from the large datasets.13,55T h em o s tc o m m o nM L
+FIGURE 5 Generalizedmachine
+learning-/deeplearning-basednetwork-based
+intrusiondetectionsystemmethodologyData
+Preprocessing
+(Encoding, Normalization )Origional
+DatasetTraining
+DatasetML / DL
+Algorithm
+Trained
+ML / DL
+ModelTesting
+DatasetTraining Phase
+Testing Phase
+Predictions
+Attack Benign
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 8 ---
+
+8o f2 9 AHMADetal.
+FIGURE 6 TaxonomyFormachinelearning-anddeeplearning-basednetwork-basedintrusiondetectionsystem
+(alsocalledShallowLearning)algorithmsusedforIDSareDecisionTree, K-NearestNeighbor(KNN),ArtificialNeural
+Network(ANN),SupportVectorMachine(SVM), K-MeanClustering,FastLearningNetwork,andEnsembleMethods.
+4.2.1 Decision tree
+DTisoneofthebasicsupervisedMLalgorithmswhichisusedforbothclassificationandregressionofthegivendataset
+byapplyingtheseriesofdecisions(rules).Themodelhasaconventionaltreestructurewithnodes,branches,andleaf.56
+Eachnoderepresentsanattributeorafeature.Thebranchrepresentsadecisionorarulewhileeachleafrepresentsapossibleoutcomeorclasslabel.
+57TheDTalgorithmautomaticallyselectsthebestfeaturesforbuildingatreeandthen
+performpruningoperationtoremoveirrelevantbranchesfromthetreetoavoidtheover-fitting.ThemostcommonDT
+modelsareCART,C4.5,andID3.58ManyadvancedlearningalgorithmslikeRandomForest(RF)59andXGBoost60are
+madefrommultipledecisiontrees.
+4.2.2 K-Nearest Neighbor
+KNNisoneofthesimplestsupervisedMLalgorithmswhichutilizestheideaof“featuresimilarity”topredicttheclass
+ofacertaindatasample.Itidentifiesasamplebasedonitsneighborsbycalculatingitsdistancefromtheneighbors.IntheKNNalgorithm,theparameter kaffectstheperformanceofthemodel.Ifthevalueof kisverysmaller,themodel
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 9 ---
+
+AHMADetal. 9o f2 9
+may be susceptible to over-fitting. While, a very large selection of kvalue may result in misclassification of the sam-
+pleinstance.61,62Karatasetal63comparedtheperformanceofdifferentMLalgorithmsusinganup-to-datebenchmark
+datasetCSE-CIC-IDS2018. Theyaddressedthe datasetimbalance problemby reducingtheimbalance ratiousing Syn-
+theticMinorityOversamplingTechnique(SMOTE),64whichresultedindetectionrateimprovementforminorityclass
+attacks.
+4.2.3 Support vector machine
+SVM is a supervised ML algorithm based on the idea of max-margin separation hyper-plane in n-dimensional feature
+space.Itisusedforthesolutionofbothlinearandnonlinearproblems.Fornonlinearproblems,kernelfunctionsareused.
+Theideaistofirstmapalowdimensionalinputvectorintoahighdimensionalfeaturespaceusingthekernelfunction.
+Next, an optimal maximum marginal hyper-plane is obtained, which works as a decision boundary using the support
+vectors.65,66ForNIDS,theSVMalgorithmcanbeusedtoenhanceitsefficiencyandaccuracybycorrectlypredictingthe
+normalandmaliciousclasses.67,68
+4.2.4 K-mean clustering
+Theclusteringisanideaofdividingdataintomeaningfulclusters(orgroups),byputtingthehighlysimilardataintothe
+samecluster. K-Meanclusteringisoneofthepopularcentroid-basediterativeMLalgorithmthatlearnsinanunsupervised
+manner. Krepresentsthenumberofcentroids(centerofthecluster)withinadataset.Forassigningcertaindatapoints
+toacluster,normallydistanceiscalculated.Themainideaistoreducethesumofthedistancesbetweenthedatapoints
+andtheirrespectivecentroidswithinacluster.69-71
+Yaoetal72proposedamultilevelintrusiondetectionmodelframeworknamedmultilevelsemi-supervisedML(MSML)
+toaddressIDS,TheclusteringconceptisusedalongwiththeRFmodel.Theproposedsolutionwascomposedoffour
+modulesaspureclusterextraction,patterndiscovery,fine-grainedclassification,andmodelupdating.Theideaisifanattackisnotlabeledinonemodulethenitisforwardedtothenextonefordetection.Theproposedmethodologywas
+testedusingtheKDDCup’99dataset.Experimentalresultsshowedthemodelsuperiorityfordetectingtheattackseven
+withlowinstancesinthedataset.
+4.2.5 Artificial neural network
+ANN is also a supervised ML algorithm and is inspired by the working of the nervous system of the human brain.It is made up of the processing elements called the neurons (nodes) and the connection between them. These nodesare organized in an input layer, many hidden layers, and an output layer. The backpropagation algorithm is used as
+a learning technique for the ANN. The main advantage of using an ANN technique is its ability to perform nonlin-
+ear modeling by learning from larger datasets.
+73However, the main issue with training the ANN model is the high
+time consumption due to its complex nature,74which slows down the learning process and to reach a suboptimal
+solution.75
+ToovercomethelimitationsofANN,Huangetal76proposedanewANNcalledanextremelearningmachine(ELM).
+The ELM is a single hidden layer feed-forward neural network, which randomly uses the input weights and hidden
+layerbiaswithouttuninganddeterminestheoutputweightsinananalyticalway.77BasedontheideaofELM,Lietal78
+proposedaFastLearningNetwork(FLN).FLNisbasedonconnectingthemultilayerfeed-forwardneuralnetworkanda
+single-layerfeed-forwardneuralnetworkinparallel.FLNshowedreasonableperformanceandstabilityusingasmaller
+numberofhiddennodesandutilizinglesstime.
+Ali et al79addressed the IDS problem by proposing a model based on FLN and particle swarm optimization80
+(PSO-FLN)andtestedthemodelusingKDDCup’99dataset.ThemodelwastestedbycomparingtheFLNwithdifferentoptimizationalgorithms.ResultsshowedthatPSO-FLNoutperformstheotherFLNmodelswithdifferentoptimization
+algorithmsasGeneticAlgorithm,HarmoneySearchoptimization,andAmelioratedTeachingLearning-basedoptimiza-
+tion.Theyalsodemonstratedthatincreasingthenumberofneuronsinthehiddenlayerincreasesaccuracy.Themaindrawbackisthelowerdetectionrateaccuracyforlowerattackclasses.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 10 ---
+
+10 of 29 AHMADetal.
+4.2.6 Ensemble methods
+The key idea behind ensemble methods is to get benefit from the different classifier by learning in an ensemble way.
+Sinceeachclassifierhassomestrengthsandweaknesses.Somemayperformwellfordetectingaspecifictypeofattacks
+andshowspoorperformanceonothertypesofattack.Theensembleapproachistocombineweakclassifiersbytraining
+multipleclassifiersandthenformastrongerclassifierbyselectingusingavotingalgorithm.
+Shenetal81proposedanIDSusinganensemblemethodbyselectingELMasabaseclassifier.Tooptimizetheproposed
+methodology,aBAToptimizationalgorithmisusedduringtheensemblepruningphase.ThemodelwastestedusingKDD
+Cup’99,NSL-KDD,andKyotodatasets.ExperimentalresultsshowedthatmanyELMscombinedinensemblemanneroutperformindividualELMinperformance.
+Gao et al
+82proposed an adaptive ensemble model by using several base classifiers as DT, RF, KNN, Deep Neural
+Network (DNN), and choosing the best using adaptive voting algorithm. The proposed methodology was verified by
+performingexperimentsusingtheNSL-KDDdataset.Experimentalresultsdemonstratedtheperformanceefficiencyby
+comparingothermodels.Theproposedmethodologydidnothavesatisfactoryresultsfortheweakerattackclasses.
+4.3 Deep learning algorithms
+DL is the subset of the ML which includes many hidden layers to get the characteristics of the deep network. ThesetechniquesaremoreefficientthantheMLduetotheirdeepstructureandabilitytolearntheimportantfeaturesfromthe
+datasetonitsownandgenerateanoutput.ThissectionpresentstheDLapproachesadoptedtoproposeDL-basedNIDS
+solutionsinthereviewedarticles.
+4.3.1 Recurrent neural networks
+RecurrentNeuralNetworks(RNN)extendsthecapabilitiesofthetraditionalfeed-forwardneuralnetworkandisdesignedtomodelthesequencedata.RNNismadeofinput,hidden,andoutputunits,wherethehiddenunitsareconsideredtobe
+thememoryelements.Tomakeadecision,eachRNNunitreliesonitscurrentinputandtheoutputofthepreviousinput.
+RNNiswidelyusedindifferentfieldslikespeechprocessing,humanactivityrecognition,handwritingprediction,and
+semanticunderstanding,tonameafew.
+83-86ForanIDS,RNNcanbeusedforthesupervisedclassificationandfeature
+extraction.RNNnormallycanhandlelimitedlengthsequencesandwillsufferfromshort-termmemoryifthesequence
+lengthislong.87DifferentRNNvariantslikeLongshort-termmemory(LSTM)88andgatedrecurrentunit(GRU)89,90are
+proposedtosolvetheseissues.
+RNN-basedIDSwasproposedbyYinetal91inthecontextofbinaryandmulticlassclassificationoftheNSL-KDD
+dataset.Themodelwastestedusingadifferentnumberofhiddennodesandlearningrates.Resultsshowedthatdifferentlearningratesandthenumberofhiddennodesaffecttheaccuracyofthemodel.Bestaccuracywasobtainedusing80
+hiddennodesandalearningrateof0.1and0.5forbinaryandmulticlassscenarios.Theproposedmodelperformedwell
+comparedtoMLalgorithmsandareduced-sizedRNNmodelproposedinReference92.Themainshortcomingofthis
+workistheincreaseincomputationalprocessingwhichresultsinhighmodeltrainingtimeandlowerdetectionratefor
+theR2LandU2Rclasses.Thearticlealsolackstheperformancecomparisonoftheproposedmodelwithdifferentother
+DLmethodologies.
+InReference93,XuetalproposedanIDSbasedonRNNusingGRUasthemainmemorytogetherwiththemultilayer
+perceptronandasoftmaxclassifier.TheproposedmethodologywastestedusingKDDCup’99andNSL-KDDdatasets.
+Experimentalresultsshowedgooddetectionratesforcomparingothermethodologies.ThemajordrawbackoftheirmodelislowerdetectionratesforminorityattackclasseslikeU2RandR2L.
+Naseeretal
+94performedacomparativeanalysisofIDSbasedondifferentDLandMLalgorithmsandimplementedon
+GPU-basedtestbed.NSL-KDDisconsideredasthebenchmarkdatasetandtheexperimentalresultsshowedthatLSTM
+andDeepCNNachievedhigheraccuracyresultscomparingothermodels.
+4.3.2 AutoEncoder
+AutoEncoder(AE)isapopularDLtechniquethatbelongstothefamilyofunsupervisedneuralnetworks.95Itworksonthe
+ideaofmatchingtheoutputasclosetoinputaspossiblebylearningthebestfeatures.Itcontainsinputandoutputlayersof
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 11 ---
+
+AHMADetal. 11 of 29
+thesamedimension,whilethedimensionsofthehiddenlayersarenormallysmallerthantheinputlayer.AEissymmetric
+andworksinEncoder-Decoderfashion.DifferentvariantsofAEareStackedAE,SparseAE,andVariationalAE.96
+Shone et al97proposed an IDS based on deep AE and ML technique RF. To make the model efficient in terms of
+computationalandtime,onlytheencoderpartofAEisutilizedtomakeitworkinanonsymmetricfashion.Twonon-
+symmetricdeepAEs,withthreehiddenlayerseach,arearrangedinastackedmanner.RFwasusedforclassification.
+ExperimentswereperformedformulticlassclassificationscenariosusingKDDCup’99andNSL-KDDdatasets.Thepro-
+posedmethodshowedtheirefficiencycomparetoDeepBeliefNetwork(DBN)usedinReference98intermsofdetection
+accuracyandreducedtrainingtime.ButthemodelshowedinefficiencyfordetectingR2LandU2Rattacksduetolackof
+datafortrainingthemodel.
+Y anetal67proposedanIDSusingstackedsparseautoencoder(SSAE)andSVM.TheSSAEwasusedasthefeature
+extractionmethodandSVMasaclassifier.Binary-classandmulti-classclassificationproblemisconsideredforconducting
+experiments.Theresultsshowedtheproposedmodelsuperiorityinperformancecomparingdifferentfeatureselection,
+ML,andDLmethodsusingtheNSL-KDDdataset.Although,themodelachievesreasonabledetectionratesforU2Rand
+R2Lattacksbutitisstilllesscomparingtheotherclassesofthedataset.
+A-Qatf et al99also proposed a similar idea of self-taught learning based on sparse AE and SVM. To validate their
+performance,theyperformedexperimentsontheproposedmodelconsideringtheNSL-KDDdataset.Theresultsshowed
+improvedoverallperformancecomparingotherDLandMLmodels.ButtheproposedmethodologyperformanceinR2L
+andU2Rclassisnotdiscussed.
+Papmartizivanous et al100proposed an autonomous misuse detection system by combining the advantages of
+self-taughtlearning101andMAPE-Kframeworks.102TheyusedsparseAEfortheunsupervisedlearningalgorithmtolearn
+useful features while performing the Plan activity within the MAPE-K Framework. Experiments performed using the
+KDDCup’99andNSL-KDDdatasets.ThemaindrawbackisthelackofdetectionaccuracyforU2RandR2Lattackclasses.
+Khanetal103proposedanefficienttwo-stagemodelbasedondeepstackedAE.Theinitialstageclassifiedthedataset
+intotheattackandnormalclasseswithprobabilityvalues.Theseprobabilityscoresarethenusedasanadditionalfeature
+andareinputtothefinaldecisionstagefornormalandmulticlassattackclassification.Theperformanceoftheproposed
+model was tested using KDD Cup’99 and UNSWNB15 datasets. To reduce the problems due to class imbalance of the
+datasets,adifferentmethodologywasadoptedforbothdatasets.ForKDDCup’99,thedownsamplingwasperformedtoremove repeated records. While, to balance the distribution of records in UNSWNB15, upsampling of the dataset was
+performedusingSMOTE.ThispreprocessingofthedatasetdramaticallyimprovestheDRefficiencyofattackclasswith
+lowertraininginstances.
+Malaiya et al
+104proposed different IDS models based on fully connected networks, Variational AE, and
+Sequence-to-Sequence(Seq2Seq)structures,respectively.ThesemodelswereexaminedfordifferentdatasetsNSL-KDD,
+KyotoHoneypot,UNSW-NB15,IDS2017,andMAWILabtraces.105ResultsshowedthattheSeq2Seqmodelconstructed
+usingtwoRNNsperformedthebestcomparingothermodelsintermsofdetectionaccuracyacrossallthedatasets.
+Yang et al106proposed a model for ID based on the supervised adversarial variational AE with regularization and
+DNN (SAVAER-DNN). The performance of the model was tested using benchmark data NSL-KDD and UNSW-NB15.Experimentalresultsconfirmthemodel’seffectivenessindetectinglowfrequencyandnewattacks.
+Andresinietal
+107incorporatedtheideaofAEtoproposedamultistagemodelinvolvingtheIDconvolutionlayerand
+twostackedfullyconnectedlayers.Intheinitialunsupervisedstage,twoAEsweretrainedseparatelyusingNormaland
+Attackflowstoreconstructthesamplesagain.Inthesupervisedstage,thesenewreconstructedsamplesareusedtobuild
+anewaugmenteddatasetthatisusedasinputtoa1D-CNN.Thentheoutputofthisconvolutionlayerisflattenedand
+fedtofullyconnectedlayers,andlastly,asoftmaxlayerclassifiesthedataset.ExperimentswereperformedontheKDD
+Cup’99,UNSWNB15,andCICIDS2017datasetsandtheproposedmethodologyachievessuperiorperformancecompar-ing differentDL models. They have not shown how the minority classes perform using this methodology.The second
+drawbackisthatitdoesnotprovideanyinformationonthecharacteristicsoftheattack.
+4.3.3 Deep neural network
+DNNisabasicDLstructurethatallowsthemodeltolearninmultiplelayers.Itiscomposedofaninputlayer,anoutputlayer,andmanyhiddenlayers.DNNisusedtomodelcomplexnonlinearfunctions.Increasednumberofhiddenlayers
+enhances the abstraction level of the model to increase its capability.
+108Jia et al109proposed a network IDS based on
+DNN with four hidden layers to classify the datasets KDD cup’99 and NSL-KDD. The output layer included one fully
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 12 ---
+
+12 of 29 AHMADetal.
+connectedlayerandsoftmaxclassifierforclassificationpurposes.Forthehiddenlayer,arectifiedlinearunitwasusedas
+theactivationfunction.110Resultsshowedtherobustnessoftheproposedmodelasitachievedhigherdetectionratesfor
+almostalltheattackclassesexceptU2Rduetopresenceoflessnumberofrecords.Accordingtotheauthors,increasing
+the number of nodes and layers leads to a complex structure that increases the computing time and consumes more
+resources.Thesolutiontotheseissuesistheoptimizationalgorithmandautomatictuning.
+Wang et al111studied the DNN-based IDS with adversaries and evaluated using the NSL-KDD dataset. They com-
+prehensivelystudiedtherolesofindividualfeaturesingeneratingadversarialexamples.Theadversarialsampleswere
+producedbyFGSM,112JSMA,113DeepFool,114andCWattacks.115Resultsshowedthatthemostcommonlyusedattributes
+aremorevulnerabletoDL-basedIDSandrequiremoreattentiontosafeguardthenetworkfromattacks.
+Vinayakumaretal116proposedahybridscalableDNNframeworkcalledasscale-hybrid-IDS-AlertNet,forintrusion
+identificationatbothhostandnetworklevel.ApacheSparkclustercomputingplatform117wasusedforimplementing
+the scalable platform. For NIDS, the proposed model was tested using publically available datasets like KDDCup 99,
+NSL-KDD,Kyoto,UNSW-NB15,WSN-DS,andCICIDS2017.Experimentresultsshowedthesuperiorityoftheproposed
+modelcomparingdifferentMLalgorithms.
+4.3.4 Deep belief network
+DBNisaDLmodelconstructedbystackingmanyRestrictedBoltzmannMachines(RBM)inlayersfollowedbyasoftmax
+classificationlayer.118AnRBMisatwo-layer(inputandhiddenlayer)modelwiththedataflowinbothdirections.In
+DBN,eachnodewithinalayerisconnectedtoeachoftheothernodesinthepreviousandnextlayers,butwithinone
+layer,thenodesarenotconnected.DBNispretrainedusingthegreedylayer-wiselearningapproachinanunsupervised
+fashion,followedbyasupervisedfine-tuningmethodologyforlearningusefulfeatures.119ForIDS,DBNisusedforfeature
+extractionandclassificationtasks.
+Mariretal120proposedadistributedmodelbasedontheBDNandmultilayerensembleSVMforlarge-scalenetwork
+IDbasedonApacheSpark.DBNwasusedforextractingfeatures,whicharethenforwardedtotheensembleSVM,and
+thenfinallyoutputwaspredictedusingavotingmechanism.TheefficiencyoftheproposedmethodwastestedforKDDCUP’99,NSL-KDD,UNSW-NB15,andCICIDS2017datasets.Theproposedsystemhasshownhighperformancesinthe
+detectionofabnormalbehaviorinadistributedway.
+ToimprovethedetectionaccuracyofIDS,Weietal
+121proposedaDL-basedmodelDBN,whichisoptimizedbycom-
+biningtheparticleswarm,fishswarm,andgeneticalgorithms.ThemodelwastestedusingtheNSL-KDDdataset.Results
+showedalargeimprovementinthedetectionrateofU2RandR2Lclass.Themaindrawbackoftheproposedmodelis
+theincreaseinthetrainingtimeofthemodelduetoitscomplexstructure.
+4.3.5 Convolutional neural network
+Convolutionalneuralnetwork(CNN)isaDLstructuremoresuitableforthedatastoredinarrays.Itconsistsofaninputlayer,thestackofconvolutionalandpoolinglayersforfeatureextraction,andfinallyafullyconnectedlayerandasoftmax
+classifierintheclassificationlayer.CNNiswidelysuccessfulinthecomputervisionfield.
+122FortheIDS,theyareused
+forthesupervisedfeatureextractionandclassificationpurposes.
+Xiaoetal123proposedanefficientIDSbasedontheCNN.Themainideaisfirsttoperformfeatureextractionusing
+PrincipleComponentAnalysisandAE.Thentransformtheone-dimensionalvector(featureset)intoatwo-dimensional
+matrixandinputtotheconvolutionNeuralNetwork.ExperimentswereperformedontheKDDCup’99dataset.Exper-imentsshowitseffectivenessintermsoftimetakenbyalgorithmsinthetrainingandtestphase.Themaindrawbackis
+lowerdetectionratesfortheU2RandR2Lclassescomparingtootherattackclasses.
+Zhang et al
+124proposed a complex multilayer IDS model based on CNN and gcForest. They also proposed a novel
+P-Zigzag algorithm for converting the raw data into two-dimensional greyscale images. They used an improved CNN
+model(GoogLeNetNP)inacoarsegrainlayerforinitialdetection.Theninthefine-grainedlayer,gcForest(caXGBoost)
+isusedtofurtherclassifiestheabnormalclassesinto N-1subclasses.TheyusedadatasetbycombiningUNSW-NB15and
+CIC-IDS2017datasets.Theexperimentalresultsshowthattheproposedmodelsignificantlyimprovestheaccuracyand
+detectionratecomparedtothesinglealgorithmswhilereducingtheFAR.
+Jiangetal125proposedanefficientIDSsystembycombiningCNNandbidirectionallongshort-termmemory(BiL-
+STM)inadeephierarchy.TheclassimbalanceproblemisaddressedbyusingtheSMOTEtoincreasetheminoritysamples,
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 13 ---
+
+AHMADetal. 13 of 29
+whichhelpsthemodeltofullylearnthefeatures.TheCNNwasusedforextractingspatialfeatureswhileBiLTSMwasused
+totemporalfeatures.ExperimentswereperformedusingNSL-KDDandUNSWNB15datasets.Theproposedmethodology
+achieveshigherperformanceintermsofaccuracyanddetectionrate.Thedetectionrateofminoritydataclassesimproved
+slightlybutstillitsisverylowcomparingotherattackclasses.Duetothecomplexstructure,thetrainingtimeishigher.
+Yu et al126proposedanIDSmodelbasedonnovelDLideaofFew-shotLearning(FSL).127Theideaistotrainusing
+a small amount of balanced labeled data from the dataset. DNN and CNN are adopted as embeddingfunctions in the
+model for extracting the essential feature and reducing the dimension. Experimental results performed on NSL-KDD
+andUNSW-NB15datasetsshowedmodelefficiencyingettingreasonabledetectionratesforminorityattackclasses.The
+proposedmodelonlyutilizedlessthan2%datafortrainingtoachievesucharemarkableperformancefortheconsidereddataset.
+In this section, we identified various ML and DL techniques (as summarized in Table 3), which are developed by
+researchers recently to detect intruders in the network. Also, the strengths and weaknesses of each methodology is
+highlightedinTable4.However,thesetechniquesneedtobeevaluatedbasedoncertainmetrics.Inthenextsection,we
+TABLE 3 Recentmachinelearning-(ML)anddeeplearning(DL)-basednetwork-basedintrusionstudiesandtheirmethods
+Study Algorithm Methodology
+ML DL
+Yinetal91✓RecurrentNeuralNetwork
+Shenetal81✓ EnsembleMethodwithOptimizationusingBATalgorithm
+Shoneetal97✓✓ NonSymmetricDeepAutoEncoderwithRandomForest
+Alietal79✓ FastLearningNetworkandParticleSwarmAlgorithm
+Jiaetal109✓DeepNeuralNetwork
+Wangetal111✓DeepNeuralNetwork
+Yan et al67✓✓ SparseAutoEncoderwithSVM
+Naseeretal94✓✓ComparisonbetweendifferentMLandDL-basedIDSModels
+Xuetal93✓NeuralNetworkusinggatedRecurrentUnitsasmemorywithMultipleLayerPerception.
+Al-Qatfetal99✓✓SelfTaughtLearningModelbasedonSparseAutoEncoderandSVM
+Mariretal120✓✓ DeepBeliefNetworkandSVM
+Papamartizivanousetal100✓SelfTaughtLearningbasedonSparseAutoEncoder
+Khanetal103✓Two-StageModelusingStackedAutoEncoder
+Xiaoetal123✓ConvolutionalNeuralNetworkwithPrincipalcomponentanalysis(PCA)andAutoEncoder
+fordimensionreduction
+Yao et al72✓ AMultilevelModelbasedon K-MeansClusteringandRandomForest
+Vinayakumaretal116✓DeepNeuralNetwork
+Gaoetal82✓ EnsembleMachineLearningmethodswithVotingalgorithm
+Weietal121✓DeepBeliefNetworkalongwithoptimizationalgorithmsParticleSwarm,FishSwarmand
+GeneticAlgorithms.
+Zhangetal124✓MultiLayerConvolutionalNeuralNetwork
+Malaiyaetal104✓ModelbasedonFullyConnectedNetworks(FCNs),VariationalAutoEncoder(VAE),and
+Sequence-to-Sequence(Seq2Seq)structures
+Karatasetal63✓ PerformanceComparisonofdifferentMLalgorithmbyfirstreducingthedatasetimbalance
+ratiousing(SMOTE)
+Jiangetal125✓DeepHierarchicalNetworkbasedonCNNandBiLSTM
+Yang et al106✓SupervisedadversarialVariationalAutoEncoderwithregularization(SAVAER)andDeep
+NeuralNetwork(DNN)
+Yuetal126✓FewShotLearning(FSL)usingDNNandCNN
+Andresinietal107✓MultistageAutoEncoderandCNN
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 14 ---
+
+14 of 29 AHMADetal.TABLE 4 Strengthsandweaknessesoftheproposedmethodologies
+Study Strengths Weaknesses
+Yinetal91ANIDSbasedonRNNmodelisproposedthatachieveshigherperformancein
+termsofdetectionaccuracyusingMLalgorithmsThemodelhasincreasedcomplexityandrequiresmoretimefortraining.Also,it
+usesanolderdatasetNSL-KDDformodelevaluation.ResultsdemonstratelowerdetectionratesforminorityattackclasseslikeR2LandU2R.
+Shenetal81AnideaofusingaBAToptimizationalgorithmtogetherwiththeEnsemblemethod
+basedonELMasthebaseclassifier.ManyELMscombinedinanEnsembleway
+outperformindividualELMperformance.TheuseofolddatasetsKDDCup’99,NSL-KDD,andKyotoformodelevaluation.
+Moreover,themodelachieveslowerdetectionaccuracyfortheU2Rattackclass.
+Shoneetal97ProposedaNIDSmodelusinganon-symmetricdeepAEandRFclassifier.The
+complexityofthemodelisreducedbyusingnon-symmetricdeepAEforefficientfeatureselection.ThemodelisevaluatedusingolddatasetsKDDCup’99andNSL-KDD.Themodel
+performanceforminorityclassesR2LandU2Risonthelowerside.
+Alietal79UseofFLNandparticleswarmoptimizationalgorithmforproposingaNIDS
+model.Theproposedmodelshowedbetterperformancethanothermodelsbased
+onFLNwithdifferentotheroptimizationalgorithms.ThemodelistestedusingaveryolddatasetKDDCup’99.Also,thedetectionrate
+fortheattackclasswithlesstrainingdata(R2LandU2R)islow.
+Jiaetal109ProposedaNIDSbasedonDNNwithfourhiddenlayersthathaveshownsuperior
+performancethanIDSbasedonMLmethods.Forvalidatingthemodel,olderdatasetsKDDcup’99andNSLKDDareused.Also,
+lowerdetectionaccuracyfortheU2Rattackclassisrecorded.
+Wangetal111StudiedtheeffectofDNN-basedIDSagainstadversariesandevaluatedthe
+state-of-the-artattackalgorithmsagainstDNNbasedintrusiondetectiononthe
+NSL-KDDdataset.UseofolderdatasetNSLKDDforvalidationpurposes.
+Yan et al67Efficientuseofstackedsparseautoencoder(SSAE)forfeatureextractionandSVM
+asaclassifiertoproposeaNIDS.AnolderdatasetNSL-KDDisusedforevaluatingthemodel.Themodelachieves
+reasonabledetectionratesforU2RandR2Lattacksbutitisstilllowercomparingtheotherattackclassesofthedataset.
+Naseeretal94ComparisonofML-andDL-basedNIDSalgorithmsbyimplementingon
+GPU-integratedtestbed.UseofanolderdatasetNSL-KDDforevaluation.
+Xuetal93UseofGRUasthemainmemoryforRNNtogetherwiththemultilayerperceptron
+andasoftmaxclassifiertoproposeaNIDSsolution.ThemodelisevaluatedusingolddatasetsKDDCup’99andNSL-KDD.Also,lower
+detectionratesforR2LandU2Rattackclassesarerecorded.
+Al-Qatfetal99TheproposalofaNIDSbyanefficientideaofself-taughtlearningbasedonSparse
+AEandSVM.ThemodelistestedusinganolderdatasetNSL-KDD.Also,noresultsareprovided
+fortheperformanceofthemodelagainstminorityattackclasses(e.g.R2Land
+U2R).
+Mariretal120UseofDBNandensembleSVMtodetectabnormalbehaviorinadistributedway.
+DBNisusedforfeatureextraction,whichisthenforwardedtotheensembleSVMandfinally,thevotingmechanismisusedforprediction.Themodeliscomplexandthetrainingtimeincreasesslightlyfordeeperlayers.
+(Continues)
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 15 ---
+
+AHMADetal. 15 of 29TABLE 4 (Continued)
+Study Strengths Weaknesses
+Papamartizivanousetal100Proposeanautonomousmisusedetectionsystembycombiningtheself-taught
+learningandMAPE-Kframeworks.Forlearningusefulfeatures,asparseAE
+isused.TheproposedmodelisvalidatedusingolddatasetsKDDCup’99andNSLKDD.
+Also,itshowstheincapabilityofdetectingR2LandU2Rattackclasses
+Khanetal103Proposeanefficienttwo-stageNIDSmodelbasedondeepstackedAE.The
+resultofthefirststagealongwiththeobtainedprobabilityscoresareinputthefinaldecisionstageasanadditionalfeaturetoimprovefornormaland
+multiclassattackclassification.Theuseofdifferentmethodologies
+(downsampling/SMOTEfordifferentdatasets)duringthepreprocessingofthedatasetdramaticallyimprovesthedetectionrateefficiencyofminorityattackclasses.Forevaluationpurposes,KDDCup’99andUNSW-NB15datasetsareused.The
+detectionaccuracyforKDDCup’99is99.996%whilefortheUNSW-NB15datasetdetectionaccuracyis89.134%whichsuggeststhatalthoughthe
+modelperformedwellforanolderdataset,howeverfortherelativelynewer
+dataset,thedetectionaccuracyisdecreasedbyalmost10%.Further,itisnotshownhowthemodelperformsindetectingminorityattackclasses.
+Xiaoetal
+123AnefficientNIDSisproposedbasedontheDLalgorithmCNN.For
+dimensionalityreduction,featureextractionisperformedconsideringPCA
+andAE.Theperformanceoftheproposedmodelisevaluatedusinganolderdataset
+KDDCup’99.Moreover,themodelachieveslowerdetectionratesforthe
+U2RandR2Lclasses.
+Yao et al72AclusteringconceptisusedalongwithRFtoproposeamultilevelintrusion
+detectionmodel.Themodelexhibitssuperiorperformanceindetectingtheattacksevenwithlowinstancesinthedataset.UseofaveryolddatasetKDDCup’99formodelvalidationpurposes.
+Vinayakumaretal116AhybridscalableDNNframeworkcalledscale-hybrid-IDS-AlertNetis
+proposedforeffectivereal-timemonitoringofnetworktraffictodetectintrusions.Themodelistestedusingdifferentnewandolddatasets.Acomplexmodelwhichgivesalowerdetectionrateperformanceforminority
+attackclass.
+Gaoetal82Useofanadaptiveensemblemodelbyusingseveralbaseclassifiersasdecision
+tree,RF,K-NearestNeighbor,DNN,andchoosingthebestclassifierusingan
+adaptivevotingalgorithm.ModelistestedusinganolderdatasetNSL-KDDwhichexhibitsunsatisfactory
+resultsforweakerattackclasses.
+Weietal121ProposedaDL-basedmodelDBN,andisoptimizedbycombiningthedifferent
+optimizationalgorithmsasParticleSwarm,Fishswarm,andGeneticAlgorithm.Theproposedmodeliscomplexandrequiresmoretrainingtime.Furthermore,
+itisevaluatedusinganolderdatasetNSL-KDD.
+Zhangetal124AmultilayerNIDSmodelbasedonCNNandgcForestisproposed.Also,for
+convertingrawdataintoatwo-dimensionalgreyscaleimage,anovel
+P-Zigzagalgorithmisproposed.Themodelisevaluatedusingbycombining
+newdatasetsUNSW-NB15andCIC-IDS2017.Thedetectionaccuracyfortheattackclasseswithlesstrainingdataislow.
+Malaiyaetal104DifferentmodelsforIDdetectionisproposedusingfullyconnectednetworks,
+VariationalAE,andSeq2Seqstructures,respectively.Bothnewandolder
+datasetsareusedformodelevaluationpurposes.TheSeq2Seqmodelperformsbestamongothermodelsatthecostofgreater
+trainingoverheadthanothers.Moreover,itisnotshownwhichmodel
+performsbestinthedetectionoftheminorityattackclasses.
+(Continues)
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 16 ---
+
+16 of 29 AHMADetal.TABLE 4 (Continued)
+Study Strengths Weaknesses
+Karatasetal63TheanalysisofsixML-basedNIDSsispresentedthataddressesdataset
+imbalancebyreducingtheimbalanceratiousingSMOTE.Thiseventually
+improvesthedetectionratefortheminorityattackclass.Also,anuptodate
+datasetCSECIC-IDS2018isusedforevaluation.Adaboostalgorithmisshowntoachievehigherdetectionaccuracy,butitisdone
+atthecostofhigherexecutiontime.
+Jiangetal125AnIDSisproposedusingCNNandbi-directionallongshort-termmemory
+(BiLSTM)inadeephierarchy.TheclassimbalanceproblemisaddressedbyusingSMOTEtoincreasetheminoritysamples.Evaluationisperformed
+usingbotholder(NSL-KDD)andnewer(UNSW-NB15)datasets.Theproposedmodeliscomplexandthedetectionrateofminoritydataclasses
+improvedslightlybutstill,itisverylowcomparingotherattackclasses.
+Yang et al106ANIDSisproposedbasedonthesupervisedadversarialvariationalAEwith
+regularizationandDNN.Evaluationisperformedusingbotholder(NSL-KDD)andnewer(UNSW-NB15)datasets.FortheNSL-KDDdataset,themodelachievesreasonabledetectionratesfor
+U2RandR2Lattacksbutitisstilllowercomparingtheotherattackclassesofthedataset.FortheUNSW-NB15dataset,themodelperformanceforthe
+detectionofminorityclassattacksisnotshown.
+Yuetal126AnefficientNIDSmodelisproposedbasedonthenovelDLideaofFew-shot
+Learning(FSL).DLalgorithmsasDNNandCNNareadoptedasembeddingfunctionsinthemodelforextractingtheessentialfeatureandreducingthedimension.ThemodelisevaluatedusingNSL-KDDandUNSW-NB15
+datasets.FortheNSL-KDDdataset,themodelachievesreasonabledetectionratesfor
+U2RandR2Lattacksbutitisstilllowercomparingtheotherattackclassesofthedataset.Also,FSLrequireslabeleddataforlearningwhichmakesitsapplicationlimitedinscenarios,wherethemodelistrainedfrequentlyusing
+theunlabelednetworktraffictohelpitlearnmorepatternsforeffective
+detection.
+Andresinietal
+107UseofAEtoproposedamulti-stagemodelinvolvingtheintrusiondetection
+convolutionlayerandtwostackedfullyconnectedlayers.Also,themodel’sperformanceistestedusingbothnewandolderdatasets.Themodel’seffectivenessindetectingtheminorityattackclassisnotgiven.
+Also,themodelisunabletoprovidedetailsaboutthestructureandcharacteristicsoftheattack.
+Abbreviations:AE,AutoEncoder;CNN,Convolutionalneuralnetwork;DL,deeplearning;DNN,DeepNeuralNetwork;IDS,intrusiondetectionsystem; ML,machinelearning;NIDS,network-basedintrusion
+detectionsystem;RF,randomforest;SVM,supportvectormachine.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 17 ---
+
+AHMADetal. 17 of 29
+willdiscusstheevaluationmetricswhichwereusedinthereviewedarticlestoevaluatetheefficiencyoftheproposed
+solutions.
+5 EVALUATION METRICS
+ThissectionexplainsthemostcommonlyusedevaluationmetricsformeasuringtheperformanceofMLandDLmeth-ods for IDS. All the evaluation metrics are based on the different attributes used in the Confusion Matrix ,w h i c hi sa
+two-dimensionalmatrixprovidinginformationabouttheActualandPredictedclass
+128andincludes;
+i.True Positive (TP):ThedatainstancescorrectlypredictedasanAttackbytheclassifier.
+ii.False Negative (FN):ThedatainstanceswronglypredictedasNormalinstances.
+iii.False Positive (FP):ThedatainstanceswronglyclassifiedasanAttack.
+iv.True Negative (TN):TheinstancescorrectlyclassifiedasNormalinstances.
+Thediagonalofconfusionmatrixdenotesthecorrectpredictionswhilenondiagonalelementsarethewrongpredic-
+tionsofacertainclassifier.Table5depictstheseattributesofconfusionmatrix.Further,thedifferentevaluationmetrics
+usedintherecentstudiesare,
+• Precision: ItistheratioofcorrectlypredictedAttackstoallthesamplespredictedasAttacks.
+Precision =TP
+TP+FP. (1)
+• Recall:ItisaratioofallsamplescorrectlyclassifiedasAttackstoallthesamplesthatareactuallyAttacks.Itisalso
+calledaDetectionRate.
+Recall =DetectionRate =TP
+TP+FN. (2)
+• False alarm rate: ItisalsocalledthefalsepositiverateandisdefinedastheratioofwronglypredictedAttacksamples
+toallthesamplesthatareNormal.
+FalseAlarmRate =FP
+FP+TN. (3)
+• True negative rate: ItisdefinedastheratioofthenumberofcorrectlyclassifiedNormalsamplestoallthesamples
+thatareNormal.
+TrueNegativeRate =TN
+TN+FP. (4)
+• Accuracy: Itistheratioofcorrectlyclassifiedinstancestothetotalnumberofinstances.ItisalsocalledasDetection
+Accuracyandisausefulperformancemeasureonlywhenadatasetisbalanced.
+Accuracy =TP+TN
+TP+TN+FP+FN. (5)
+TABLE 5 ConfusionmatrixPredicted class
+Attack Normal
+Attack TruePositive FalseNegativeActual Class
+Normal FalsePositive TrueNegative
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 18 ---
+
+18 of 29 AHMADetal.
+• F-Measure: ItisdefinedastheharmonicmeanofthePrecisionandRecall.Inotherwords,itisastatisticaltechnique
+forexaminingtheaccuracyofasystembyconsideringbothprecisionandrecallofthesystem.
+FMeasure =2(Precision ×Recall
+Precision +Recall)
+. (6)
+Theseevaluationmetricsarecalculatedbytestingtheproposedmethodologiesusingbenchmarkdatasets.Thenext
+sectiondiscussesthepopularpublicdatasetusedfortestingNIDS.
+6 BENCHMARK DATASETS
+Thissectionprovidesdetailaboutthepopulardatasetsusedbytheresearcherfortestingtheperformanceoftheirproposedmethodology.AdetailedsummaryofthedatasetandtheattackclasseswithineachisgiveninTable6.
+• KDD Cup’99: ItisoneofthemostpopularandwidelyuseddatasetforIDS.Itcontainsapproximatelyfiveandtwo
+million records for training and testing respectively. Each record contains 41 different features or attributes and islabeledaseithernormalorattack.TheattacksareclassifiedintofourdifferenttypesasDenialofService(DoS),Probe,
+RemotetoLocal(R2L),andUsertoRoot(U2R).
+129
+• Kyoto 2006 +:Thisdatasetiscreatedfromthenetworktrafficrecords,obtainedbydeployinghoneypots,darknetsen-
+sors,emailservers,webcrawler,andothernetworksecuritymeasuresbyKyotoUniversity.134Themostlatestdataset
+includesthetrafficrecordfrom2006to2015.Eachrecordhas24statisticalfeatures,14ofwhicharederivedfromKDD
+Cup’99datasetwhiletheremaining10areadditionalfeatures.130
+• NSL-KDD: ThisistherevisedandrefinedversionoftheKDDCup’99datasetbyremovingseveralofitsintegralissues.
+Thisdatasetisalsoa41featuredatasetwiththeattacksdividedintofourclassesasdiscussedinKDDCup’99.131
+• UNSW-NB15: ThisdatasetiscreatedbytheAustralianCenterforCyberSecurity.132Itcontainsapproximatelytwo
+millionrecordswithatotalof49features,thatareextractedusingBro-IDS,Argustools,andsomenewlydevelopedalgo-
+rithms.Thisdatasetcontainsthetypesofattacksnamedas,Worms,Shellcode,Reconnaissance,PortScans,Generic,
+Backdoor,DoS,Exploits,andFuzzers.135
+• CIC-IDS2017: This dataset is created by the Canadian Institute of Cyber Security (CIC) in 2017.133It contains the
+normalflowsandupdatedreal-worldattacks.ThenetworktrafficisanalyzedbyCICFlowMeterusingtheinforma-
+tion based on timestamps, source, and destination IP addresses, protocols, and attacks.136Moreover, CICIDS2017
+includescommonattackscenarioslikeBruteForceAttack,HeartBleedAttack,Botnet,DenialofService(DoS)Attack,
+DistributedDoS(DDoS)Attack,WebAttack,andInfiltrationAttack..137
+• CSE-CIC-IDS2018: ThisdatasetisjointlycreatedbyCommunicationsSecurityEstablishment(CSE)andCICin2018.63
+The user profiles containing the abstract representation of the different events is created. For the generation of the
+Dataset Year Attack types Attacks
+KDDCup’991291998 4 DoS,Probe,R2L,U2R
+Kyoto2006 +13020062 KnownAttacks,UnknownAttacks
+NSL-KDD1312009 4 DoS,Probe,R2L,U2R
+UNSW-NB1513220159 Backdoors,DoS,Exploits,Fuzzers,
+Generic,Portscans,Reconnaissance,Shellcode,worms
+CIC-IDS2017
+1332017 7 BruteForce,HeartBleed,Botnet,DoS,
+DDoS,Web,Infiltration
+CSE-CIC-IDS201813320187 HeartBleed,DoS,Botnet,DDoS,Brute
+Force,Infiltration,Web.TABLE 6 Summaryofpublic
+benchmarkdatasets
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 19 ---
+
+AHMADetal. 19 of 29
+TABLE 7 Datasetsandperformanceevaluationmetrics
+Study Dataset Evaluation metrics
+KC NK KY UN C7 C8 OT ACC PRE REC F-M FAR ROC TPR OTH
+Yinetal91✓✓ ✓ ✓
+Shenetal81✓✓✓ ✓ ✓ ✓
+Shoneetal97✓✓ ✓ ✓ ✓ ✓ ✓
+Alietal79✓ ✓
+Jiaetal109✓✓ ✓ ✓ ✓ ✓ ✓ ✓
+Wangetal111✓ ✓✓✓✓✓✓
+Yan et al67✓✓ ✓ ✓
+Naseeretal94✓ ✓✓✓ ✓ ✓
+Xuetal93✓✓ ✓ ✓ ✓ ✓
+Al-Qatfetal99✓ ✓✓✓✓
+Mariretal120✓✓ ✓ ✓ ✓ ✓ ✓ ✓
+Papamartizivanousetal100✓✓ ✓✓✓✓
+Khanetal103✓✓ ✓ ✓ ✓ ✓ ✓
+Xiaoetal123✓ ✓ ✓ ✓
+Yao et al72✓✓ ✓ ✓ ✓ ✓
+Vinayakumaretal116✓✓✓✓✓ ✓ ✓✓ ✓✓✓ ✓
+Gaoetal82✓✓ ✓ ✓ ✓
+Weietal121✓ ✓ ✓ ✓ ✓
+Zhangetal124✓✓ ✓ ✓ ✓
+Malaiyaetal104✓✓✓✓✓ ✓ ✓✓✓✓ ✓
+Karatasetal63✓✓ ✓ ✓ ✓
+Jiangetal125✓ ✓ ✓✓✓✓
+Yang et al106✓✓ ✓ ✓ ✓ ✓ ✓
+Yuetal126✓ ✓ ✓✓✓✓✓
+Andresinietal107✓✓ ✓✓ ✓
+KC,KDDCup’99;NK,NSL-KDD;KY,Kyoto2006 +, ACC,Accuracy;PRE,Precision;REC,Recall;F-M,F-Measure;
+UN,UNSW-NB15;C7,CICIDS2017; FAR,FalseAlarmRate;ROC,ReceiverOperatingCharacteristic
+C8,CSE-CIC-IDS2018;OT,Others Curve,TPR,TruePositiveRate;OTH,Others.
+dataset, all these profiles are combined with a unique set of features. It includes seven different attack scenarios:
+Brute-force,Heartbleed,Botnet,DoS,DDoS,Webattacks,andinfiltrationofthenetworkfrominside.133
+Table7providesanoverviewandsummaryofvariousstudiesthatutilizethedatasetsdiscussedinSection6andthe
+evaluationmetrics(discussedinSection5)toevaluatetheefficiencyoftheirproposedtechniques.
+7 OBSERVATIONS, CHALLENGES, AND FUTURE TRENDS
+ThissectionfirstdiscussesrecenttrendsinIDSbasedonproposedmethodology,performancecriteria,andthedataset
+adopted. It also highlights the possible research gap and challenges and finally presents the future trends for the
+researcherstocomeupwithanefficient,robust,andaccurateIDS.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 20 ---
+
+20 of 29 AHMADetal.
+7.1 Recent trends and observations
+The efficiency of the AI-powered NIDS highly depends upon training using a suitable dataset. For ML models, the
+algorithmcanbetrainedusingasmalldatasettoachievebetterresults.Butincaseofthelargerdataset,thenMLisnot
+suitableunlessthedatasetislabeledinnature.Sincelabelingisanexpensiveandtimeconsumingprocess,DLmethods
+arepreferredforlargerdatasets.Thesemethodswilllearnandextractusefulpatternsfromrawdatasets.TomakeNIDS
+efficientindetectingzero-dayattacks,itneedstobetrainedregularly withthenewdataobtainedasaresultofmoni-
+toringthenetworktraffic.ThelargedatasetanddeepnatureoftheDLalgorithmswillmakethelearningprocessmore
+resourcehungryintermsofcomputationalresourcesandtimeconsumption.ThemoretheNIDSmodelistrained,themoreefficientlyitwilldetectintrusions.
+Table4highlightsthestrengthsandweaknessesofthereviewedarticles.ItisobservedthatDL-basedNIDSmethod-
+ologiesarepreferrednowadaysovertheMLmethodologiesduetotheirefficiencyinlearningfromlargedatasetsinraw
+form.SincetheDLalgorithmsrequireextensivecomputationalresources,theadventofGPUsandcloud-basedplatforms
+haveeasedthewayfortheimplementationofDL-basedmethods.Weobservedthatinmostoftheproposedsolutions,
+modelsaretestedusingolderdatasetssuchasKDDCup’99andNSL-KDD.Wealsoobservedthatinsomeproposedsolu-
+tions, the performance of the model showing extremelyexcellent results for older datasets is decreased for newer and
+recentlyproposeddatasets,forinstance.
+103Anothermajordrawbackexhibitedbymostofthemethodologiesistheirinef-
+ficiencyindetectingtheattackhavingfewersamplesforthetrainingdataset.Thisclassimbalanceproblemaffectsthedetectionrateandaccuracyfortheseminorityattackclasseswhichneedsfurtherattention.Also,weobservedthatsomeof
+themethodologiesarequitecomplexanditultimatelyrequiresmoremodeltrainingtime.Weobserveatrade-offbetween
+modelcomplexityandthedeepstructureofDLmethods.Thedeeperthealgorithmis,themorecomplexthemodelwill
+beandhenceitwillconsumemoretimeandcomputingresources.Sotheintelligentselectionofusefulfeaturesforthe
+modeltrainingwillultimatelyimprovethisdrawback.
+Basedonthereviewedarticle,itisobservedthatduringthepastthreeyears,theresearchersfocusedonDLtoolsfor
+designingtheIDSsystemasshowninFigure7.Itisnoticedthat60%oftheproposedmethodsarepurelybasedontheDL
+approaches,20%solutionsusehybridapproachinvolvingthecombinationofML-andDL-basedalgorithmswhileonly
+20%proposedsolutionsarebasedonMLmethods.Asdiscussedearlier,DLmodelsarecomplexinnatureandrequireextensive computational resources. This is made possible due to the advent of the GPU and has contributed to a vast
+increaseintheuseofDL-basedalgorithmsinthedesignofIDS.
+Moreover, Figure 8 shows the number of times ML- or DL-based algorithms are adopted by the researchers in the
+contextofdesigninganefficientIDSsolution.ItisobservedthatthefourmostfrequentalgorithmsusedareAE,DNN,
+CNN,andRNN,respectively,whichareallDLinnature.ThentheML-basedapproacheslikeRFandSVMcomeinthe
+listandaremostlyusedinthehybriddesigntoassistandimproveDL-basedalgorithms.Also,ML-basedalgorithmslike
+DT,KNN,andFLNarelessfrequentlyadoptedalgorithmsduringthereviewedperiod.
+Fromthereviewedarticles,itisobservedthatAEanditsdifferentvariationsareoneofthemostutilizedalgorithms
+adopted for proposing NIDS solutions. Mostly, AE is adopted specifically used for feature extractions and reduction,followed by the ML-based classifier for classification purposes. This feature reduction approach reduces the overall
+Machine 
+Learning
+20%
+DeepLearning
+60%Machine and 
+Deep Learning
+20%
+FIGURE 7 Methodologydistribution
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 21 ---
+
+AHMADetal. 21 of 29
+FIGURE 8 Numberoftime
+machinelearninganddeeplearningalgorithmsused
+FIGURE 9 Evaluationmetrics
+complexityofthemodelandeventuallydecreasesthetrainingtime.Itisalsoobservedthatfewproposedmethodologies
+combinedtwoormoreDLalgorithmsinamodel.Althoughthesetypesofmethodologiesimprovedthedetectionaccu-
+racybutitisdoneatthecostofmorecomplexitywhichdemandshighcomputingresources.Similarly,sometimesthedataneedtobetransformedintheformattobeusedforsomespecificalgorithm.Forinstance,touseCNNspecifically
+for NIDS, the transformation of data from one-dimensional data vector (feature set) into a two-dimensional matrix is
+required.
+Theanalysisoftheperformancemetricsusedbytheresearchersfortheevaluationofthemethodologyisshownin
+Figure9.ItisnotedthatthemostwidelyusedperformancemetricsareDetectionAccuracyandRecall(Detectionrate).
+Itisobviousthatforefficientnetworksecurity,theIDSdemandsahigherAccuracyandDetectionrate.So,toinvestigate
+theefficiencyandeffectivenessoftheproposedmethodology,thesetwoperformancemetricsshouldbeconsidered.For
+atypicalIDSdesignedusingML/DLtools,theAccuracy,Recall,andF-measureshouldbethecompulsoryperformance
+metricbesidesotherstoshowitsabilityindetectingintrusions.
+Benchmark datasets are an important ingredient used to test the performance of the proposed methodology. The
+analysisfortheuseofthepublicdatasetsisshowninFigure10.Itisillustratedthat60%timesNSL-KDDandKDDCup’99
+wereusedfortestingandvalidatingpurposes.Bothofthesearequiteolddatasetsbutarestillverypopulartouseamong
+researchers due to the availability of extensive results in the literature. Modern network architecture is quite different
+fromtheone20yearsago.InthiseraofIoT,security,andprivacyofthebigdataandsensornodesareaprimeconcern
+duetotherapidgenerationofnovelattacks.IfanewIDSmethodologyproposedforthemodernnetworksistestedusing
+anolddataset,therearemorechancesthattheproposedmethodwillnotperformwellwhendeployedinthereal-world
+environment. It is quite obvious that a model trained and verified using the latest dataset will perform comparatively
+betterthanthemodeltrainedandverifiedusinganolddatasetintherealworld.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 22 ---
+
+22 of 29 AHMADetal.
+KDD Cup'99
+24%
+NSL-KDD
+36%Kyoto
+6%UNSW-NB15
+18%CIC-IDS2017 & 
+CSE-CIC-
+IDS2018
+12%Others
+4%FIGURE 1 0 Datasetsdistribution
+7.2 Research challenges
+ThissubsectionhighlightstheresearchchallengesinthefieldofIDS.
+1.Unavailability of a systematic dataset: Thecurrentstudyhighlightedtheunavailabilityofanuptodatedatasetthat
+reflectsthenewattacksformodernnetworks.Mostoftheproposedmethodologieswerenotabletodetectzero-day
+attacksbecausethesemodelswerenottrainedwithenoughattacktypesandpatterns.TocomeupwithanefficientIDS
+model,itneedstobetestedandverifiedusingthedatasethavingolderandnewerattacks.Byincludingthemaximum
+number of attacks definition in a dataset will enable the ML/DL model to learn more patterns and eventually will
+provideprotectionagainstmaximumintrusionsofdifferenttypes.Butdatasetconstructionisanexpensiveprocess
+that demands a lot of resources and high experts’ knowledge. Hence, one of the research challenges for IDS is thesystematic construction of an up-to-date dataset with enough instances of almost all the attack types. The dataset
+shouldbeupdatedfrequentlytoincludethelatestintrusioninstancesandshouldbemadepublictohelptheresearch
+community.
+2.Lower detection accuracy due to imbalance dataset: Itisalsonotedfromthecurrentstudythatmostofthepro-
+posedIDSmethodologiesexhibitlowerdetectionaccuracyforcertainattacktypesthantheoveralldetectionaccuracy
+ofthemodel.Thisproblemiscausedbytheimbalancenatureofthedataset.Thedetectionaccuracyforlowfrequent
+attacksclassislowerthantheattackswithmoreinstances.Therecanbetwosolutionstothisproblem.Thefirstisto
+comeupwithanup-to-dateandbalanceddataset.Thesecondsolutionistocomeupwithefficienttechniquesthat
+canincreasethenumberofminorityattackinstancestobalancethedataset.Recently,researchersusedcertaintech-niqueslikeSMOTE,RandomOverSampler,andadaptivesyntheticsamplingapproach(ADASYNAlgorithm),etc.for
+reducingthedatasetimbalanceratioforimprovedperformance.Butthereisstillroomforimprovementanddemands
+moreresearchinthisdirection.
+3.Low performance in real-world environment: Another research challenge for IDS is their performance in the
+real-worldenvironment.Sincemostoftheproposedmethodologiesaretestedandverifiedwithinalabusingthepublic
+datasets.Noneoftheproposedmethodologiesistestedinareal-worldenvironment.So,itisstillnotclearhowthey
+will perform in real-world scenarios. As stated, most of them still rely on testing using old datasets. So the biggest
+challengefortheproposedmethodologyistobeasefficientasdemonstratedinthelabtests.Theproposedmethod
+oncetestedinthelabshouldalsobetestedinareal-timeenvironmenttoverifyitseffectivenessformodernnetworks.
+4.Resources consumed by complex models: MostIDSmethodologiesproposedbytheresearcherarebasedonvery
+complex models that require a lot of time in processing and computing resources (almost 80% DL-based methods
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 23 ---
+
+AHMADetal. 23 of 29
+orDL-MLbasedmethods).Thismayresultinextraoverheadfortheprocessingunitandultimatelyaffectstheper-
+formanceofIDS.Theuseofamulti-corehigh-performanceGPUcanspeedupthecomputationprocessandreduce
+time,butitwillcostahugeamountofmoney.Similarly,Sotoreducethecomputationalandprocessingoverhead,an
+efficientfeatureselectionalgorithmisneededtointelligentlyselectsthemostimportantfeaturesforfasterprocess-
+ing.Althoughmanyoptimizationalgorithmsarebeingexploredbytheresearchersforfeatureselection,thereisstill
+scopeofimprovementandresearchcanbecarriedoutinthisdirectiontocomeupwithanefficientfeatureselection
+optimizationalgorithm.
+5.Lightweight IDS for IoT: AnIDScanalsobeusedtoprovidesecuritytotheIoTnetworkanditsassociatedsensor
+nodes.InanIoTenvironment,sensornodescollectahugeamountofcriticaldatathatissharedthroughtheinternet.Sensornodesareresource-constrainedwithlimitedcomputationalpower,storagecapacity,andbatterylife.IDScan
+either be deployed at the points where network traffic enters into the IoT network from the internet, or it can be
+deployedinadistributedmanneroverthesensornodes.Inthefirstscenario,theNIDSneedstobeefficientindetecting
+maliciousattacksandposesthesamechallengesasdiscussedearlier.Inthesecondscenario,fortheresource-limited
+sensornodes,alightweightIDSmodelisneeded.SothedesignofalightweightIDSmodelwhichisefficientinterms
+ofcomputationalpower,trainingtime,andwithhigherintrusiondetectionrateisoneofthebiggestchallenges.
+7.3 Future trends
+ThissubsectionhighlightsthefuturescopeinML-/DL-basedIDSresearch.
+1.Efficient NIDS framework: NIDSisoneoftheimportantdefensemechanismtoanetworkagainstintrusions.Recent
+studiesshowitslimitationindetectingzero-dayattackswithahighfalsealarm.Tothisend,theperformanceofIDScan
+beimprovedbyusinganup-to-date,systematic,andbalanceddataset.Thereareveryfewattemptsbytheresearchers
+toproposeanefficientandcompleteNIDSframeworkforanetwork(morespecificallyformodernnetworkslikean
+IoT138).ResearchcanbecarriedinthisdirectiontoproposeanefficientNIDSframeworkthatcanprovidecomplete
+securityagainstintrusions.TheIDSframeworkshouldincludeamechanismtofrequentlyupdatetheattackdefinitions
+inadatasetandkeepontrainingthemodelwiththeupdateddefinitionstomakethemodellearnnewfeatures.ThiswilleventuallyimprovetheIDSmodelindetectingzero-dayattacksanddecreasefalsealarms.Thetrainingphaseof
+anML-orDL-basedIDSmodelnormallytakesalongtimeandcanbeperformedoffline.Thekeytoattackdetection
+andaccuracyofamodelliesintheconstantprocessofdatasetupdatingandtrainingforAI-basedIDSsystems.
+2.Solution to complex models: Accordingtorecentstudies,DL-basedIDSshavegainedenormouspopularitydueto
+deepfeaturelearningabilitytoproduceexcellentresultsindetectingmaliciousattacks.Themodelswhicharebased
+onDLalgorithmsarequitecomplexandrequirehighresourcesintermsofcomputationalpower,storagecapacity,
+and time. These complex structures put extra challenges for IDS to be implemented in real-time environments. To
+addresstheseproblems,onesolutionistousehigh-performanceGPUsfortheprocessingofbigdatasetsquicklyand
+efficiently.ButtheseGPUsarenormallyexpensive.Sothereisatradeoffbetweenperformanceandcost.Toreducecost, cloud-based GPU platforms or services can be explored for model training purposes. Another solution to this
+problemistotryreducingthecomplexityofDLalgorithmsbydoingefficientandintelligentfeatureengineering.By
+selectingonlythekeyfeatureswillresultinalmostthesamedetectionaccuracyasobtainedusingthecompleteset
+offeatures.Thiswilleventuallydecreasethecomplexityofthemodelandwillutilizefewercomputingresourcesina
+real-timeenvironment.
+3.U s eo fD La l g o r i t h m s : RecentstudiessuggestedtheuseofDL-basedalgorithmsforanIDSdesign.ManyDLalgo-
+rithms(asdiscussedinthisSection4)areexploredandusedefficientlyinproposingeffectivesolutions.Butthereare
+stillsomeDLalgorithmsthatrequiremoreattentionlikedeepreinforcementlearning,HiddenMarkovModels,etc.for
+proposingIDSsolutionforIoTnetwork.TheresearchtouseDLforIDSisstillintheearlystages.ResearcherscanalsoexplorethehybridideaofusingDLforfeatureextractionandMLforclassification.Thiswillreducethecomplexityof
+theproposedmodel.
+4.Efficient NIDS for cyber-physical systems: Recently,amassiveinterestisshowninCyber-PhysicalSystemssuch
+asSupervisoryControlandDataAcquisition(SCADA)networksandUnmannedAerialVehicles(UAV)-enablednet-
+works.SCADAnetworkshavevariousapplications,suchassmartgrids
+139andmanufacturingindustries,etc.However,
+SCADA networks are becoming more and more complex as state-of-the-art information and communication tech-
+nologies (ICT) are embedded within the network, thus providing an opportunity for the attackers to be part of the
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 24 ---
+
+24 of 29 AHMADetal.
+network.NIDSplaysanimportantroleinsuchnetworks,wherethesecandetectintrudersbyinspectingthenetwork
+traffic. Further, the use of ML and DL will increase the efficiencyof NIDS, as it can provide an extra dimensionto
+detectcyberattackswithintheSCADAnetworks.However,theresearchinthisdomainisstillinearly-stageandmore
+investigationisrequiredtoidentifyanddesignefficientDL-basedNIDSforSCADAnetworks.
+Similarly,UAV-enablednetworksalsoofferawiderangeofapplications,includingtrafficmonitoring,assetinspec-
+tion, and securing critical infrastructure, etc.140Due to the nature of communication involved over the wireless
+channel,thesenetworksareaccessiblenotonlytolegitimateusersbutalsosusceptibletothenetworkintruders,which
+cannotonlymonitorthecommunicationbutcanalsolaunchvariousattacks.Therefore,anefficientandintelligent
+NIDSisrequiredwhichcandetecttheintruderswithinUAV-enablednetworks.Furthermore,theuseofAIwithintheNIDSforUAV-enablednetworkscanbeaninterestingresearchdirection,whichrequiresmoreexplorationand
+investigation.
+141,142
+8 CONCLUSIONS
+ThispaperprovidesanextensivereviewofthenetworkintrusiondetectionmechanismsbasedontheMLandDLmeth-odstoprovidethenewresearcherswiththeupdatedknowledge,recenttrends,andprogressofthefield.Asystematic
+approachisadoptedfortheselectionoftherelevantarticlesinthefieldofAI-basedNIDS.Firstly,theconceptofIDSanditsdifferentclassificationschemesiselaboratedextensivelybasedonthereviewedarticles.Thenthemethodologyofeach
+articleisdiscussedandthestrengthsandweaknessesofeacharehighlightedintermsoftheintrusiondetectioncapa-
+bilityandcomplexityofthemodel.Basedonthisstudy,therecenttrendrevealstheusageofDL-basedmethodologies
+toimprovetheperformanceandeffectivenessofNIDSintermsofdetectionaccuracyandreductioninFAR.About80%
+oftheproposedsolutionswerebasedontheDLapproacheswithAEandDNNarethemostfrequentlyusedalgorithms.
+AlthoughDLschemeshavemuchsuperiorperformancethantheML-basedmethodsintermsoftheirabilitytolearnfea-
+turesbyitselfandstrongermodelfittingabilities.Buttheseschemesarequitecomplexandrequireextensivecomputing
+resourcesintermsofprocessingpowerandstoragecapabilities.Thesechallengesneedtobeaddressedtofulfillreal-time
+requirementsforNIDSandhenceimprovesNIDSperformance.
+Thestudyalsoshowsthat60%oftheproposedmethodologiesweretestedusingKDDCup’99andNSL-KDDdatasets
+mainly because of the availability of extensive results using these datasets. But these datasets are quite old to address
+modernnetworkattacks,andhencelimitstheperformanceoftheproposedmethodologiesinreal-timeenvironments.
+ForAI-basedNIDSmethods,themodelshouldbetestedwiththelatestupdateddatasetlikeCSE-CIC-IDS2018forbetter
+performance in terms of detection accuracy for intrusions. This article also highlights the research gaps in improving
+themodelperformanceforlow-frequencyattacksinareal-worldenvironmentandtofindefficientsolutionstoreduce
+complexityfortheproposedmodels.ProposinganefficientNIDSframeworkusinglesscomplexDLalgorithmsandhave
+aneffectivedetectionmechanismisapotentialfuturescopeofresearchinthisarea.Forfutureresearch,wewillusethis
+knowledgetodesignanovel,lightweight,andefficientDL-basedNIDSwhichwilleffectivelydetecttheintruderswithinthenetwork.
+ACKNOWLEDGMENTS
+ThisresearchisfullyfundedbyResearch,InnovationandEnterpriseCentre(RIEC),UniversitiMalaysiaSarawakunder
+thegrantnumberF08/PGRG/1908/2019.
+DATA AVAILABILITY
+Analyzeddataforthissurveyarticleisavailableuponrequestfromthecorrespondingauthor.
+ORCID
+Zeeshan Ahmad
+https://orcid.org/0000-0002-8530-864X
+REFERENCES
+1. TarterA.Importanceofcybersecurity. Community Policing-A European Perspective: Strategies, Best Practices and Guidelines .NewYork,
+NY:Springer;2017:213-230.
+2. LiJ,QuY,ChaoF,ShumHP,HoES,YangL.Machinelearningalgorithmsfornetworkintrusiondetection. AI in Cybersecurity .New
+York,NY:Springer;2019:151-179.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 25 ---
+
+AHMADetal. 25 of 29
+3. LuntTF.Asurveyofintrusiondetectiontechniques. Comput Sec .1993;12(4):405-418.https://doi.org/10.1016/0167-4048(93)90029-5.
+4. AndersonJP. Computer Security Threat Monitoring and Surveillance .FortWashington,PA:JamesPAndersonCo;1980.
+5. DebarH,DacierM,WespiA.Towardsataxonomyofintrusion-detectionsystems. Comput Netw .1999;31(8):805-822.https://doi.org/10.
+1016/S1389-1286(98)00017-6.
+6. HoqueMS,MukitM,BikasM,NaserA,Animplementationofintrusiondetectionsystemusinggeneticalgorithm;2012.arXivpreprint
+arXiv:1204.1336.
+7. Prasad R, Rohokale V. Artificial intelligence and machine learning in cyber security. Cyber Security: The Lifeline of Information and
+Communication Technology .NewYork,NY:Springer;2020:231-247.
+8. LewJ,ShahDA,PatiS,etal.AnalyzingmachinelearningworkloadsusingadetailedGPUsimulator.Paperpresentedat:Proceedingsof
+theIEEEInternationalSymposiumonPerformanceAnalysisofSystemsandSoftware(ISPASS).Madison,WI,USA:IEEE;2019:151-152.
+9. NajafabadiMM,VillanustreF,KhoshgoftaarTM,SeliyaN,WaldR,MuharemagicE.Deeplearningapplicationsandchallengesinbig
+dataanalytics. J Big Data.2015;2(1):1.https://doi.org/10.1186/s40537-014-0007-7.
+10. Dong B, Wang X. Comparison deep learning method to traditional methods using for network intrusion detection. Paper presented
+at:Proceedingsofthe8thIEEEInternationalConferenceonCommunicationSoftwareandNetworks(ICCSN).Beijing,China:IEEE;
+2016:581-585.
+11. VasilomanolakisE,KaruppayahS,MühlhäuserM,FischerM.Taxonomyandsurveyofcollaborativeintrusiondetection. ACM Comput
+Surv.2015;47(4):1-33.https://doi.org/10.1145/2716260.
+12. BuczakAL,GuvenE.Asurveyofdataminingandmachinelearningmethodsforcybersecurityintrusiondetection. IEEE Commun Surv
+Tutor.2015;18(2):1153-1176.https://doi.org/10.1109/COMST.2015.2494502.
+13. ThomasR,PavithranD.AsurveyofintrusiondetectionmodelsbasedonNSL-KDDdataset.Paperpresentedat:Proceedingsofthe5th
+HCTInformationTechnologyTrends(ITT).Dubai,UnitedArabEmirates:IEEE;2018:286-291.
+14. LiuH,LangB.Machinelearninganddeeplearningmethodsforintrusiondetectionsystems:asurvey. Appl Sci.2019;9(20):4396.https://
+doi.org/10.3390/app9204396.
+15. Khraisat A, Gondal I, Vamplew P, Kamruzzaman J. Survey of intrusion detection systems: techniques, datasets and challenges.
+Cybersecurity .2019;2(1):20.https://doi.org/10.1186/s42400-019-0038-7.
+16. DKAC,PapaJP,LisboaCO,MunozR,DVHCA.InternetofThings:asurveyonmachinelearning-basedintrusiondetectionapproaches.
+Comput Netw .2019;151:147-157.https://doi.org/10.1016/j.comnet.2019.01.023.
+17. KeeleS,GuidelinesforPerformingSystematicLiteratureReviewsinSoftwareEngineering.TechnicalReport,TechnicalReport,Ver.2.3,
+EBSETechnicalReport.vol.5,EBSE;2007.
+18. ScopusPreviewWelcometoScopusPreview;2020.https://www.scopus.com/.AccessedJune25,2020.19. MukkamalaS,JanoskiG,SungA.Intrusiondetectionusingneuralnetworksandsupportvectormachines.Paperpresentedat:Proceed-
+ingsofthe2002InternationalJointConferenceonNeuralNetworks.IJCNN’02(Cat.No.02CH37290).Honolulu,HI,USA:IEEE;vol.2,2002:1702-1707.
+20. Garcia-TeodoroP,Diaz-VerdejoJ,Maciá-FernándezG,VázquezE.Anomaly-basednetworkintrusiondetection:techniquessystemsand
+challenges. Comput Secur .2009;28(1-2):18-28.https://doi.org/10.1016/j.cose.2008.08.003.
+21. DenningDE.Anintrusion-detectionmodel. IEEE Trans Softw Eng .1987;2:222-232.https://doi.org/10.1109/TSE.1987.232894.
+22. VerwoerdT,HuntR.Intrusiondetectiontechniquesandapproaches. Comput Commun .2002;25(15):1356-1365.https://doi.org/10.1016/
+S0140-3664(02)00037-3.
+23. KabiriP,GhorbaniAA.Researchonintrusiondetectionandresponse:asurvey. Int J Netw Secur .2005;1(2):84-102.https://doi.org/10.
+6633/IJNS.200509.1(2).05.
+24. ZhangY,LeeW,HuangYA.Intrusiondetectiontechniquesformobilewirelessnetworks. Wirel Netw .2003;9(5):545-556.https://doi.org/
+10.1023/A:1024600519144.
+25. AxelssonS. Intrusion Detection Systems: A Survey and Taxonomy. Technical Report 99-15 .DepartmentofComputerEngineering,Chalmers
+University;2000.
+26. AhmimA,DerdourM,FerragMA.Anintrusiondetectionsystembasedoncombiningprobabilitypredictionsofatreeofclassifiers. Int
+J Commun Syst .2018;31(9):e3547.https://doi.org/10.1002/dac.3547.
+27. Uddin M, Rahman AA, Uddin N, Memon J, Alsaqour RA, Kazi S. Signature-based multi-layer distributed intrusion detection system
+usingmobileagents. Int J Netw Secur .2013;15(2):97-105.https://doi.org/10.6633/IJNS.201303.15(2).03.
+28. NeriF.Comparinglocalsearchwithrespecttogeneticevolutiontodetectintrusionsincomputernetworks.Paperpresentedat:Proceed-
+ingsoftheProceedingsofthe2000CongressonEvolutionaryComputation.CEC00(Cat.No.00TH8512).LaJolla,CA,USA:IEEE;vol.1,2000:238-243.
+29. Ma W. Analysis of anomaly detection method for Internet of things based on deep learning. Trans Emerg Telecommun Technol .
+2020;e3893.https://doi.org/10.1002/ett.3893.
+30. Zhang Z, Shen H, Sang Y. An observation-centric analysis on the modeling of anomaly-based intrusion detection. Int J Netw Secur .
+2007;4(3):292-305.https://doi.org/10.6633/IJNS.200705.4(3).08.
+31. GuoC,PingY,LiuN,LuoSS.Atwo-levelhybridapproachforintrusiondetection. Neurocomputing .2016;214:391-400.https://doi.org/
+10.1016/j.neucom.2016.06.021.
+32. ChandolaV,BanerjeeA,KumarV.Anomalydetection:asurvey. ACM Comput Surv .2009;41(3):1-58.https://doi.org/10.1145/1541880.
+1541882.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 26 ---
+
+26 of 29 AHMADetal.
+33. MehmoodY,AhmadF,YaqoobI,AdnaneA,ImranM,GuizaniS.Internet-of-Things-basedsmartcities:recentadvancesandchallenges.
+IEEE Commun Mag .2017;55(9):16-24.https://doi.org/10.1109/MCOM.2017.1600514.
+34. AhmadF,AhmadZ,KerracheCA,KurugolluF,AdnaneA,BarkaE.BlockchaininInternet-of-Things:architecture,applicationsand
+research directions. Paper presented at: Proceedings of the IEEE International Conference on Computer and Information Sciences(ICCIS).Sakaka,SaudiArabia:IEEE;2019:1-6.
+35. MengW.IntrusiondetectionintheeraofIoT:buildingtrustviatrafficfilteringandsampling. Computer.2018;51(7):36-43.https://doi.
+org/10.1109/MC.2018.3011034.
+36. Shah SA, Seker DZ, Hameed S, Draheim D. The rising role of big data analytics and IoT in disaster management: recent advances
+taxonomyandprospects. IEEE Access .2019;7:54595-54614.https://doi.org/10.1109/ACCESS.2019.2913340.
+37. LazarescuMT.WirelesssensornetworksfortheInternetofThings:barriersandsynergies. Components and Services for IoT Platforms .
+NewYork,NY:Springer;2017:155-186.
+38. HaseebK,AlmogrenA,IslamN,UdDinI,JanZ.Anenergy-efficientandsecureroutingprotocolforintrusionavoidanceinIoT-based
+WSN. Energies.2019;12(21):4174.https://doi.org/10.3390/en12214174.
+39. Roman R, Zhou J, Lopez J. Applying intrusion detection systems to wireless sensor networks. Paper presented at: Proceedings of the
+IEEEConsumerCommunications&NetworkingConference(CCNC2006).LasVegas(USA);2006.
+40. Hortelano J, Ruiz JC, Manzoni P. Evaluating the usefulness of watchdogs for intrusion detection in VANETs. Paper presented at:
+ProceedingsoftheIEEEInternationalConferenceonCommunicationsWorkshops.Capetown,SouthAfrica:IEEE;2010:1-5.
+41. Krzyszto ´n M, Marks M. Simulation of watchdog placement for cooperative anomaly detection in bluetooth mesh intrusion detection
+system. Simul Model Pract Theory .2020;101:102041.https://doi.org/10.1016/j.simpat.2019.102041.
+42. ChenH,WuH,HuJ,GaoC.Event-basedtrustframeworkmodelinwirelesssensornetworks.Paperpresentedat:Proceedingsofthe
+InternationalConferenceonNetworking,Architecture,andStorage.Chongqing,China:IEEE;2008:359-364.
+43. Meng Y, Li W. Evaluation of detecting malicious nodes using Bayesian model in wireless intrusion detection. Paper presented at:
+ProceedingsoftheInternationalConferenceonNetworkandSystemSecurity;2013:40-53;Springer,NewYork,NY.
+44. ShenS,YueG,CaoQ,YuF.Asurveyofgametheoryinwirelesssensornetworkssecurity. JN e t w.2011;6(3):521.https://doi.org/10.4304/
+jnw.6.3.521-532.
+45. AbdalzaherMS,MutaO.Agame-theoreticapproachforenhancingsecurityanddatatrustworthinessinIoTapplications. IEEE IoT J .
+2020.https://doi.org/10.1109/JIOT.2020.2996671.
+46. Khan ZA, Herrmann P. A trust based distributed intrusion detection mechanism for internet of things. Paper presented at: Proceed-
+ingsoftheIEEE31stInternationalConferenceonAdvancedInformationNetworkingandApplications(AINA).Taipei,Taiwan:IEEE;2017:1169-1176.
+47. Ahmad F, Kurugollu F, Adnane A, Hussain R, Hussain F. MARINE: man-in-the-middle attack resistant trust model in connected
+vehicles. IEEE IoT J.2020;7(4):3310-3322.https://doi.org/10.1109/JIOT.2020.2967568.
+48. Abdalzaher MS, Muta O. Employing game theory and TDMA protocol to enhance security and manage power consumption in
+wsns-basedcognitiveradio. IEEE Access .2019;7:132923-132936.https://doi.org/10.1109/ACCESS.2019.2940699.
+49. AbdalzaherMS,SeddikK,MutaO.Aneffectivestackelberggameforhigh-assuranceofdatatrustworthinessinwsns.Paperpresented
+at:ProceedingsoftheIEEESymposiumonComputersandCommunications(ISCC).Heraklion,Greece:IEEE;2017:1257-1262.
+50. Abdalzaher MS, Seddik K, Muta O. Using repeated game for maximizing high priority data trustworthiness in wireless sensor net-
+works.Paperpresentedat:ProceedingsoftheIEEESymposiumonComputersandCommunications(ISCC).Heraklion,Greece:IEEE;2017:552-557.
+51. BerryMW,MohamedA,YapBW. Supervised and Unsupervised Learning for Data Science .NewYork,NY:Springer;2019.
+52. Zanero S,Serazzi G. Unsupervised learning algorithms for intrusion detection. Paper presented at: Proceedings of the IEEE Network
+OperationsandManagementSymposium.Salvador,Bahia,Brazil:IEEE;2008:1043-1048.
+53. ImamverdiyevY,AbdullayevaF.DeeplearningmethodfordenialofserviceattackdetectionbasedonrestrictedBoltzmannmachine.
+Big Data.2018;6(2):159-169.https://doi.org/10.1089/big.2018.0023.
+54. AlsughayyirB,QamarAM,KhanR.Developinganetworkattackdetectionsystemusingdeeplearning.Paperpresentedat:Proceedings
+oftheInternationalConferenceonComputerandInformationSciences(ICCIS).Sakaka,SaudiArabia:IEEE;2019:1-5.
+55. XinY,KongL,LiuZ,etal.Machinelearninganddeeplearningmethodsforcybersecurity. IEEE Access .2018;6:35365-35381.https://doi.
+org/10.1109/ACCESS.2018.2836950.
+56. Chary S, Rama B. A survey on comparative analysis of decision tree algorithms in data mining, International Journal of Advanced
+ScientificTechnologies,EngineeringandManagementSciences;vol.3,2017:91-95.
+57. SahaniR,RoutC,BadajenaJC,JenaAK,DasH.Classificationofintrusiondetectionusingdataminingtechniques. Progress in Computing,
+Analytics and Networking .NewYork,NY:Springer;2018:753-764.
+58. RaiK,DeviMS,GuleriaA.Decisiontreebasedalgorithmforintrusiondetection. Int J Adv Netw Appl .2016;7(4):2828.
+59. FarnaazN,JabbarM.Randomforestmodelingfornetworkintrusiondetectionsystem. Proc Comput Sci .2016;89(1):213-217.https://doi.
+org/10.1016/j.procs.2016.06.047.
+60. Dhaliwal SS, Nahid AA, Abbas R. Effective intrusion detection system using XGBoost. Information . 2018;9(7):149. https://doi.org/10.
+3390/info9070149.
+61. MaZ,KabanA.K-Nearest-Neighbourswithanovelsimilaritymeasureforintrusiondetection.Paperpresentedat:Proceedingsofthe
+13thUKWorkshoponComputationalIntelligence(UKCI).Guildford,UK:IEEE;2013:266-271.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 27 ---
+
+AHMADetal. 27 of 29
+62. ZhangY,CaoG,WangB,LiX.Anovelensemblemethodfork-nearestneighbor. Pattern Recogn .2019;85:13-25.https://doi.org/10.1016/
+j.patcog.2018.08.003.
+63. KaratasG,DemirO,SahingozOK.Increasingtheperformanceofmachinelearning-basedIDSsonanimbalancedandup-to-datedataset.
+IEEE Access .2020;8:32150-32162.https://doi.org/10.1109/ACCESS.2020.2973219.
+64. Chawla NV, Bowyer KW, Hall LO, Kegelmeyer WP. SMOTE synthetic minority over-sampling technique. J Artif Intell Res .
+2002;16:321-357.https://doi.org/10.1613/jair.953.
+65. ChenWH,HsuSH,ShenHP.ApplicationofSVMandANNforintrusiondetection. Comput Oper Res .2005;32(10):2617-2634.https://
+doi.org/10.1016/j.cor.2004.03.019.
+66. Roopa Devi E, Suganthe R. Enhanced transductive support vector machine classification with grey wolf optimizer cuckoo search
+optimizationforintrusiondetectionsystem. Concurr Comput Pract Exp .2020;32(4):e4999.https://doi.org/10.1002/cpe.4999.
+67. Yan B, Han G. Effective feature extraction via stacked sparse autoencoder to improve intrusion detection system. IEEE Access .
+2018;6:41238-41248.https://doi.org/10.1109/ACCESS.2018.2858277.
+68. GhanemK,Aparicio-NavarroFJ,KyriakopoulosKG,LambotharanS,ChambersJA.Supportvectormachinefornetworkintrusionand
+cyber-attackdetection.Paperpresentedat:ProceedingsoftheSensorSignalProcessingforDefenceConference(SSPD).London,UK:
+IEEE;2017:1-5.doi:https://doi.org/10.1109/SSPD.2017.8233268..
+69. KumariR,SinghM,JhaR,SinghN.AnomalydetectioninnetworktrafficusingK-meanclustering.Paperpresentedat:Proceedingsof
+the3rdInternationalConferenceonRecentAdvancesinInformationTechnology(RAIT).Dhanbad,India;2016:387-393.
+70. LiZ,LiY,XuL.Anomalyintrusiondetectionmethodbasedonk-meansclusteringalgorithmwithparticleswarmoptimization.Paper
+presentedat:ProceedingsoftheInternationalConferenceofInformationTechnology,ComputerEngineeringandManagementSciences.Nanjing,Jiangsu,China:IEEE;vol.2;2011:157-161.
+71. MuntherA,RazifR,AbuAlhajM,AnbarM,NizamS.ApreliminaryperformanceevaluationofK-means,KNNandEMunsupervised
+machine learning methods for network flow classification. Int J Electr Comput Eng . 2016;6(2):778-784. https://doi.org/10.11591/ijece.
+v6i2.8909.
+72. Yao H, Fu D, Zhang P, Li M, Liu Y. MSML: a novel multilevel semi-supervised machine learning framework for intrusion detection
+system. IEEE IoT J.2018;6(2):1949-1959.https://doi.org/10.1109/JIOT.2018.2873125.
+73. SaritasMM,YasarA.PerformanceanalysisofANNandNaiveBayesclassificationalgorithmfordataclassification. Int J Intell Syst Appl
+Eng.2019;7(2):88-91.https://doi.org/10.18201//ijisae.2019252786.
+74. AndersonJA. An Introduction to Neural Networks .Cambridge,MA:MITPress;1995.
+75. Bangyal WH, Ahmad J, Rauf HT, Shakir R. Evolving artificial neural networks using opposition based particle swarm optimization
+neuralnetworkfordataclassification.Paperpresentedat:ProceedingsoftheInternationalConferenceonInnovationandIntelligenceforInformatics,Computing,andTechnologies(3ICT).Sakhier,Bahrain;2018:1-6.
+76. HuangGB,ZhuQY,SiewCK.Extremelearningmachine:theoryandapplications. Neurocomputing .2006;70(1-3):489-501.https://doi.
+org/10.1016/j.neucom.2005.12.126.
+77. LiG,NiuP.Anenhancedextremelearningmachinebasedonridgeregressionforregression. Neural Comput Appl .2013;22(3-4):803-810.
+https://doi.org/10.1007/s00521-011-0771-7.
+78. LiG,NiuP,DuanX,ZhangX.Fastlearningnetwork:anovelartificialneuralnetworkwithafastlearningspeed. Neural Comput Appl .
+2014;24(7-8):1683-1695.https://doi.org/10.1007/s00521-013-1398-7.
+79. Ali MH, Al Mohammed BAD, Ismail A, Zolkipli MF. A new intrusion detection system based on fast learning network and particle
+swarmoptimization. IEEE Access .2018;6:20255-20261.https://doi.org/10.1109/ACCESS.2018.2820092.
+80. BaiQ.Analysisofparticleswarmoptimizationalgorithm. Comput Inf Sci .2010;3(1):180.
+81. ShenY,ZhengK,WuC,ZhangM,NiuX,YangY.Anensemblemethodbasedonselectionusingbatalgorithmforintrusiondetection.
+Comput J.2018;61(4):526-538.https://doi.org/10.1093/comjnl/bxx101.
+82. Gao X, Shan C, Hu C, Niu Z, Liu Z. An adaptive ensemble machine learning model for intrusion detection. IEEE Access .
+2019;7:82512-82521.https://doi.org/10.1109/ACCESS.2019.2923640.
+83. GravesA,MohamedA,HintonG.Speechrecognitionwithdeeprecurrentneuralnetworks.Paperpresentedat:ProceedingsoftheIEEE
+InternationalConferenceonAcoustics,SpeechandSignalProcessing.Vancouver,BC,Canada:IEEE;2013:6645-6649.
+84. SinghD,MerdivanE,PsychoulaI,etal.Humanactivityrecognitionusingrecurrentneuralnetworks.Paperpresentedat:Proceedingsof
+theInternationalCross-DomainConferenceforMachineLearningandKnowledgeExtraction;2017:267-274;Springer,NewYork,NY.
+85. Nishide S, Okuno HG, Ogata T, Tani J. Handwriting prediction based character recognition using recurrent neural network. Paper
+presented at: Proceedings of the IEEE International Conference on Systems, Man, and Cybernetics. Anchorage, AK, USA: IEEE;2011:2549-2554.
+86. MesnilG,DauphinY,YaoK,etal.Usingrecurrentneuralnetworksforslotfillinginspokenlanguageunderstanding. IEEE/ACM Trans
+Audio Speech Lang Process .2014;23(3):530-539.https://doi.org/10.1109/TASLP.2014.2383614.
+87. LiuX,GherbiA,LiW,CherietM.Multifeaturesandmulti-timestepsLSTMbasedmethodologyforbikesharingavailabilityprediction.
+Proc Comput Sci .2019;155:394-401.https://doi.org/10.1016/j.procs.2019.08.055.
+88. Hochreiter S, Schmidhuber J. Long short-term memory. Neural Comput . 1997;9(8):1735-1780. https://doi.org/10.1162/neco.1997.9.8.
+1735.
+89. Chung J, Gulcehre C, Cho K, Bengio Y. Empirical evaluation of gated recurrent neural networks on sequence modeling; 2014. arXiv
+preprintarXiv:1412.3555.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 28 ---
+
+28 of 29 AHMADetal.
+90. MittalM,IwendiC,KhanS,RehmanJA.Analysisofsecurityandenergyefficiencyforshortestroutediscoveryinlow-energyadaptive
+clusteringhierarchyprotocolusingLevenberg-Marquardtneuralnetworkandgatedrecurrentunitforintrusiondetectionsystem. Trans
+Emerg Telecommun Technol .2020;e3997.https://doi.org/10.1002/ett.3997.
+91. Yin C, Zhu Y, Fei J, He X. A deep learning approach for intrusion detection using recurrent neural networks. IEEE Access .
+2017;5:21954-21961.https://doi.org/10.1109/ACCESS.2017.2762418.
+92. Sheikhan M, Jadidi Z, Farrokhi A. Intrusion detection using reduced-size RNN based on feature grouping. Neural Comput Appl .
+2012;21(6):1185-1190.https://doi.org/10.1007/s00521-010-0487-0.
+93. Xu C, Shen J, Du X, Zhang F. An intrusion detection system using a deep neural network with gated recurrent units. IEEE Access .
+2018;6:48697-48707.https://doi.org/10.1109/ACCESS.2018.2867564.
+94. Naseer S, Saleem Y, Khalid S, et al. Enhanced network anomaly detection based on deep neural networks. IEEE Access .
+2018;6:48231-48246.https://doi.org/10.1109/ACCESS.2018.2863036.
+95. FarahnakianF,HeikkonenJ.Adeepauto-encoderbasedapproachforintrusiondetectionsystem.Paperpresentedat:Proceedingsofthe
+20thInternationalConferenceonAdvancedCommunicationTechnology(ICACT).Chuncheon-siGangwon-do,Korea(South):IEEE;
+2018:178-183.
+96. GoodfellowI,BengioY,CourvilleA.DeepLearning.MITPress.2016.http://www.deeplearningbook.org.97. Shone N, Ngoc TN, Phai VD, Shi Q. A deep learning approach to network intrusion detection. IEEE Trans Emerg Top Comput Intell .
+2018;2(1):41-50.https://doi.org/10.1109/TETCI.2017.2772792.
+98. AlrawashdehK,PurdyC.Towardanonlineanomalyintrusiondetectionsystembasedondeeplearning.Paperpresentedat:Proceedings
+ofthe15thIEEEInternationalConferenceonMachineLearningandApplications(ICMLA).Anaheim,CA,USA:IEEE;2016:195-200.
+99. Al-QatfM,LashengY,Al-HabibM,Al-SabahiK.DeeplearningapproachcombiningsparseautoencoderwithSVMfornetworkintrusion
+detection. IEEE Access .2018;6:52843-52856.https://doi.org/10.1109/ACCESS.2018.2869577.
+100. PapamartzivanosD,MármolFG,KambourakisG.Introducingdeeplearningself-adaptivemisusenetworkintrusiondetectionsystems.
+IEEE Access .2019;7:13546-13560.https://doi.org/10.1109/ACCESS.2019.2893871.
+101. RainaR,BattleA,LeeH,PackerB,NgAY.Self-taughtlearning:transferlearningfromunlabeleddata.Paperpresentedat:Proceedings
+ofthe24thInternationalConferenceonMachineLearning.CorvalisOregonUSA;2007:759-766.
+102. KephartJO,ChessDM.Thevisionofautonomiccomputing. Computer.2003;36(1):41-50.https://doi.org/10.1109/MC.2003.1160055.
+103. KhanFA,GumaeiA,DerhabA,HussainA.Anoveltwo-stagedeeplearningmodelforefficientnetworkintrusiondetection. IEEE Access .
+2019;7:30373-30385.https://doi.org/10.1109/ACCESS.2019.2899721.
+104. Malaiya RK, Kwon D, Suh SC, Kim H, Kim I, Kim J. An empirical evaluation of deep learning for network anomaly detection. IEEE
+Access.2019;7:140806-140817.https://doi.org/10.1109/ACCESS.2019.2943249.
+105. FontugneR,BorgnatP,AbryP,FukudaK.Mawilab:combiningdiverseanomalydetectorsforautomatedanomalylabelingandperfor-
+mancebenchmarking.Paperpresentedat:Proceedingsofthe6thInternationalConferenceonEmergingNetworkingExperimentsAndTechnologies(Co-Next);2010:1-12;ACM,NewYork,NY.
+106. YangY,ZhengK,WuB,YangY,WangX.Networkintrusiondetectionbasedonsupervisedadversarialvariationalauto-encoderwith
+regularization. IEEE Access .2020;8:42169-42184.https://doi.org/10.1109/ACCESS.2020.2977007.
+107. AndresiniG,AppiceA,DiMauroN,LoglisciC,MalerbaD.Multi-channeldeepfeaturelearningforintrusiondetection. IEEE Access .
+2020;8:53346-53359.https://doi.org/10.1109/ACCESS.2020.2980937.
+108. GuS,RigazioL.Towardsdeepneuralnetworkarchitecturesrobusttoadversarialexamples;2014.arXivpreprintarXiv:1412.5068.109. JiaY,WangM,WangY.Networkintrusiondetectionalgorithmbasedondeepneuralnetwork. IET Inf Secur .2018;13(1):48-53.https://
+doi.org/10.1049/iet-ifs.2018.5258.
+110. Dahl GE, Sainath TN, Hinton GE. Improving deep neural networks for LVCSR using rectified linear units and dropout. Paper pre-
+sentedat:ProceedingsoftheIEEEInternationalConferenceonAcoustics,SpeechandSignalProcessing.Vancouver,BC,Canada:IEEE;2013:8609-8613.
+111. WangZ.Deeplearning-basedintrusiondetectionwithadversaries. IEEE Access .2018;6:38367-38384.https://doi.org/10.1109/ACCESS.
+2018.2854599.
+112. GoodfellowIJ,ShlensJ,SzegedyC.Explainingandharnessingadversarialexamples;2014.arXivpreprintarXiv:1412.6572.113. PapernotN,McDanielP,JhaS,FredriksonM,CelikZB,SwamiA.Thelimitationsofdeeplearninginadversarialsettings.Paperpresented
+at:ProceedingsoftheIEEEEuropeanSymposiumonSecurityandPrivacy(EuroS&P).Saarbrucken,Germany:IEEE;2016:372-387.
+114. Moosavi-DezfooliSM,FawziA,FrossardP.Deepfool:asimpleandaccuratemethodtofooldeepneuralnetworks.Paperpresentedat:
+ProceedingsoftheIEEEConferenceonComputerVisionandPatternRecognition.LasVegas,NV,USA;2016:2574-2582.
+115. CarliniN,WagnerD.Towardsevaluatingtherobustnessofneuralnetworks.Paperpresentedat:ProceedingsoftheIEEESymposiumon
+SecurityandPrivacy(sp).SanJose,CA,USA:IEEE;2017:39-57.
+116. VinayakumarR,AlazabM,SomanK,PoornachandranP,Al-NemratA,VenkatramanS.Deeplearningapproachforintelligentintrusion
+detectionsystem. IEEE Access .2019;7:41525-41550.https://doi.org/10.1109/ACCESS.2019.2895334.
+117. VinayakumarR,PoornachandranP,SomanK.Scalableframeworkforcyberthreatsituationalawarenessbasedondomainnamesystems
+dataanalysis. Big Data in Engineering Applications .NewYork,NY:Springer;2018:113-142.
+118. HintonGE.ApracticalguidetotrainingrestrictedBoltzmannmachines. Neural Networks: Tricks of the Trade .NewYork,NY:Springer;
+2012:599-619.
+119. HintonGE,OsinderoS,TehYW.Afastlearningalgorithmfordeepbeliefnets. Neural Comput .2006;18(7):1527-1554.https://doi.org/
+10.1162/neco.2006.18.7.1527.
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License
+
+--- Page 29 ---
+
+AHMADetal. 29 of 29
+120. MarirN,WangH,FengG,LiB,JiaM.Distributedabnormalbehaviordetectionapproachbasedondeepbeliefnetworkandensemble
+svmusingspark. IEEE Access .2018;6:59657-59671.https://doi.org/10.1109/ACCESS.2018.2875045.
+121. WeiP,LiY,ZhangZ,HuT,LiZ,LiuD.Anoptimizationmethodforintrusiondetectionclassificationmodelbasedondeepbeliefnetwork.
+IEEE Access .2019;7:87593-87605.https://doi.org/10.1109/ACCESS.2019.2925828.
+122. Lawrence S, Giles CL, Tsoi AC, Back AD. Face recognition: a convolutional neural-network approach. IEEE Trans Neural Netw .
+1997;8(1):98-113.https://doi.org/10.1109/72.554195.
+123. XiaoY,XingC,ZhangT,ZhaoZ.Anintrusiondetectionmodelbasedonfeaturereductionandconvolutionalneuralnetworks. IEEE
+Access.2019;7:42210-42219.https://doi.org/10.1109/ACCESS.2019.2904620.
+124. ZhangX,ChenJ,ZhouY,HanL,LinJ.Amultiple-layerrepresentationlearningmodelfornetwork-basedattackdetection. IEEE Access .
+2019;7:91992-92008.https://doi.org/10.1109/ACCESS.2019.2927465.
+125. JiangK,WangW,WangA,NetworkIntrusionWH.Detectioncombinedhybridsamplingwithdeephierarchicalnetwork. IEEE Access .
+2020;8:32464-32476.https://doi.org/10.1109/ACCESS.2020.2973730.
+126. YuY,BianN.Anintrusiondetectionmethodusingfew-shotlearning. IEEE Access .2020;8:49730-49740.https://doi.org/10.1109/ACCESS.
+2020.2980136.
+127. WangY,YaoQ,KwokJ,NiLM.Generalizingfromafewexamples:asurveyonfew-shotlearning;2019.arXiv:1904.05046.128. DengX,LiuQ,DengY,MahadevanS.Animprovedmethodtoconstructbasicprobabilityassignmentbasedontheconfusionmatrixfor
+classificationproblem. Inf Sci.2016;340:250-261.https://doi.org/10.1016/j.ins.2016.01.033.
+129. BayS. The UCI KDD Archive [http://kdd. ics. uci. edu] .Irvine,CA:UniversityofCalifornia,DepartmentofComputerScience;1999.
+130. SongJ,TakakuraH,OkabeY,EtoM,InoueD,NakaoK.StatisticalanalysisofhoneypotdataandbuildingofKyoto2006 +datasetfor
+NIDSevaluation.Paperpresentedat:Proceedingsofthe1stWorkshoponBuildingAnalysisDatasetsandGatheringExperienceReturnsforSecurity.SalzburgAustria;2011:29-36.
+131. TavallaeeM,BagheriE,LuW,GhorbaniAA.AdetailedanalysisoftheKDDCUP99dataset.Paperpresentedat:Proceedingsofthe
+IEEESymposiumonComputationalIntelligenceforSecurityandDefenseApplications.Ottawa,ON,Canada:IEEE;2009:1-6.
+132. Moustafa N, Slay J. UNSW-NB15: a comprehensive data set for network intrusion detection systems (UNSW-NB15 network data
+set).Paperpresentedat:ProceedingsoftheMilitaryCommunicationsandInformationSystemsConference(MilCIS).Canberra,ACT,Australia:IEEE;2015:1-6.
+133. SharafaldinI,LashkariAH,GhorbaniAA.Towardgeneratinganewintrusiondetectiondatasetandintrusiontrafficcharacterization.
+Paperpresentedat:Proceedingsofthe4thInternationalConferenceonInformationSystemsSecurityandPrivacy(ICISSP).Madeira,Portugal;2018:108-116.
+134. Singh R, Kumar H, Singla R. An intrusion detection system using network traffic profiling and online sequential extreme learning
+machine. Expert Syst Appl .2015;42(22):8609-8624.https://doi.org/10.1016/j.eswa.2015.07.015.
+135. Moustafa N, Slay J. The evaluation of network anomaly detection systems: statistical analysis of the UNSW-NB15 data set and the
+comparisonwiththeKDD99dataset. Inf Sec J A Global Perspect .2016;25(1-3):18-31.https://doi.org/10.1080/19393555.2015.1125974.
+136. LashkariAH,Draper-GilG,MamunMSI,GhorbaniAA.Characterizationoftortrafficusingtimebasedfeatures.Paperpresentedat:
+Proceedingsofthe3rdInternationalConferenceonInformationSystemsSecurityandPrivacy(ICISSP).Porto,Portugal;2017:253-262.
+137. AbdulhammedR,MusaferH,AlessaA,FaezipourM,AbuzneidA.Featuresdimensionalityreductionapproachesformachinelearning
+basednetworkintrusiondetection. Electronics.2019;8(3):322.https://doi.org/10.3390/electronics8030322.
+138. Otoum Y, Liu D, Nayak A. DL-IDS: a deep learning–based intrusion detection framework for securing IoT. Trans Emerg Telecomm
+Technol.2019;e3803.https://doi.org/10.1002/ett.3803.
+139. Yang Y, Xu HQ, Gao L, Yuan YB, McLaughlin K, Sezer S. Multidimensional intrusion detection system for IEC 61850-based SCADA
+networks. IEEE Trans Power Deliv .2016;32(2):1068-1078.https://doi.org/10.1109/TPWRD.2016.2603339.
+140. BarkaE,KerracheCA,BenkraoudaH,ShuaibK,AhmadF,KurugolluF.Towardsatrustedunmannedaerialsystemusingblockchain
+fortheprotectionofcriticalinfrastructure. Trans Emerg Telecommun Technol .2019;e3706.https://doi.org/10.1002/ett.3706.
+141. Alipour-FanidA,DabaghchianM,WangN,WangP,ZhaoL,ZengK.Machinelearning-baseddelay-awareUAVdetectionandoperation
+mode identification over encrypted Wi-Fi traffic. IEEE Trans Inf Forens Secur . 2019;15:2346-2360. https://doi.org/10.1109/TIFS.2019.
+2959899.
+142. SciancaleporeS,IbrahimOA,OligeriG,DiPietroR.PiNcH:aneffective,efficient,androbustsolutiontodronedetectionvianetwork
+trafficanalysis. Comput Netw .2020;168:107044.https://doi.org/10.1016/j.comnet.2019.107044.
+How to cite this article: AhmadZ, ShahidKhanA, WaiShiangC, AbdullahJ, AhmadF.Networkintrusion
+detectionsystem:Asystematicstudyofmachinelearninganddeeplearningapproaches. Trans Emerging Tel Tech .
+2021;32:e4150. https://doi.org/10.1002/ett.4150
+ 21613915, 2021, 1, Downloaded from https://onlinelibrary.wiley.com/doi/10.1002/ett.4150, Wiley Online Library on [02/04/2026]. See the Terms and Conditions (https://onlinelibrary.wiley.com/terms-and-conditions) on Wiley Online Library for rules of use; OA articles are governed by the applicable Creative Commons License

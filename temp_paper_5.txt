@@ -1,0 +1,678 @@
+
+--- Page 1 ---
+
+Cyber Threat Detection based on Artificial Neural 
+Networks using Event Profiles 
+Varimadugu Lokeshwar Reddy Briso Becky Bell 
+AI&ML  AI&ML 
+Karunya Institute of Technology and Sciences Karunya Institute of Technology and Sciences 
+Coimbatore,India  Coimbatore,India 
+varimadugulokeshwar@karunya.edu.in  brisobell@karunya.edu  
+ 
+  
+ 
+ 
+ 
+Abstract—In the new age of increasingly growing cyber 
+threats, the rule-based security measures can no longer 
+help identify complex attacks. The given project introduces 
+a smart cyber threat detection system using the Artificial 
+Neural Networks (ANNs) and structural profiling of events 
+by identifying anomalous activities in network settings. The 
+proposed system is capable of reading security event logs 
+and converting them to small event profiles and subsequent 
+analysis of large-scale data by a deep learning model in 
+order to identify patterns. Implementing the Bayesian 
+inference into the system, it models interdependencies of 
+variables with the help of the directed acyclic graph, which 
+enhance the probabilistic threat classification. This hybrid 
+solution overcomes the drawbacks of other available 
+solutions since it improves the accuracy of detection, false 
+positives, and provides the opportunity to analyze in real 
+time. It uses Python, Django, and MySQL as the 
+implementation of such a system and a number of machine 
+learning algorithms such as ANN, CNN, Random Forest, 
+and SVM to validate it. The experimental findings also 
+prove the strength of the detection process of neural 
+networks in spotting complex cyber threats providing an 
+extensible and anticipatory approach to the current 
+cybersecurity issues. 
+ 
+Keywords:Cybersecurity, Artificial Neural Network, Event 
+Profiling, Intrusion Detection, Machine Learning, 
+Bayesian Inference, Deep Learning, Threat Detection, 
+Network Security, Anomaly Detection. 
+ 
+I. INTRODUCTION  
+ 
+The rapid expansion of the internet, cloud computing, 
+and connected devices has significantly elevated the 
+scale and complexity of cybersecurity threats. 
+Organizations today face an unprecedented volume of 
+cyberattacks ranging from phishing, malware, and 
+ransomware to advanced persistent threats (APT). Conventional  security  mechanisms —primarily 
+rule-based intrusion detection systems —struggle to 
+detect sophisticated, evasive, and zero-day attacks due 
+to their limited adaptability and dependency on 
+predefined signatures. 
+ 
+Artificial intelligence (AI), especially, machine 
+learning (ML) and deep learning (DL) algorithms 
+have proven to be a useful method of addressing a 
+weakness of the conventional cybersecurity systems. 
+Among them, artificial neural networks (ANNs) have 
+come into the picture because of having the ability to 
+describe complex non-linear relationships as well as 
+learning within large-scale data. Because the detection 
+of malicious behavior is based on subtle and 
+sometimes unconditional behavior patterns, ANNs 
+can be trained to look out for the previously unknown 
+patterns. 
+ 
+In this research, a novel approach is proposed that 
+combines ANN models with structured event profiles 
+to detect cyber threats in real time. Event profiling 
+involves transforming raw security logs into concise, 
+feature-rich representations of system events. These 
+profiles allow for efficient input to neural network 
+models, minimizing noise and dimensional 
+complexity while retaining the essential behavioral 
+features required for accurate threat detection. 
+ 
+To enhance the decision-making capability of the 
+system, the architecture incorporates Bayesian 
+inference. This probabilistic modeling approach 
+enables the system to visualize dependencies between 
+variables using directed acyclic graphs, thus 
+improving classification and interpretability. Unlike Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 8512025 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA) | 979-8-3315-9929-4/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICECA66444.2025.11382931
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 2 ---
+
+black -box models that lack transparency, the 
+integration of Bayesian networks provides an 
+additional layer of reasoning for security analysts.  
+ 
+The given system works with large amounts of event 
+data that are produced by components of security 
+infrastructure including Intrusion Prevention Systems 
+(IPS), firewalls, and Security Information and Event 
+Management (SIEM) tool. The ANN -based model 
+preprocesses these events, profiles them,  and analyses 
+them in a bid to identify the existing and unseen 
+threats. The system produces a threat rating together 
+with confidence measures, which can be used to 
+facilitate quick defense.  
+ 
+To validate the effectiveness of the system, a number 
+of classifiers are trained on and evaluated on real 
+world datasets, i.e., Random Forest (RF), Support 
+Vector Machine (SVM), Convolutional Neural 
+Networks (CNN) and ANN. ANN -based method has 
+been found to be more precise, contains fewer false 
+positive results and is able to accommodate increased 
+degree of flexibility to new pattern of attacks. 
+Comparative results show that ANN along with event 
+profiling scaled well and what is more, the detection 
+effectiveness is good compared to machine learning 
+models.  
+ 
+This study contributes to the growing field of 
+intelligent cybersecurity by introducing a hybrid 
+framework that combines neural networks with 
+structured event data and probabilistic reasoning. The 
+proposed model addresses key challenges such as 
+dimensionality  reduction,  explainability,  and detection 
+of zero -day attacks, making it a robust and practical 
+solution for modern cybersecurity environments.  
+ 
+II. LITERATURE  SURVEY  
+ 
+Artificial Neural Networks (ANNs) have increasingly 
+become a cornerstone in enhancing the capabilities of 
+cyber threat detection systems. Oyinloye et al. (2025) 
+proposed an enhanced ANN -based architecture that 
+demonstrated substantial improvements in identifying 
+sophisticated cyberattacks across various network 
+environments. The study emphasized optimizing 
+model parameters and incorporating historical attack 
+data, leading to improved detection accuracy and 
+lower false positive rates.  
+ 
+Saminathan et al. (2023) developed an ANN -based 
+autoencoder architecture specifically tailored for 
+detecting insider threats. Their model was  effective in 
+learning latent representations of normal user  
+behavior and identifying subtle deviations linked to 
+malicious  insider actions.  The autoencoder’s  ability  to 
+reconstruct only benign data patterns made it 
+particularly suitable for anomaly detection in 
+controlled environments.  Sufi (2023) proposed an artificial intelligence and 
+convolutional neural networks (CNN) based global 
+threat  intelligence  system. The  model  was inclusive  of 
+live-time threat feeds and geospatial threat correlation 
+that generated ahead -of-time warns. Traffic 
+characteristics were examined using CNN extractor 
+functions in examining the  traffic  patterns  which were 
+complex and the proposed model was shown to scale 
+when deployed internationally.  
+ 
+Yuan et al. (2021) proposed a parallel neural joint 
+model for detecting malicious URLs. By integrating 
+both character -level and word -level embeddings, the 
+model  achieved  high performance  in filtering  phishing 
+and malware -laden links. This hybrid feature learning 
+approach enhanced the model’s generalization across 
+multilingual and obfuscated URLs, providing robust 
+real-world applicability.  
+ 
+Diaba and Elmusrati (2023) presented a proposal of 
+deep learning which was highlighted on Distributed 
+Denial -of-Service (DDoS) detection in smart grids. 
+The method they applied included the use of LSTM 
+layers to guarantee the interpretation of the network 
+flow information as a way to calculate the significant 
+temporal characteristics that  can be  used in distinction 
+volumetric and low rate DDoS attack. The model 
+proved very supportive especially on the performance 
+of training concerning the detection of the threat.  
+ 
+Gong et al. (2024) The self explored a usage of 
+variational quantum convolutional neural networks 
+(VQCNN) to network intrusion detection. It is the 
+initial study to combine the concept of quantum 
+computer with the neural designs in an effort to deal 
+with the continued complexity of cyber risks. The 
+VQCNNs were faster and more accurate in their 
+utilization of benchmark datasets than the traditional 
+CNNs as demonstrated by their experiments.  
+ 
+Sowjanya et al. (2022) proposed an ANN -based 
+system that leverages event profiles for cyber threat 
+detection. By converting raw event logs into  
+structured profiles, the system effectively reduced 
+dimensionality and improved ANN input quality. 
+Their results highlighted that the use of event  
+profiling significantly enhances the ANN’s capability 
+to detect anomalies with high precision.  
+ 
+Gupta et al. (2023) introduced an artificial 
+intelligence -based anomaly detection framework for 
+securing IoT -enabled transportation networks. Their 
+model integrated ANN with contextual metadata such 
+as geolocation, device identity, and timestamp to 
+improve situational awareness. This hybrid strategy 
+effectively minimized false alarms and enabled rapid 
+threat containment in real -time systems.  
+ 
+Habibi et al. (2021) addressed cybersecurity in DC 
+microgrids  by combining  Secure  Model  Predictive  Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 852
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 3 ---
+
+Control (MPC) with ANN for detecting false data 
+injection attacks. Their hybrid architecture enabled 
+accurate prediction of control signals and swift 
+anomaly recognition, which are critical for 
+maintaining operational integrity in smart energy 
+systems.  
+ 
+Sathyakala and Anbalagan (2024) conducted a 
+comparative study  on various  AI approaches  for cyber 
+threat detection. Their evaluation covered ANN,  
+SVM, Decision Trees, and hybrid models, 
+benchmarking  them  across  datasets  with varying  noise 
+levels and attack types. The study concluded that  
+ANN models provided better adaptability and 
+performance under real -time constraints.  
+ 
+III. PROPOSED  METHODOLOGY  
+ 
+The designed system is created such that it can 
+identify any cyber threats using the strength of the 
+artificial neural networks (ANN) integrated with 
+structured event profiling. The entire procedure 
+includes the conversion of raw log data pertaining to 
+systems and networks to readable representation of 
+features and training of deep learning model to detect 
+abnormal patterns of behavior. Every phase of the 
+methodology is vital in the scalability, correctness,  
+and applicability in the use of real -time threat 
+scenarios in the system. These subsections outline the 
+phases in a detailed manner.  
+ 
+ 
+ 
+ 
+Fig 1: System  Architecture  
+ 
+A. Gathering  and collection  of data 
+ 
+The first step includes the collection of extensive 
+security event records of a range of network integrity 
+checks as well as apprehension systems such as in 
+intrusion Administration systems (IPS), firewalls, 
+security Information and event management (SIEM) 
+facilities in addition to program servers. The data that 
+is used consists of normal activities combined with 
+attack related events so that the model is trained on 
+rich variety of evidences. Such collection process is 
+essential in creating generalizable and strong  
+detection model.  
+ 
+B. Profiling  of the events  After the acquisition of raw data, it is converted into 
+structured event profiles. Some of the important  
+pieces  of information that  are built in the raw logs are: 
+● Timestamps  
+● IP addresses  
+● Protocols  
+● Request  sizes  
+● Event  durations  
+ 
+The profiles are compressions of network events and 
+remove noise and dimensionality in favor of 
+maintaining certain information required to detect.  
+The ANN model has these structured profiles as the 
+input vectors and therefore learning the behaviour 
+patterns is simpler in the system.  
+ 
+C. Data  filtering  
+Event profiles are created and  follow the procedure of 
+preprocessing in order to be applicable in training the 
+ANN model. Some of the steps involved in this stage 
+are: 
+ 
+Standardization:  Standardization  of numerical  features 
+of the size of requests and durations of events.  
+● Categorical Encoding: Change in the nature 
+of data by making a non -numeric feature 
+represented in numbers.  
+● The Handling of Missing Data: Treat null or 
+inconsistent data by deleting it or filling in 
+data. 
+● Classification of events: Classification of 
+events can be placed as either benign or 
+malicious, according to  past attack  records  or 
+assumed attack signatures.  
+● Lastly, the data is divided into training and 
+test data in order to be evaluated neutrally.  
+ 
+D. Algorithm (ANN Model Training and Bayesian 
+Inference)  
+ 
+The present section describes the main algorithm of 
+cyber threat detection implementing the Artificial 
+Neural Networks (ANN) in profile the events and 
+Bayesian inference.  
+ 
+1. Data  Collection : 
+○ Include logs of the  IPS, firewall  and 
+SIEM and normal and malicious 
+events.  
+ 
+2. Event  Profiling : 
+○ Transform unstructured raw logs 
+into structured event profiles by 
+deriving  the features  such as Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 853
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 4 ---
+
+timestamps,  IP addresses,  protocols, 
+raw size, and events durations.  
+3. Data  Preprocessing : 
+○ Standardize numerical attributes; 
+and encode the categorical 
+appearance as well as address the 
+missing data.  
+○ By classifying events as malign, or 
+benign using historical logs.  
+4. ANN  Model  Training : 
+ 
+○ Input Layer: The profiles of the 
+events are delivered as feature 
+vectors to the input layer.  
+○ Hidden Layer: Make it non -linear 
+by using ReLU non -linear  
+activation.  
+○ Output Layer: Work with Layer 
+software can involve binary or 
+many -class classification as well as 
+sigmoid or softmax.  
+○ Backpropagation:  Using 
+cross -entropy loss to backpropagate 
+is used to minimize the errors to 
+train the model.  
+5. Bayesian  Inference : 
+○ Introduce a model of probabilistic 
+relations among features in a 
+Bayesian form as Directed Acyclic 
+Graph (DAG).  
+○ The Bayesian layer makes a better 
+understanding  and the 
+decision -making process becomes 
+better  
+ 
+6. Real -Time  Classification : 
+○ The trained ANN is applied to 
+profile incoming event by giving a 
+score associated with confidence of 
+threats.  
+7. Alert  Generation : 
+○ In the event of the presence of a 
+threat, real time based alerts are 
+raised including the severity and 
+confidence levels.  
+8. Model  Evaluation : ○ Criteria to measure the  performance 
+include the accuracy, precision, 
+recall, F1 -score, AUC -ROC; also, 
+such performance was estimated 
+with the help of cross -validation to 
+guarantee the stability of the model.  
+ 
+E. Taxonomy  and Critique  . 
+After training the model, it is incorporated so that 
+incoming profiles of the events get real time 
+classification. The type of event falls under the 
+heading such as benign, malware, phishing, or DDoS. 
+The benchmarking of the system performance is in 
+terms of such metrics as accuracy, precision, recall, 
+F1-score, and AUC -ROC. Cross -validation avoids 
+overfitting on a subset of data since we can use this 
+procedure to get a similar performance on other 
+subsets to avoid over -fitting and generalizes the  
+results so that the model is accurate in a variety of 
+environments.  
+ 
+IV. RESULTS  AND  DISCUSSION  
+ 
+A. Evaluation  Setup  
+ 
+The proposed system was ported to python, and the 
+model was normally trained and checked using  
+normal machine learning libraries. The utilized data 
+were the so -called network traffic logs marked with 
+normal and malicious activity. Raw log line profiling 
+was applied to make raw logs lines readable and 
+arranged  in a form of structured vectors. The 80 and  
+20 percent data were used to get the training and 
+testing data respectively by means of partitioning. To 
+ensure that the performance has been assessed 
+sufficiently,  the use of accuracy, precision, recall, 
+F1-score, and confusion indexes of ROC -AUC was 
+selected.  
+ 
+B. Model  Performance  Evaluation  
+ 
+Support Vector Machine (SVM) algorithm was 
+excellent as compared to the random forest (RF) and 
+Convolution Neural Network (CNN) algorithm in 
+cyber threat finding with the help of Artificial Neural 
+Network algorithm (ANN). The ANN demonstrated  
+an overall accuracy of 97.4 percent that was superior 
+to the CNN (95.6 percent), RF (94.2 percent) and 
+SVM (91.8 percent). The fact that the planned 
+profiling approach to the event has given the 
+advantage in the production of better quality input  
+data and good acquisit ion of behavioral learning has 
+been cited.  Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 854
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 5 ---
+
+ 
+ 
+Fig 2: Model  Performance  
+ 
+Table  1: Model  Comparison  Table  
+ 
+Model  Accur 
+acy 
+(%) Precisi 
+on Rec 
+all F1-S 
+core AU 
+C 
+ANN  
+(Propos 
+ed) 97.4 0.95 0.97 0.96 0.98 
+CNN  95.6 0.93 0.94 0.94 0.95 
+Random 
+Forest  94.2 0.91 0.92 0.91 0.93 
+SVM  91.8 0.89 0.87 0.88 0.89 
+ 
+C. Accuracy,  Recall  and F1 -Score  
+ 
+The precision of the ANN model was 0.95 and the 
+recall was 0.97 that suggested that it was highly 
+sensitive in reflecting the actual threats and was less 
+likely to give false positive results. The 
+precision/recall balance is perceived as F1 - score  
+equal to 0.96 that makes the model appropriate to 
+implement under the conditions where neither false 
+negatives nor false alarms should be regarded as 
+factors  of minor  consideration.  The F1-scores  were  
+0.94 and 0.91 of CNN and RF respectively against  
+that of SVM which was lower (0.88).  
+ 
+D. Analysis  of ROC  Curve  and AUC  
+ 
+To study the classification thresholds, Receiver 
+Operating Characteristic (ROC) was plotted on all the 
+models. We had an AUC (Area Under Curve) of 0.98 
+in the ANN model which shows that it has a high 
+ability to differentiate between normal and malicious 
+activities  at different  threshold  values.  Comparatively, 
+CNN achieved  AUC  of 0.95,  RF 0.93,  and SVM  0.89, 
+which proves the high classification capability of 
+ANN.   
+Fig 3: ROC  Curve  
+ 
+E. Confusion  Matrix  Knowledge  
+ 
+ANN confusion matrix demonstrated that the number 
+of false positives and false negatives was minimal, 
+which proves that the model has a high level of 
+reliability. Most of the bad traffic was correctly 
+identified and good traffic was limitedly identified as 
+bad. This is a major boost to the credibility of the 
+system particularly during the real -time security 
+activities whereby the instances of false alarm may be 
+not only distractive but also expensive.  
+ 
+ 
+ 
+ 
+Fig 4 : Confusion  Matrix  
+ 
+F. Efficiency  in Computation  
+ 
+Although the CNN model provided a competitive  
+level of accuracy, it could not utilize fewer 
+computational resources and a reduced time of  
+training because of its bulky structure. Conversely, 
+ANN  achieved  great  accuracy  with faster  convergence 
+and reduced the use of resources. That makes the  
+ANN  model  more  feasible  to implement  in 
+resource -limited scenarios, e.g. edge devices or 
+embedded systems.  
+Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 855
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 6 ---
+
+G. The effects  of the Event  Profiling  
+ 
+One of the most important aspects considered in the 
+proposed methodology will be the conversion of raw 
+logs into structured profiles of events. This 
+preprocessing step did not only help in dimensional 
+reduction of the input space, but it also boosted 
+pertinent features and consequently helped in 
+improved generalization. The profiling framework 
+itself lead to better interpretability of the model and 
+allowed adding in probabilistic reasoning through the 
+Bayesian inference layer.  
+ 
+H. Findings  Synopsis  
+ 
+All in all, the ANN -based paradigm, complemented 
+with the event profiling and Bayesian reasoning, 
+presented better capabilities in terms of detection as 
+compared to the popular classifiers. It was able to 
+achieve high precision, recall and robustness at the 
+cost of low computational efficiency. These findings 
+testify to the appropriateness of the suggested 
+framework in the context of contemporary 
+cybersecurity  systems,  especially  in the recognition  of 
+both complicated and zero -day malicious attacks with 
+the minimum of manual efforts.  
+ 
+V. CONCLUSION  
+ 
+We describe in this study an efficient intrusion 
+discovery system comprising of the combination of 
+Artificial Neural Networks (ANN) and structured 
+event profiling and Bayesian inference. The 
+methodology converts raw network logs into event 
+profiles and subsequently allow the ANN to learn 
+important behavioral patterns and make a high 
+accuracy distinction between benign and malicious 
+activities. The model also behaves more intuitively 
+and thus supports more decision -making in real -time 
+environments and in existing models by adding the 
+probabilities reasoning with the help of Bayesian 
+networks, the model is able to evaluate the 
+interpretability and confidence scoring as well.  
+ 
+The score of ANN model is significantly higher than 
+the traditional classifiers, which are Support Vector 
+Machine (SVM), Random Forest (RF), and 
+Convolutional Neural Networks (CNN), in terms of 
+accuracy, F1 -score and AUC based on experimental 
+results. Computational efficiency of the system was 
+also tested and thus it could be deployed in a  
+resource -limited environment with no effects on the 
+performance. The event profiling approach proved to 
+be instrumental in enhancing the quality of model 
+inputs and false positives, and accordingly the 
+capability of effects related to the threat detection.  
+ 
+The proposed system would provide the scalable, 
+adaptive approach to the current issues in 
+cybersecurity especially  in the changing  environments  since novel and complex vectors of attack appear 
+regularly. The capability to generalize based on the 
+various training data and the interpretation of the 
+patterns makes it an essential benefit to the intrusion 
+detection  systems  of the future.  Future  research  can be 
+aimed at increasing the ability of the system to detect 
+zero-day attacks and include the cross -linkage with 
+capable federated learning or blockchain -based audit 
+trails of the distributed security intelligence.  
+ 
+VI. FUTURE  ENHANCEMENT  
+ 
+While the proposed system demonstrates high 
+accuracy and efficiency in detecting cyber threats 
+using artificial neural networks and event profiling, 
+several areas remain open for further improvement  
+and expansion.  
+ 
+Firstly, future work can explore the integration of  
+real-time streaming data from large -scale enterprise 
+networks. Currently, the model operates on static 
+datasets,  but adapting  it to function  in dynamic, 
+high-throughput environments such as cloud -native 
+platforms and IoT ecosystems will enhance its 
+practical applicability.  
+ 
+Secondly, the system’s robustness against adversarial 
+attacks  can be strengthened.  As attackers  continuously 
+evolve their techniques to bypass AI -based defenses, 
+incorporating adversarial training and robust learning 
+strategies  will help the model  withstand  deception  and 
+manipulation attempts.  
+ 
+Another promising enhancement involves deploying 
+the model in a distributed or federated learning 
+architecture. This  would enable  collaboration  between 
+multiple organizations without sharing sensitive data, 
+thereby preserving data privacy while enriching the 
+model's learning across diverse threat patterns.  
+ 
+Additionally, the incorporation of explainable AI 
+(XAI) techniques could make the system more 
+transparent. By generating human -understandable 
+insights into why a particular alert was triggered, 
+security analysts can trust and validate the model's 
+decisions more effectively.  
+ 
+Lastly, expanding the model’s classification 
+capabilities  beyond  binary  outcomes  to include 
+multi -label attack classification (e.g., ransomware, 
+phishing, botnet) will provide more granular threat 
+detection. Integrating threat intelligence feeds and 
+behavior -based anomaly detection modules could 
+further improve the detection of zero -day exploits  and 
+insider threats.  
+ 
+These enhancements will help evolve the system into  
+a comprehensive, intelligent cybersecurity framework 
+capable of adapting to emerging threats and complex 
+network environments.  Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 856
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 
+--- Page 7 ---
+
+REFERENCES  
+ 
+1. Gong,  C., Guan,  W., Zhu, H., Gani,  A., & Qi, H. (2024).  
+Network intrusion detection based on variational  
+quantum convolution neural network. Journal of  
+Supercomputing , 80(9). 
+2. Sowjanya, S. M., Ahmed, S., & Salman, S. (2022).  
+ANN Based Cyber Threat Detection Utilising Event  
+Profiles. JOURNAL OF ALGEBRAIC STATISTICS , 
+13(3), 2410 -2414.  
+3. Gupta, H., Sharma, S., & Agrawal, S. (2023). Artificial  
+intelligence -based anomalies detection scheme for  
+identifying cyber threat on IoT -based transport network.  
+IEEE Transactions on Consumer Electronics , 70(1), 
+1716 -1724.  
+4. Habibi, M. R., Baghaee, H. R., Blaabjerg, F., &  
+Dragičević, T. (2021). Secure MPC/ANN -based false  
+data injection cyber -attack detection and mitigation in  
+DC microgrids.  IEEE  Systems  Journal , 16(1), 
+1487 -1498.  
+5. Sathyakala, S., & Anbalagan, E. (2024, September).  
+Comparative Analysis of Cyber Security Threat  
+Detection Based on Artificial Intelligence Approaches.  
+In 2024 Asian Conference on Intelligent Technologies  
+(ACOIT) (pp. 1 -8). IEEE.  
+6. Oyinloye, T. S., Arowolo, M. O., & Prasad, R. (2025).  
+Enhancing cyber threat detection with an improved  
+artificial neural network model. Data Science and  
+Management, 8(1), 107 -115. 
+7. Saminathan, K., Mulka, S. T. R., Damodharan, S.,  
+Maheswar, R., & Lorincz, J. (2023). An artificial neural  
+network autoencoder for insider cyber security threat  
+detection. Future Internet , 15(12), 373.  
+8. Sufi,  F. (2023).  A global  cyber -threat  intelligence  system  
+with artificial intelligence and convolutional neural  
+network. Decision Analytics Journal , 9, 100364.  
+9. Yuan, J., Chen,  G., Tian,  S., & Pei, X. (2021).  Malicious  
+URL detection based on a parallel neural joint model.  
+Ieee Access , 9, 9464 -9472.  
+10. Diaba, S. Y., & Elmusrati, M. (2023). Proposed  
+algorithm for smart grid DDoS detection based on deep  
+learning. Neural Networks , 159, 175 -184. Proceedings of the 9th International Conference on Electronics, Communication and Aerospace Technology (ICECA-2025)
+IEEE Xplore Part Number: CFP25J88-ART; ISBN: 979-8-3315-9929-4
+979-8-3315-9929-4/25/$31.00 ©2025 IEEE 857
+Authorized licensed use limited to: Ontario Tech University. Downloaded on April 04,2026 at 03:53:02 UTC from IEEE Xplore.  Restrictions apply. 

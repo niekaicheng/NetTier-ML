@@ -1,0 +1,2064 @@
+
+--- Page 1 ---
+
+computers  & security  86 (2019)  147–167  
+Available  online  at www.sciencedirect.com  
+j o u r n a l h o m e p a g e : w w w . e l s e v i e r . c o m / l o c a t e / c o s e 
+A survey  of network-based  intrusion  
+detection  data  sets  
+Markus  Ring a , ∗, Sarah  Wunderlich  a , Deniz  Scheuring  a , Dieter  Landes  a , 
+Andreas  Hotho  b 
+a Faculty  of Electrical  Engineering  and Informatics,  Coburg  University  of Applied  Sciences,  Coburg  96450, Germany  
+b Data Mining and Information  Retrieval  Group, University  of Würzburg,  Würzburg  97074, Germany  
+a r t i c l e i n f o 
+Article history:  
+Received  7 March 2019 
+Revised  3 June 2019 
+Accepted  10 June 2019 
+Available  online 11 June 2019 
+Keywords:  
+Intrusion  detection  
+IDS 
+NIDS 
+Data sets 
+Evaluation  
+Data mining  a b s t r a c t 
+Labeled  data sets are necessary  to train and evaluate  anomaly-based  network  intrusion  de- 
+tection  systems.  This work provides  a focused  literature  survey of data sets for network-  
+based intrusion  detection  and describes  the underlying  packet-  and flow-based  network  
+data in detail. The paper identifies  15 different  properties  to assess the suitability  of indi- 
+vidual data sets for specific  evaluation  scenarios.  These properties  cover a wide range of 
+criteria  and are grouped  into five categories  such as data volume  or recording  environment  
+for offering  a structured  search.  Based on these properties,  a comprehensive  overview  of 
+existing  data sets is given. This overview  also highlights  the peculiarities  of each data set. 
+Furthermore,  this work briefly touches  upon other sources  for network-based  data such as 
+traffic generators  and data repositories.  Finally,  we discuss  our observations  and provide  
+some recommendations  for the use and the creation  of network-based  data sets. 
+© 2019 Elsevier  Ltd. All rights reserved.  
+1. Introduction  
+IT security  is an important  issue and much effort has been 
+spent in the research  of intrusion  and insider  threat detec- 
+tion. Many contributions  have been published  for processing  
+security-related  data ( Chandola  et al., 2006; Garcia et al., 2014; 
+Rehák et al., 2008; Ring et al., 2017 ), detecting  botnets  ( Beigi 
+et al., 2014; Stevanovic  and Pedersen,  2015; Wang and Pascha-  
+lidis, 2017; Yin et al., 2018 ), port scans ( Jung et al., 2004; Ring 
+et al., 2018 ), brute force attacks  ( Hellemons  et al., 2012; Javed 
+and Paxson,  2013; Najafabadi  et al., 2014; Sperotto  et al., 2009 ) 
+and so on. All these works have in common  that they re- 
+quire representative  network-based  data sets. Furthermore,  
+benchmark  data sets are a good basis to evaluate  and com- 
+pare the quality  of different  network  intrusion  detection  sys- 
+∗Corresponding  author.  
+E-mail addresses:  markus.ring@hs-coburg.de  (M. Ring), sarah.wunderlich@hs-coburg.de  (S. Wunderlich),  deniz.brix@stud.hs-coburg.de  
+(D. Scheuring),  dieter.landes@hs-coburg.de  (D. Landes),  hotho@informatik.uni-wuerzburg.de  (A. Hotho).  tems (NIDS).  Given a labeled  data set in which each data point 
+is assigned  to the class normal  or attack,  the number  of de- 
+tected attacks  or the number  of false alarms  may be used as 
+evaluation  criteria.  Unfortunately,  there are not too many rep- 
+resentative  data sets around.  According  to Sommer  and Pax- 
+son (2010) , the lack of representative  publicly  available  data 
+sets constitutes  one of the biggest  challenges  for anomaly-  
+based intrusion  detection.  Similar  statements  are made by 
+Małowidzki  et al. (2015) and Haider  et al. (2017) . However,  the 
+community  is working  on this problem  as several  intrusion  
+detection  data sets have been published  over the last years. In 
+particular,  the Australian  Centre  for Cyber Security  published  
+the UNSW-NB15  ( Moustafa  and Slay, 2015 ) data set, the Uni- 
+versity  of Coburg  published  the CIDDS-001  ( Ring et al., 2017c ) 
+https://doi.org/10.1016/j.cose.2019.06.005  
+0167-4048/© 2019  Elsevier  Ltd. All rights reserved.  
+--- Page 2 ---
+
+148 computers  & security  86 (2019)  147–167  
+data set, or the University  of New Brunswick  published  the CI- 
+CIDS 2017 ( Sharafaldin  et al., 2018 ) data set. More data sets can 
+be expected  in the future.  However,  there is no overall  index 
+of existing  data sets and it is hard to keep track of the latest 
+developments.  
+This work provides  a literature  survey  of existing  network-  
+based intrusion  detection  data sets. At first, the underlying  
+data are investigated  in more detail. Network-based  data ap- 
+pear in packet-based  or flow-based  format.  While flow-based  
+data contain  only meta information  about network  connec-  
+tions, packet-based  data also contain  payload.  Then, this pa- 
+per analyzes  and groups  different  data set properties  which 
+are often used in literature  to evaluate  the quality  of network-  
+based data sets. The main contribution  of this survey  is an ex- 
+haustive  literature  overview  of network-based  data sets and 
+an analysis  as to which data set fulfills which data set prop- 
+erties. The paper focuses  on attack scenarios  within  data sets 
+and highlights  relations  between  the data sets. Furthermore,  
+we briefly touch upon traffic generators  and data repositories  
+as further  sources  for network  traffic besides  typical  data sets 
+and provide  some observations  and recommendations.  As a 
+primary  benefit,  this survey  establishes  a collection  of data 
+set properties  as a basis for comparing  available  data sets and 
+for identifying  suitable  data sets, given specific  evaluation  sce- 
+narios.  Further,  we created  a website  1 which references  to all 
+mentioned  data sets and data repositories  and we intend  to 
+update  this website.  
+The rest of the paper is organized  as follows.  The next sec- 
+tion discusses  related  work. Section  3 analyzes  packet-  and 
+flow-based  network  data in more detail. Section  4 discusses  
+typical  data set properties  which are often used in the liter- 
+ature to evaluate  the quality  of intrusion  detection  data sets. 
+Section  5 gives an overview  of existing  data sets and checks  
+each data set against  the identified  properties  of Section  4 . 
+Section  6 briefly touches  upon further  sources  for network-  
+based data. Observations  and recommendations  are discussed  
+in Section  7 before the paper concludes  with a summary.  
+2. Related  work 
+This section  reviews  related  work on network-based  data 
+sets for intrusion  detection.  It should  be noted that host- 
+based intrusion  detection  data sets like ADFA ( Creech  and Hu, 
+2013 ) are not considered  in this paper. Interested  readers  may 
+find details  on host-based  intrusion  detection  data in Glass- 
+Vanderlan  et al. (2018) . 
+Małowidzki  et al. (2015) discuss  missing  data sets as a sig- 
+nificant  problem  for intrusion  detection,  set up requirements  
+for good data sets, and list available  data sets. Koch et al. 
+(2014) provide  another  overview  of intrusion  detection  data 
+sets, analyze  13 data sources,  and evaluate  them with re- 
+spect to 8 data set properties.  Nehinbe  (2011) provides  a crit- 
+ical evaluation  of data sets for IDS and intrusion  prevention  
+systems  (IPS). The author  examines  seven data sets from dif- 
+ferent sources  (e.g. DARPA  data sets and DEFCON  data sets), 
+highlights  their limitations,  and suggests  methods  for creat- 
+1 http://www.dmir.uni-  wuerzburg.de/datasets/nids-  ds ing more realistic  data sets. Since many data sets are pub- 
+lished in the last four years, we continue  previous  work ( Koch 
+et al., 2014; Małowidzki  et al., 2015; Nehinbe,  2011 ) from 2011 to 
+2015, but offer a more up-to-date  and more detailed  overview  
+than our predecessors.  
+While many data set papers  (e.g., CIDDS-002  ( Ring et al., 
+2017 ), ISCX ( Shiravi  et al., 2012 ) or UGR’16  ( Maciá-Fernández  
+et al., 2018 )) give just a brief overview  of some intrusion  detec- 
+tion data sets, Sharafaldin  et al. (2018) provide  a more exhaus-  
+tive review.  Their main contribution  is a new framework  for 
+generating  intrusion  detection  data sets. Sharafaldin  et al. also 
+analyze  11 available  intrusion  detection  data sets and evalu- 
+ate them with respect  to 11 data set properties.  In contrast  to 
+earlier  data set papers,  our work focuses  on providing  a neu- 
+tral overview  of existing  network-based  data sets rather than 
+contributing  an additional  data set. 
+Other recent papers  also touch upon network-based  data 
+sets, yet with a different  primary  focus. Bhuyan  et al. 
+(2014) present  a comprehensive  review  of network  anomaly  
+detection.  The authors  describe  nine existing  data sets and 
+analyze  data sets which are used by existing  anomaly  de- 
+tection  methods.  Similarly,  Nisioti  et al. (2018) focus on un- 
+supervised  methods  for intrusion  detection  and briefly refer 
+to 12 existing  network-based  data sets. Yavanoglu  and Aydos 
+(2017) analyze  and compare  the most commonly  used data 
+sets for intrusion  detection.  However,  their review  contains  
+only seven data sets including  other data sets like HTTP CSIC 
+2010 ( Giménez  et al., 2010 ). All in all, these works tend to have 
+different  research  objectives  and only touch upon network-  
+based data sets marginally.  
+3. Data 
+Normally,  network  traffic is captured  either in packet-based  
+or flow-based  format.  Capturing  network  traffic on packet-  
+level is usually  done by mirroring  ports on network  devices.  
+Packet-based  data encompass  complete  payload  information.  
+Flow-based  data are more aggregated  and usually  contain  only 
+metadata  from network  connections.  Wheelus  et al. highlight  
+the distinction  through  an illustrative  comparison:  “A good ex- 
+ample of the difference  between  captured  packet inspection  and Net- 
+Flow would be viewing  a forest by hiking through  the forest as op- 
+posed to flying over the forest in a hot air balloon” ( Wheelus  et al., 
+2014 ). In this work, a third category  ( other data) is introduced.  
+The category  other has no standard  format  and varies for each 
+data set. 
+3.1. Packet-based  data 
+Packet-based  data is commonly  captured  in pcap format  and 
+contains  payload.  Available  metadata  depends  on the used 
+network  and transport  protocols.  There are many different  
+protocols  and the most important  ones being TCP, UDP, ICMP 
+and IP. Fig. 1 illustrates  the different  headers.  TCP is a reliable  
+transport  protocol  and encompasses  metadata  like sequence  
+number,  acknowledgment  number,  TCP flags, or checksum  
+values.  UDP is a connection-less  transport  protocol  and has 
+a smaller  header  than TCP which contains  only four fields, 
+namely  source  port, destination  port, length and checksum.  In 
+--- Page 3 ---
+
+computers  & security  86 (2019)  147–167  149 
+Fig. 1 –I P , TCP, UDP and ICMP header  after ( Tanenbaum  and 
+Wetherall,  2011 ). 
+contrast  to TCP and UDP, ICMP is a supporting  protocol  con- 
+taining  status messages  and is thus even smaller.  Normally,  
+there is also an IP header  available  beside the header  of the 
+transport  protocol.  The IP header  provides  information  such 
+as source  and destination  IP addresses  and is also shown  in 
+Fig. 1 . 
+3.2. Flow-based  data 
+Flow-based  network  data is a more condensed  format  which 
+contains  mainly  meta information  about network  connec-  
+tions. Flow-based  data aggregate  all packets  which share some 
+properties  within  a time window  into one flow and usually  do 
+not include  any payload.  The default  five-tuple  definition,  i.e., 
+source  IP address,  source  port, destination  IP address,  destina-  
+tion port and transport  protocol  ( Claise,  2008 ), is a widely  used Table 1 – Attributes  in flow-based  network  traffic.  
+# Attribute  
+1 Date first seen 
+2 Duration  
+3 Transport  protocol  
+4 Source IP address  
+5 Source port 
+6 Destination  IP address  
+7 Destination  port 
+8 Number  of transmitted  bytes 
+9 Number  of transmitted  packets  
+10 TCP flags 
+standard  for matching  properties  in flow-based  data. Flows 
+can appear  in unidirectional  or bidirectional  format.  The uni- 
+directional  format  aggregates  all packets  from host A to host B 
+which share the above mentioned  properties  into one flow. All 
+packets  from host B to host A are aggregated  into another  uni- 
+directional  flow. In contrast,  a bidirectional  flow summarizes  
+all packets  between  hosts A and B , regardless  of direction.  
+Typical  flow-based  formats  are NetFlow  ( Claise,  2004 ), IP- 
+FIX ( Claise,  2008 ), sFlow ( Phaal, 2004 ) and OpenFlow  ( McKeown  
+et al., 2008 ). Table 1 gives an overview  of typical  attributes  
+within  flow-based  network  traffic.  Depending  on the specific  
+flow format  and flow exporter,  additional  attributes  like bytes 
+per second,  bytes per packet,  TCP flags of the first packet,  or 
+even the calculated  entropy  of the payload  can be extracted.  
+Furthermore,  it is possible  to convert  packet-based  data to 
+flow-based  data (but not vice versa) with tools like nfdump  2 
+or YAF.3 Readers  interested  in the differences  between  flow 
+exporters  may find additional  details  in Haddadi  and Zincir-  
+Heywood  (2016) , together  with an analysis  of how different  
+flow exporters  affect botnet  classification.  
+3.3. Other data 
+This category  includes  all data sets that are neither  purely 
+packet-based  nor flow-based.  An example  of this category  
+might be flow-based  data sets which have been enriched  
+with additional  information  from packet-based  data or host- 
+based log files. The KDD CUP 1999 ( Stolfo, 2018 ) data set is a 
+well-known  representative  of this category.  Each data point 
+has network-based  attributes  like the number  of transmitted  
+source  bytes or TCP flags, but has also host-based  attributes  
+like number  of failed logins.  As a consequence,  each data set 
+of this category  has its own set of attributes.  Since each data 
+set must be analyzed  individually,  we do not make any general  
+statements  about available  attributes.  
+4. Data set properties  
+To be able to compare  different  intrusion  detection  data sets 
+side by side and to help researchers  finding  appropriate  data 
+sets for their specific  evaluation  scenario,  it is necessary  to 
+2 https://github.com/phaag/nfdump  
+3 https://tools.netsa.cert.org/yaf/  
+--- Page 4 ---
+
+150 computers  & security  86 (2019)  147–167  
+Fig. 2 –D a t a set properties  and their value ranges.  
+define common  properties  as evaluation  basis. Therefore,  we 
+explore  typical  data set properties  that are used in the lit- 
+erature  to assess intrusion  detection  data sets. The general  
+concept  FAIR ( Wilkinson  et al., 2016 ) defines  four principles  
+that scholarly  data should  fulfill, namely  Findability,  Acces- 
+sibility,  Interoperability  and Reusability  . While concurring  with 
+this general  concept,  this work uses more detailed  data set 
+properties  to provide  a focused  comparison  of network-based  
+intrusion  detection  data sets. Generally,  different  data sets 
+emphasize  different  data set properties.  For instance,  the 
+UGR’16  data set ( Maciá-Fernández  et al., 2018 ) emphasizes  
+a long recording  time to capture  periodic  effects  while the 
+ISCX data set ( Shiravi  et al., 2012 ) focuses  on accurate  label- 
+ing. Since we aim at investigating  more general  properties  for 
+network-based  intrusion  detection  data sets, we try to unify 
+and generalize  properties  used in literature  rather than adopt-  
+ing all of them. For example,  some approaches  evaluate  the 
+presence  of specific  kind of attacks  like DoS (Denial  of Ser- 
+vice) or Browser  injections.  The presence  of certain  attack 
+types may be a relevant  property  for evaluating  detection  ap- 
+proaches  for those specific  attack types, but are meaningless  for other approaches.  Hence,  we use the general  property  at- 
+tacks which describes  the presence  of malicious  network  traf- 
+fic (see Table 3 ). Section  5 provides  more details  on the differ- 
+ent attack types in the data sets together  with a discussion  of 
+other particular  properties.  
+We do not develop  an evaluation  score like Haider  et al. 
+(2017) or Sharafaldin  et al. (2018) since we do not want to judge 
+the importance  of different  data set properties.  In our opinion,  
+the importance  of certain  properties  depends  on the specific  
+evaluation  scenario  and should  not be generally  judged  in a 
+survey.  Rather,  readers  should  be put in a position  to find suit- 
+able data sets for their needs.  Therefore,  we group the data set 
+properties  discussed  below in five categories  to support  sys- 
+tematic  search.  Fig. 2 summarizes  all data set properties  and 
+their value ranges.  
+4.1. General  information  
+The following  four properties  reflect general  information  
+about the data set, namely  the year of creation,  availability,  
+presence  of normal  and malicious  network  traffic.  
+--- Page 5 ---
+
+computers  & security  86 (2019)  147–167  151 
+4.1.1. Year of creation  
+Since network  traffic is subject  to concept  drift and new attack 
+scenarios  appear  daily, the age of an intrusion  detection  data 
+set plays an important  role. This property  describes  the year 
+of creation.  The year in which the underlying  network  traffic 
+of a data set was captured  is more relevant  for up-to-dateness  
+than the year of its publication.  
+4.1.2. Public availability  
+Intrusion  detection  data sets should  be publicly  available  
+to serve as a basis for comparing  different  intrusion  detec- 
+tion methods.  Furthermore,  the quality  of data sets can only 
+be checked  by third parties  if they are publicly  available.  
+Table 3 encompasses  three different  characteristics  for this 
+property:  yes, o.r. (on request),  and no. On request  means  that 
+access  will be granted  after sending  a message  to the authors  
+or the responsible  person.  
+4.1.3. Normal  user behavior  
+This property  indicates  the availability  of normal  user behav-  
+ior within  a data set and takes the values  yes or no. The value 
+yes indicates  that there is normal  user behavior  within  the 
+data set, but it does not make any statements  about the pres- 
+ence of attacks.  In general,  the quality  of an IDS is primarily  
+determined  by its attack detection  rate and false alarm rate. 
+Therefore,  the presence  of normal  user behavior  is indispens-  
+able for evaluating  an IDS. The absence  of normal  user behav-  
+ior, however,  does not make a data set unusable,  but rather 
+indicates  that it has to be merged  with other data sets or with 
+real world network  traffic.  Such a merging  step is often called 
+overlaying  or salting  ( Aviv and Haeberlen,  2011; Celik et al., 
+2011 ). 
+4.1.4. Attack traffic 
+IDS data sets should  include  various  attack scenarios.  This 
+property  indicates  the presence  of malicious  network  traffic 
+within  a data set and has the value yes if the data set con- 
+tains at least one attack.  Table 4 provides  additional  informa-  
+tion about the specific  attack types. 
+4.2. Nature  of data 
+Properties  of this category  describe  the format  of the data sets 
+and the presence  of meta information.  
+4.2.1. Metadata  
+Content-related  interpretation  of packet-based  and flow- 
+based network  traffic is difficult  for third parties.  Therefore,  
+data sets should  come along with metadata  to provide  addi- 
+tional information  about the network  structure,  IP addresses,  
+attack scenarios  and so on. This property  indicates  the pres- 
+ence of additional  metadata.  
+4.2.2. Format  
+Network  intrusion  detection  data sets appear  in different  
+formats.  We roughly  divide them into three formats  (see 
+Section  3 ). (1) Packet-based  network  traffic (e.g. pcap) con- 
+tains network  traffic with payload.  (2) Flow-based  network  
+traffic (e.g. NetFlow)  contains  only meta information  about 
+network  connections.  (3) Other types of data sets may contain,  e.g., flow-based  traces with additional  attributes  from packet-  
+based data or even from host-based  log files. 
+4.2.3. Anonymity  
+Frequently,  intrusion  detection  data sets may not be published  
+due to privacy  reasons  or are only available  in anonymized  
+form. This property  indicates  if data is anonymized  and which 
+attributes  are affected.  The value none in Table 3 indicates  
+that no anonymization  has been performed.  The value yes 
+(IPs) means  that IP addresses  are either anonymized  or re- 
+moved  from the data set. Similarly,  yes (payload)  indicates  that 
+payload  information  is anonymized  or removed  from packet-  
+based network  traffic.  
+4.3. Data volume  
+Properties  in this category  characterize  data sets in terms of 
+volume  and duration.  
+4.3.1. Count 
+The property  count describes  a data set’s size as either the 
+number  of contained  packets/flows/points  or the physical  size 
+in Gigabyte  (GB). 
+4.3.2. Duration  
+Data sets should  cover network  traffic over a long time for cap- 
+turing periodical  effects  (e.g., daytime  vs. night or weekday  vs. 
+weekend)  ( Maciá-Fernández  et al., 2018 ). The property  dura- 
+tion provides  the recording  time of each data set. 
+4.4. Recording  environment  
+Properties  in this category  delineate  the network  environment  
+and conditions  in which the data sets are captured.  
+4.4.1. Kind of traffic 
+The property  Kind of Traffic describes  three possible  origins  of 
+network  traffic:  real, emulated,  or synthetic.  Real means  that 
+real network  traffic was captured  within  a productive  network  
+environment.  Emulated  means  that real network  traffic was 
+captured  within  a test bed or emulated  network  environment.  
+Synthetic  means  that the network  traffic was created  synthet-  
+ically (e.g., through  a traffic generator)  and not captured  by a 
+real (or virtual)  network  device.  
+4.4.2. Type of network  
+Network  environments  in small and medium-sized  com- 
+panies  are fundamentally  different  from internet  service  
+providers  (ISP). As a consequence,  different  environments  
+require  different  security  systems  and evaluation  data sets 
+should  be adapted  to the specific  environment.  This property  
+describes  the underlying  network  environment  in which the 
+respective  data set was created.  
+4.4.3. Complete  network  
+This property  is adopted  from Sharafaldin  et al. (2018) and in- 
+dicates  if the data set contains  the complete  network  traffic 
+from a network  environment  with several  hosts, router and so 
+on. If the data set contains  only network  traffic from a single 
+host (e.g., honeypot)  or only some protocols  from the network  
+traffic (e.g., exclusively  SSH traffic),  the value is set to no. 
+--- Page 6 ---
+
+152 computers  & security  86 (2019)  147–167  
+Table 2 – Decision  support  table for finding  appropriate  network-based  data sets. Some data sets like CTU-13  provide  
+several  data formats  and appear  in several  columns.  (+) indicates  that the data set is publicly  available.  (?) indicates  that 
+we were not able to find the data set. (-) indicates  that the data set is not publicly  available.  
+Labeled  Format  
+packet  flow other 
+yes ( + ) Botnet ( + ) CICIDS 2017 ( + ) AWID 
+( + ) CIC DoS ( + ) CIDDS-001  ( + ) KDD CUP 99 
+( + ) CICIDS 2017 ( + ) CIDDS-002  ( + ) Kyoto 2006+ 
+( + ) DARPA ( + ) ISCX 2012 ( + ) NSL-KDD  
+( + ) DDoS 2016 ( + ) TUIDS ( + ) UNSW-NB  15 
+( + ) ISCX 2012 ( + ) Twente 
+( + ) ISOT 
+( + ) NDSec-1  
+( + ) NGIDS-DS  
+( + ) TRAbID  
+( + ) TUIDS 
+( + ) UNSW-NB15  
+(?) PU-IDS 
+(?) SSENET-2011  
+(?) SSENET-2014  
+(-) IRSC (-) IRSC (-) SANTA 
+yes with BG ( + ) CTU-13  ( + ) CTU-13  
+( + ) UGR’16 
+yes (IDS) (?) PUF 
+indirect  ( + ) SSHCure  
+no ( + ) Booters  ( + ) Kent 2016 
+( + ) CDX ( + ) UNIBS 
+( + ) LBNL ( + ) Unified Host 
+and Network  
+4.5. Evaluation  
+The following  properties  are related  to the evaluation  of intru- 
+sion detection  methods  using network-based  data sets. More 
+precisely,  the properties  denote  the availability  of predefined  
+subsets,  the data set’s balance,  and the presence  of labels. 
+4.5.1. Predefined  splits 
+Sometimes  it is difficult  to compare  the quality  of different  
+IDS, even if they are evaluated  on the same data set. In that 
+case, it must be clarified  whether  the same subsets  are used 
+for training  and evaluation.  This property  provides  the infor- 
+mation  if a data set comes  along with predefined  subsets  for 
+training  and evaluation.  
+4.5.2. Balanced  
+Often, machine  learning  and data mining  methods  are used 
+for anomaly-based  intrusion  detection.  In the training  phase 
+of such methods  (e.g., decision  tree classifiers),  data sets 
+should  be balanced  with respect  to their class labels. Conse-  
+quently,  data sets should  contain  the same number  of data 
+points from each class (normal  and attack).  Real-world  net- 
+work traffic,  however,  is not balanced  and contains  more nor- 
+mal user behavior  than attack traffic.  This property  indicates  
+if data sets are balanced  with respect  to their class labels. Im- 
+balanced  data sets should  be balanced  by appropriate  prepro-  
+cessing  before data mining  algorithms  are used. He and Garcia 
+(2009) provide  a good overview  of learning  from imbalanced  
+data. 4.5.3. Labeled  
+Labeled  data sets are necessary  for training  supervised  meth- 
+ods and for evaluating  supervised  as well as unsupervised  in- 
+trusion  detection  methods.  This property  denotes  if data sets 
+are labeled  or not. If there are at least the two classes  nor- 
+mal and attack,  this property  is set to yes. Possible  values  
+in this property  are: yes, yes with BG. (yes with background),  
+yes (IDS), indirect,  and no. Yes with background  means  that 
+there is a third class background.  Packets,  flows, or data points 
+which belong  to the class background  could be normal  or at- 
+tack. Yes (IDS) means  that some kind of intrusion  detection  
+system  was used to create the data set’s labels. Some labels 
+of the data set might be wrong since an IDS might be imper-  
+fect. Indirect  means  that the data set has no explicit  labels, 
+but labels can be created  on one’s own from additional  log 
+files. 
+5. Data sets 
+In our opinion,  the data set properties  Labeled  and Format  are 
+the most decisive  properties  when searching  for adequate  
+network-based  data sets. The intrusion  detection  method  (su- 
+pervised  or unsupervised)  determines  if labels are necessary  
+or not and which kind of data is required  (packet,  flow or 
+other ). Therefore,  Table 2 provides  a classification  of all in- 
+vestigated  network-based  data sets with respect  to these two 
+properties.  A more detailed  overview  of network-based  intru- 
+sion detection  data sets with respect  to the data set proper-  
+--- Page 7 ---
+
+computers  & security  86 (2019)  147–167  153 Table 3 – Overview  of network-based  data sets. 
+Data set General  information  Nature  of the Data Data Volume  Recording  Environment  Evaluation  
+Year of 
+traffic 
+creation  Public 
+avail. Normal  
+traffic Attack  
+traffic Meta- 
+data Format  Anonymity  Count Duration  Kind of 
+Traffic Type of 
+Network  Compl.  
+Network  Predef.  
+Splits Balanced  Labeled  
+AWID ( Kolias 
+et al., 2016 ) 2015 o.r. yes yes yes other none 37M 
+packets  1 hour emulated  small 
+network  yes yes no yes 
+Booters  
+( Santanna  
+et al., 2015 ) 2013 yes no yes no packet yes 250GB 
+packets  2 days real small 
+network  no no no no 
+Botnet ( Beigi 
+et al., 2014 ) 2010/2014  yes yes yes yes packet none 14GB 
+packets  n.s. emulated  diverse 
+networks  yes yes no yes 
+CIC DoS ( Jazi 
+et al., 2017 ) 2012/2017  yes yes yes no packet none 4.6GB 
+packets  24 hours emulated  small 
+network  yes no no yes 
+CICIDS 2017 
+( Sharafaldin  
+et al., 2018 ) 2017 yes yes yes yes packet, bi. 
+flow none 3.1M 
+flows 5 days emulated  small 
+network  yes no no yes 
+CIDDS-001  ( Ring 
+et al., 2017c ) 2017 yes yes yes yes uni. flow yes (IPs) 32M flows 28 days emulated  
+and real small 
+network  yes no no yes 
+CIDDS-002  ( Ring 
+et al., 2017 ) 2017 yes yes yes yes uni. flow yes (IPs) 15M flows 14 days emulated  small 
+network  yes no no yes 
+CDX ( Sangster  
+et al., 2009 ) 2009 yes yes yes yes packet none 14GB 
+packets  4 days real small 
+network  yes no no no 
+CTU-13  ( Garcia 
+et al., 2014 ) 2013 yes yes yes yes uni. and bi. 
+flow, paket yes 
+(payload)  81M flows 125 hours real university  
+network  yes no no yes with  
+BG. 
+DARPA 
+( Lippmann  
+et al., 2000a,b  ) 1998/99  yes yes yes yes packet, logs none n.s. 7/5 weeks emulated  small 
+network  yes yes no yes 
+DDoS 2016 
+( Alkasassbeh  
+et al., 2016 ) 2016 yes yes yes no packet yes (IPs) 2.1M 
+packets  n.s. synthetic  n.s. n.s. no no yes 
+IRSC ( Zuech 
+et al., 2015 ) 2015 no yes yes no packet, flow n.s. n.s. n.s. real production  
+network  yes n.s. n.s. yes 
+ISCX 2012 
+( Shiravi et al., 
+2012 ) 2012 yes yes yes yes packet, bi. 
+flow none 2M flows 7 days emulated  small 
+network  yes no no yes 
+( continued  on next page ) 
+--- Page 8 ---
+
+154 computers  & security  86 (2019)  147–167  Table 3 ( continued  ) 
+Data set General  information  Nature  of the Data Data Volume  Recording  Environment  Evaluation  
+Year of 
+traffic 
+creation  Public 
+avail. Normal  
+traffic Attack  
+traffic Meta- 
+data Format  Anonymity  Count Duration  Kind of 
+Traffic Type of 
+Network  Compl.  
+Network  Predef.  
+Splits Balanced  Labeled  
+ISOT ( Saad et al., 
+2011 ) 2010 yes yes yes yes packet none 11GB 
+packets  n.s. emulated  small 
+network  yes no no yes 
+KDD CUP 99 
+( Stolfo, 2018 ) 1998 yes yes yes no other none 5M points n.s. emulated  small 
+network  yes yes no yes 
+Kent 2016 ( Kent, 
+2015a; 2015b ) 2016 yes yes n.s. no uni. flow, 
+logs yes (IPs, 
+Ports, date) 130M 
+flows 58 days real enterprise  
+network  yes no no no 
+Kyoto 2006 + 
+( Song et al., 
+2011 ) 2006 to 
+2009 yes yes yes no other yes (IPs) 93M 
+points 3 years real honeypots  no no no yes 
+LBNL ( Pang et al., 
+2005 ) 2004 / 
+2005 yes yes yes no packet yes 160M 
+packets  5 hours real enterprise  
+network  yes no no no 
+NDSec-1  ( Beer 
+et al., 2017 ) 2016 o.r. no yes no packet, logs none 3.5M 
+packets  n.s. emulated  small 
+network  yes no no yes 
+NGIDS-DS  
+( Haider et al., 
+2017 ) 2016 yes yes yes no packet, logs none 1M 
+packets  5 days emulated  small 
+network  yes no no yes 
+NSL-KDD  
+( Tavallaee  
+et al., 2009 ) 1998 yes yes yes no other none 150k 
+points n.s. emulated  small 
+network  yes yes no yes 
+PU-IDS ( Singh 
+et al., 2015 ) 1998 n.i.f. yes yes no other none 200k 
+points n.s. synthetic  small 
+network  yes no no yes 
+PUF ( Sharma  
+et al., 2018 ) 2018 n.i.f. yes yes no uni. flow yes (IPs) 300k flows 3 days real university  
+network  no no no yes (IDS)  
+SANTA ( Wheelus  
+et al., 2014 ) 2014 no yes yes no other yes 
+(payload)  n.s. n.s. real ISP yes n.s. no yes 
+SSENET-2011  
+( Vasudevan  
+et al., 2011 ) 2011 n.i.f. yes yes no other none n.s. 4 hours emulated  small 
+network  yes no no yes 
+SSENET-2014  
+( Bhattacharya  
+and 
+Selvakumar,  
+2014 ) 2011 n.i.f. yes yes no other none 200k 
+points 4 hours emulated  small 
+network  yes yes yes yes 
+( continued  on next page ) 
+--- Page 9 ---
+
+computers  & security  86 (2019)  147–167  155 Table 3 ( continued  ) 
+Data set General  information  Nature  of the Data Data Volume  Recording  Environment  Evaluation  
+Year of 
+traffic 
+creation  Public 
+avail. Normal  
+traffic Attack  
+traffic Meta- 
+data Format  Anonymity  Count Duration  Kind of 
+Traffic Type of 
+Network  Compl.  
+Network  Predef.  
+Splits Balanced  Labeled  
+SSHCure  
+( Hofstede  et al., 
+2014 ) 2013 / 
+2014 yes yes yes no uni. and bi. 
+flow, logs yes (IPs) 2.4GB 
+flows 
+(com- 
+pressed)  2 months  real university  
+network  yes no no indirect  
+TRAbID  ( Viegas 
+et al., 2017 ) 2017 yes yes yes no packet yes (IPs) 460M 
+packets  8 hours emulated  small 
+network  yes yes no yes 
+TUIDS ( Gogoi 
+et al., 2012 ), 
+( Bhuyan  et al., 
+2015 ) 2011 / 
+2012 o.r. yes yes no packet, bi. 
+flow none 250k flows 21 days emulated  medium  
+network  yes yes no yes 
+Twente ( Sperotto  
+et al., 2009 ) 2008 yes no yes yes uni. flow yes (IPs) 14M flows 6 days real honeypot  no no no yes 
+UGR’16 ( Maciá- 
+Fernández  
+et al., 2018 ) 2016 yes yes yes some uni. flows yes (IPs) 16900M  
+flows 4 months  real ISP yes yes no yes with 
+BG. 
+UNIBS ( Gringoli  
+et al., 2009 ) 2009 o.r. yes no no flow yes (IPs) 79k flows 3 days real university  
+network  yes no no no 
+Unified Host and 
+Network  
+( Turcotte  et al., 
+2017 ) 2017 yes yes n.s. no bi. flows, 
+logs yes (IPs and 
+date) 150GB 
+flows 
+(com- 
+pressed)  90 days real enterprise  
+network  yes no no no 
+UNSW-NB15  
+( Moustafa  and 
+Slay, 2015 ) 2015 yes yes yes yes packet, 
+other none 2M points 31 hours emulated  small 
+network  yes yes no yes 
+n.s. = not specified,  n.i.f. = no information  found, uni. flow = unidirectional  flow, bi. flow = bidirectional  flow, yes with BG. = yes with background  labels. 
+--- Page 10 ---
+
+156 computers  & security  86 (2019)  147–167  
+Table 4 – Attacks  within  the network-based  data sets of Table 3 . The column  Attacks  describes  the performed  attack sce- 
+narios  for each data set. Specific  attack information  (e.g. name of the executed  botnet  or type of executed  port scan) and 
+SLUused  tools are provided  in round brackets  if available.  
+Data set Attacks  
+AWID ( Kolias et al., 2016 ) Popular  attacks on 802.11 (e.g. authentication  request,  ARP flooding,  injection,  probe 
+request)  
+Booters  ( Santanna  et al., 2015 ) 9 different  DDoS attacks 
+Botnet ( Beigi et al., 2014 ) botnets  (Menti, Murlo, Neris, NSIS, Rbot, Sogou, Strom, Virut, Zeus) 
+CIC DoS ( Jazi et al., 2017 ) Application  layer DoS attacks (executed  through  ddossim,  Goldeneye,  hulk, RUDY, 
+Slowhttptest,  Slowloris)  
+CICIDS 2017 ( Sharafaldin  et al., 2018 ) botnet (Ares), cross-site-scripting,  DoS (executed  through  Hulk, GoldenEye,  Slowloris,  
+and Slowhttptest),  DDoS (executed  through  LOIC), heartbleed,  infiltration,  SSH brute 
+force, SQL injection  
+CIDDS-001  ( Ring et al., 2017c ) DoS, port scans (ping-scan,  SYN-Scan),  SSH brute force 
+CIDDS-002  ( Ring et al., 2017 ) port scans (ACK-Scan,  FIN-Scan,  ping-Scan,  UDP-Scan,  SYN-Scan)  
+CDX ( Sangster  et al., 2009 ) not specified  
+CTU-13  ( Garcia et al., 2014 ) botnets  (Menti, Murlo, Neris, NSIS, Rbot, Sogou, Virut) 
+DARPA ( Lippmann  et al., 2000a,b  ) DoS, privilege  escalation  (remote-to-local  and user-to-root),  probing  
+DDoS 2016 ( Alkasassbeh  et al., 2016 ) DDoS (HTTP flood, SIDDOS,  smurf ICMP flood, UDP flood) 
+IRSC ( Zuech et al., 2015 ) n.s. 
+ISCX 2012 ( Shiravi et al., 2012 ) Four attack scenarios  (1: Infiltrating  the network  from the inside; 2: HTTP DoS; 3: DDoS 
+using an IRC botnet; 4: SSH brute force) 
+ISOT ( Saad et al., 2011 ) botnet (Storm, Waledac)  
+KDD CUP 99 ( Stolfo, 2018 ) DoS, privilege  escalation  (remote-to-local  and user-to-root),  probing  
+Kent 2016 ( Kent, 2015a ), ( Kent, 2015b ) not specified  
+Kyoto 2006 + ( Song et al., 2011 ) Various  attacks against honeypots  (e.g. backscatter,  DoS, exploits,  malware,  port scans, 
+shellcode)  
+LBNL ( Pang et al., 2005 ) port scans 
+NDSec-1  ( Beer et al., 2017 ) botnet (Citadel),  brute force (against  FTP, HTTP and SSH), DDoS (HTTP floods, SYN 
+flooding  and UDP floods), exploits,  probe, spoofing,  SSL proxy, XSS/SQL  injection  
+NGIDS-DS  ( Haider et al., 2017 ) backdoors,  DoS, exploits,  generic,  reconnaissance,  shellcode,  worms 
+NSL-KDD  ( Tavallaee  et al., 2009 ) DoS, privilege  escalation  (remote-to-local  and user-to-root),  probing  
+PU-IDS ( Singh et al., 2015 ) DoS, privilege  escalation  (remote-to-local  and user-to-root),  probing  
+PUF ( Sharma  et al., 2018 ) DNS attacks 
+SANTA ( Wheelus  et al., 2014 ) (D)DoS (ICMP flood, RUDY, SYN flood), DNS amplification,  heartbleed,  port scans 
+SSENET-2011  ( Vasudevan  et al., 2011 ) DoS (executed  through  LOIC), port scans (executed  through  Angry IP Scanner,  Nessus,  
+Nmap), various  attack tools (e.g. metasploit)  
+SSENET-2014  ( Bhattacharya  and Selvakumar,  2014 ) botnet, flooding,  privilege  escalation,  port scans 
+SSHCure  ( Hofstede  et al., 2014 ) SSH attacks 
+TRAbID  ( Viegas et al., 2017 ) DoS (HTTP flood, ICMP flood, SMTP flood, SYN flood, TCP keepalive),  port scans 
+(ACK-Scan,  FIN-Scan,  NULL-Scan,  OS Fingerprinting,  Service Fingerprinting,  UDP-Scan,  
+XMAS-Scan)  
+TUIDS ( Gogoi et al., 2012 ), ( Bhuyan  et al., 2015 ) botnet (IRC), DDoS (Fraggle  flood, Ping flood, RST flood, smurf ICMP flood, SYN flood, 
+UDP flood), port scans (e.g. FIN-Scan,  NULL-Scan,  UDP-Scan,  XMAS-Scan),  coordinated  
+port scan, SSH brute force 
+Twente ( Sperotto  et al., 2009 ) Attacks  against a honeypot  with three open services  (FTP, HTTP, SSH) 
+UGR’16 ( Maciá-Fernández  et al., 2018 ) botnet (Neris), DoS, port scans, SSH brute force, spam 
+UNIBS ( Gringoli  et al., 2009 ) none 
+Unified Host and Network  ( Turcotte  et al., 2017 ) not specified  
+UNSW-NB15  ( Moustafa  and Slay, 2015 ) backdoors,  DoS, exploits,  fuzzers,  generic,  port scans, reconnaissance,  shellcode,  spam, 
+worms 
+ties of Section  4 is given in Table 3 . The presence  of specific  
+attack scenarios  is an important  aspect  when searching  for a 
+network-based  data set. Therefore,  Table 3 indicates  the pres- 
+ence of attack traffic while Table 4 provides  details  on spe- 
+cific attacks  within  a data set. Papers  on data sets describe  
+attacks  on different  abstraction  levels. Vasudevan  et al. (2011) , 
+for instance,  characterized  attack traffic within  their data set 
+(SSENET-2011)  as follows:  “Nmap,  Nessus,  Angry IP scanner,  Port 
+Scanner,  Metaploit,  Backtrack  OS, LOIC, etc., were some of the at- 
+tack tools used by the participants  to launch the attacks.” . In con- 
+trast, Ring et al. specify  the number  and different  types of exe- cuted port scans in their CIDDS-002  data set ( Ring et al., 2017 ). 
+Consequently,  the abstraction  level of attack descriptions  may 
+vary in Table 4 . A detailed  description  of all attack types is be- 
+yond the scope of this work. Rather,  we refer interested  read- 
+ers to the open access  paper “From Intrusion  Detection  to an In- 
+trusion  Response  System:  Fundamentals,  Requirements,  and Future 
+Directions” by Anwar  et al. (2017) . 
+Further,  some data sets are modifications  or combinations  
+of others.  Fig. 3 shows the interrelationships  among  several  
+well-known  data sets. 
+--- Page 11 ---
+
+computers  & security  86 (2019)  147–167  157 
+Fig. 3 – Relationships  between  the data sets in Table 3 . 
+5.1. Network-based  data sets in alphabetical  order 
+AWID ( Kolias et al., 2016 ). AWID is a publicly  available  data set 4 
+which is focused  on 802.11 networks.  Its creators  used a small 
+network  environment  (11 clients)  and captured  WLAN  traffic 
+in packet-based  format.  In one hour, 37 million  packets  were 
+captured.  156 attributes  are extracted  from each packet.  Ma- 
+licious  network  traffic was generated  by executing  16 specific  
+attacks  against  the 802.11 network.  AWID is labeled  and split 
+into a training  and a test subset.  
+Booters  ( Santanna  et al., 2015 ). Booters  are Distributed  De- 
+nial of Service  (DDoS)  attacks  offered  as a service  by crimi- 
+nals. Santanna  et al. (2015) published  a data set which includes  
+traces of nine different  booter  attacks  which were executed  
+against  a null-routed  IP address  within  their network  environ-  
+ment. The resulting  data set is recorded  in packet-based  for- 
+mat and consists  of more than 250 GB of network  traffic.  Indi- 
+vidual packets  are not labeled,  but the different  booter  attacks  
+4 http://icsdweb.aegean.gr/awid/index.html  are split into different  files. The data set is publicly  available  5 , 
+but names  of booters  are anonymized  for privacy  reasons.  
+Botnet  ( Beigi et al., 2014 ). The Botnet  data set is a com- 
+bination  of existing  data sets and is publicly  available.6 The 
+creators  of Botnet  used the overlay  methodology  of ( Aviv and 
+Haeberlen,  2011 ) to combine  (parts of) the ISOT ( Saad et al., 
+2011 ), ISCX 2012 ( Shiravi  et al., 2012 ) and CTU-13  ( Garcia et al., 
+2014 ) data sets. The resulting  data set contains  various  bot- 
+nets and normal  user behavior.  The Botnet  data set is divided  
+into a 5.3 GB training  subset  and a 8.5 GB test subset,  both in 
+packet-based  format.  
+CIC DoS ( Jazi et al., 2017 ). CIC DoS is a data set from the 
+Canadian  Institute  for Cybersecurity  and is publicly  available.7 
+The authors’  intention  was to create an intrusion  detection  
+data set with application  layer DoS attacks.  Therefore,  the au- 
+thors executed  eight different  DoS attacks  on the application  
+layer. Normal  user behavior  was generated  by combining  the 
+resulting  traces with attack-free  traffic from the ISCX 2012 
+( Shiravi  et al., 2012 ) data set. The resulting  data set is avail- 
+able in packet-based  format  and contains  24 hours of network  
+traffic.  
+CICIDS  2017 ( Sharafaldin  et al., 2018 ). CICIDS  2017 was 
+created  within  an emulated  environment  over a period of 5 
+days and contains  network  traffic in packet-based  and bidi- 
+rectional  flow-based  format.  For each flow, the authors  ex- 
+tracted  more than 80 attributes  and provide  additional  meta- 
+data about IP addresses  and attacks.  Normal  user behavior  is 
+executed  through  scripts.  The data set contains  a wide range 
+of attack types like SSH brute force, heartbleed,  botnet,  DoS, 
+DDoS, web and infiltration  attacks.  CICIDS  2017 is publicly  
+available  8 . 
+CIDDS-001  ( Ring et al., 2017c ). The CIDDS-001  data set was 
+captured  within  an emulated  small business  environment  in 
+2017, contains  four weeks of unidirectional  flow-based  net- 
+work traffic,  and comes  along with a detailed  technical  report 
+with additional  information.  As special  feature,  the data set 
+encompasses  an external  server which was attacked  in the 
+internet.  In contrast  to honeypots,  this server was also reg- 
+ularly used by the clients  from the emulated  environment.  
+Normal  and malicious  user behavior  was executed  through  
+python  scripts  which are publicly  available  on GitHub.9 These 
+scripts  allow an ongoing  generation  of new data sets and 
+can be used by other researches.  The CIDDS-001  data set is 
+publicly  available  10 and contains  SSH brute force, DoS and 
+port scan attacks  as well as several  attacks  captured  from the 
+wild. 
+CIDDS-002  ( Ring et al., 2017 ). CIDDS-002  is a port scan data 
+set which is created  based on the scripts  of CIDDS-001.  The 
+data set contains  two weeks of unidirectional  flow-based  net- 
+work traffic within  an emulated  small business  environment.  
+CIDDS-002  contains  normal  user behavior  as well as a wide 
+range of different  port scan attacks.  A technical  report pro- 
+vides additional  meta information  about the data set where 
+5 https://www.simpleweb.org/wiki/index.php  
+6 http://www.unb.ca/cic/datasets/botnet.html  
+7 http://www.unb.ca/cic/datasets/dos-dataset.html  
+8 http://www.unb.ca/cic/datasets/ids-2017.html  
+9 https://github.com/markusring/CIDDS  
+10 http://www.hs-coburg.de/cidds  
+--- Page 12 ---
+
+158 computers  & security  86 (2019)  147–167  
+external  IP addresses  are anonymized.  The data set is publicly  
+available.11 
+CDX ( Sangster  et al., 2009 ). Sangster  et al. (2009) propose  a 
+concept  to create network-based  data sets from network  war- 
+fare competitions  and discuss  the advantages  and disadvan-  
+tages of such an approach  comprehensively.  The CDX data set 
+contains  network  traffic of a four day network  warfare  com- 
+petition  in 2009. The traffic is recorded  in packet-based  for- 
+mat and is publicly  available.12 CDX contains  normal  user be- 
+haviour  as well as several  types of attacks.  An additional  plan 
+describes  metadata  about the network  structure  and IP ad- 
+dresses,  but the individual  packets  are not labeled.  Further,  
+host-based  log files and warnings  from an IDS are available.  
+CTU-13  ( Garcia et al., 2014 ). The CTU-13  data set was cap- 
+tured in the year 2013 and is available  in three formats:  packet,  
+unidirectional  flow, and bidirectional  flow.13 It was captured  in 
+a university  network  and distinguishes  13 scenarios  contain-  
+ing different  botnet  attacks.  Additional  information  about in- 
+fected hosts is provided  at the website.  Traffic was labeled  us- 
+ing a three stage approach.  In the first stage, all traffic to and 
+from infected  hosts is labeled  as botnet.  In the second  stage, 
+traffic which matches  specific  filters is labeled  as normal.  Re- 
+maining  traffic is labeled  as background.  Consequently,  back- 
+ground  traffic could be normal  or malicious.  The authors  rec- 
+ommend  a split of their data set into training  and test subsets  
+( Garcia et al., 2014 ). 
+DARPA  ( Lippmann  et al., 2000a,b  ). The DARPA  1998/99  data 
+sets are the most popular  data sets for intrusion  detection  and 
+were created  at the MIT Lincoln  Lab within  an emulated  net- 
+work environment.  The DARPA  1998 and DARPA  1999 data sets 
+contain  seven and, respectively,  five weeks of network  traffic 
+in packet-based  format,  including  various  kinds of attacks  like 
+DoS, buffer overflow,  port scans, or rootkits.  Additional  infor- 
+mation  as well as download  links can be found at the web- 
+site.14 In spite (or because)  of their wide distribution,  the data 
+sets are often criticized  for artificial  attack injections  or the 
+large amount  of redundancy  ( McHugh,  2000; Tavallaee  et al., 
+2009 ). 
+DDoS 2016 ( Alkasassbeh  et al., 2016 ). Alkasassbeh  et al. 
+(2016) published  a packet-based  data set which was created  
+using the network  simulator  NS2 in 2016. Detailed  informa-  
+tion about the simulated  network  environment  is not avail- 
+able. The DDoS 2016 data set focuses  on different  types of 
+DDoS attacks.  In addition  to normal  network  traffic,  the data 
+set contains  four different  types of DDoS attacks:  UDP flood, 
+smurf,  HTTP flood, and SIDDOS.  The data set contains  2.1 mil- 
+lion packets  and can be downloaded  at researchgate.15 
+IRSC ( Zuech et al., 2015 ). The IRSC data set was recorded  in 
+2015, using an inventive  approach.  Real network  traffic with 
+normal  user behavior  and attacks  from the internet  were cap- 
+tured. In addition  to that, additional  attacks  were run manu-  
+11 http://www.hs-coburg.de/cidds  
+12 https://www.usma.edu/crc/sitepages/datasets.aspx  
+13 https://mcfp.weebly.com/the-  ctu- 13- dataset-  a- labeled-  
+dataset-  with- botnet-  normal-  and- background-  traffic.html  
+14 https://www.ll.mit.edu/ideval/docs/index.html  
+15 https://www.researchgate.net/publication/292967044  _ 
+Dataset-  _ Detecting  _ Distributed  _ Denial _ of _ Service  _ Attacks  _ 
+Using _ Data _ Mining  _ Techniques  ally. The IDS SNORT  16 and manual  inspection  were used for 
+labeling.  Since the data set is not publicly  available  due to pri- 
+vacy concerns,  we are not able to fill all properties  in Table 3 . 
+ISCX 2012 ( Shiravi  et al., 2012 ). The ISCX data set was 
+created  in 2012 by capturing  traffic in an emulated  network  
+environment  over one week. The authors  used a dynamic  
+approach  to generate  an intrusion  detection  data set with nor- 
+mal as well as malicious  network  behavior.  So-called  αprofiles  
+define attack scenarios  while βprofiles  characterize  normal  
+user behavior  like writing  e-mails  or browsing  the web. These 
+profiles  are used to create a new data set in packet-based  
+and bidirectional  flow-based  format.  The dynamic  approach  
+allows an ongoing  generation  of new data sets. ISCX can be 
+downloaded  at the website  17 and contains  various  types of at- 
+tacks like SSH brute force, DoS or DDoS. 
+ISOT ( Saad et al., 2011 ). The ISOT data set was created  in 
+2010 by combining  normal  network  traffic from Traffic Lab 
+at Ericsson  Research  in Hungary  ( Szabó et  al., 2008 ) and the 
+Lawrence  Berkeley  National  Lab (LBNL)  ( Pang et al., 2005 ) with 
+malicious  network  traffic from the French  chapter  of the hon- 
+eynet project.18 ISOT was used for detecting  P2P botnets  ( Saad 
+et al., 2011 ). The resulting  data set is publicly  available  19 and 
+contains  11 GB of packet-based  data in pcap format.  
+KDD CUP 99 ( Stolfo, 2018 ). KDD CUP 99 is based on the 
+DARPA  data set and among  the most widespread  data sets 
+for intrusion  detection.  Since it is neither  in standard  packet-  
+, nor in flow-based  format,  it belongs  to category  other . The 
+data set contains  basic attributes  about TCP connections  and 
+high-level  attributes  like number  of failed logins,  but no IP 
+addresses.  KDD CUP 99 encompasses  more than 20 different  
+types of attacks  (e.g. DoS or buffer overflow)  and comes  along 
+with an explicit  test subset.  The data set includes  5 million  
+data points and can be downloaded  freely.20 
+Kent 2016 ( Kent, 2015a ), ( Kent, 2015b ). This data set was 
+captured  over 58 days at the Los Alamos  National  Laboratory  
+network.  It contains  around  130 million  flows of unidirectional  
+flow-based  network  traffic as well as several  host-based  log 
+files. Network  traffic is heavily  anonymized  for privacy  rea- 
+sons. The data set is not labeled  and can be downloaded  at 
+the website.21 
+Kyoto 2006+ ( Song et al., 2011 ). Kyoto 2006+ is a publicly  
+available  honeypot  data set 22 which contains  real network  
+traffic,  but includes  only a small amount  and a small range 
+of realistic  normal  user behavior.  Kyoto 2006+ is categorized  
+as other since the IDS Bro 23 was used to convert  packet-based  
+traffic into a new format  called sessions.  Each session  com- 
+prises 24 attributes,  14 out of which characterize  statistical  in- 
+formation  inspired  by the KDD CUP 99 data set. The remaining  
+10 attributes  are typical  flow-based  attributes  like IP addresses  
+(in anonymized  form), ports, or duration.  A label attribute  in- 
+dicates  the presence  of attacks.  Data were captured  over three 
+16 https://www.snort.org/  
+17 http://www.unb.ca/cic/datasets/ids.html  
+18 http://honeynet.org/chapters/france  
+19 https://www.uvic.ca/engineering/ece/isot/datasets/  
+20 http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html  
+21 https://csr.lanl.gov/data/cyber1/  
+22 http://www.takakura.com/Kyoto  _ data/ 
+23 https://www.bro.org/  
+--- Page 13 ---
+
+computers  & security  86 (2019)  147–167  159 
+years. As a consequence  of that unusually  long recording  pe- 
+riod, the data set contains  about 93 million  sessions.  
+LBNL ( Pang et al., 2005 ). Research  on intrusion  detection  
+data sets often refers to the LBNL data set. Thus, for the sake 
+of completeness,  this data set is also added to the list. The cre- 
+ation of the LNBL data set was mainly  motivated  by analyzing  
+characteristics  of network  traffic within  enterprise  networks,  
+rather than publishing  intrusion  detection  data. According  to 
+its creators,  the data set might still be used as background  
+traffic for security  researchers  as it contains  almost  exclu- 
+sively normal  user behavior.  The data set is not labeled,  but 
+anonymized  for privacy  reasons,  and contains  more than 100 
+hours of network  traffic in packet-based  format.  The data set 
+can be downloaded  at the website.24 
+NDSec-1  ( Beer et al., 2017 ). The NDSec-1  data set is remark-  
+able since it is designed  as an attack composition  for net- 
+work security.  According  to the authors,  this data set can be 
+reused  to salt existing  network  traffic with attacks  using over- 
+lay methodologies  like ( Aviv and Haeberlen,  2011 ). NDSec-1  is 
+publicly  available  on request  25 and was captured  in packet-  
+based format  in 2016. It contains  additional  syslog and win- 
+dows event log information.  The attack composition  of NDSec-  
+1 encompasses  botnet,  brute force attacks  (against  FTP, HTTP 
+and SSH), DoS (HTTP flooding,  SYN flooding,  UDP flooding),  ex- 
+ploits, port scans, spoofing,  and XSS/SQL  injection.  
+NGIDS-DS  ( Haider  et al., 2017 ). The NGIDS-DS  data set con- 
+tains network  traffic in packet-based  format  as well as host- 
+based log files. It was generated  in an emulated  environment,  
+using the IXIA Perfect  Storm tool to generate  normal  user be- 
+havior as well as attacks  from seven different  attack families  
+(e.g. DoS or worms).  Consequently,  the quality  of the generated  
+data depends  primarily  on the IXIA Perfect  Storm hardware.26 
+The labeled  data set contains  approximately  1 million  packets  
+and is publicly  available.27 
+NSL-KDD  ( Tavallaee  et al., 2009 ). NSL-KDD  enhances  the 
+KDD CUP 99. A major criticism  against  the KDD CUP 99 data 
+set is the large amount  of redundancy(  Tavallaee  et al., 2009 ). 
+Therefore,  the authors  of NSL-KDD  removed  duplicates  from 
+the KDD CUP 99 data set and created  more sophisticated  sub- 
+sets. The resulting  data set contains  about 150,000  data points 
+and is divided  into predefined  training  and test subsets  for in- 
+trusion  detection  methods.  NSL-KDD  uses the same attributes  
+as KDD CUP 99 and belongs  to the category  other . Yet, it should  
+be noted that the underlying  network  traffic of NSL-KDD  dates 
+back to the year 1998. The data set is publicly  available.28 
+PU-IDS  ( Singh et al., 2015 ). The PU-IDS  data set is a deriva-  
+tive of the NSL-KDD  data set. The authors  developed  a gen- 
+erator which extracts  statistics  of an input data set and uses 
+these statistics  to generate  new synthetic  instances.  As a con- 
+sequence,  the work of Singh et al. (2015) could be seen as a traf- 
+fic generator  to create PU-IDS  which contains  about 200,000  
+data points and has the same attributes  and format  as the 
+NSL-KDD  data set. As NSL-KDD  is based on KDD CUP 1999 
+which in turn is extracted  from DARPA  1998, the year of cre- 
+24 http://icir.org/enterprise-tracing/  
+25 http://www2.hs-  fulda.de/NDSec/NDSec-  1/ 
+26 https://www.ixiacom.com/products/perfectstorm  
+27 https://research.unsw.edu.au/people/professor-  jiankun-  hu 
+28 http://www.unb.ca/cic/datasets/nsl.html  ation is set to 1998 since the input for the traffic generator  was 
+captured  back then. 
+PUF ( Sharma  et al., 2018 ). Recently,  Sharma  et al. (2018) pub- 
+lished the flow-based  PUF data set which was captured  over 
+three days within  a campus  network  and contains  exclusively  
+DNS connections.  38,120 out of a total of 298,463  unidirec-  
+tional flows are malicious  while the remaining  ones reflect 
+normal  user activity.  All flows are labeled  using logs of an in- 
+trusion  prevention  system.  For privacy  reasons,  IP addresses  
+are removed  from the data set. The authors  intend  to make 
+PUF publicly  available.  
+SANTA  ( Wheelus  et al., 2014 ). The SANTA  data set was 
+captured  within  an ISP environment  and contains  real net- 
+work traffic.  The network  traffic is labeled  through  an exhaus-  
+tive manual  procedure  and stored in a so-called  session-based  
+format.  This data format  is similar  to NetFlow  but enriched  
+with additional  attributes  which are calculated  by using in- 
+formation  from packet-based  data. The authors  spent much 
+effort on the generation  of additional  attributes  which should  
+enhance  intrusion  detection  methods.  SANTA  is not publicly  
+available.  
+SSENet-2011  ( Vasudevan  et al., 2011 ). SSENet-2011  was 
+captured  within  an emulated  environment  over four hours. It 
+contains  several  attacks  like DoS or port scans. Browsing  ac- 
+tivities  of participants  generated  normal  user behavior.  Each 
+data point is characterized  by 24 attributes.  The data set be- 
+longs to the category  other since the tool Tstat was used to ex- 
+tract adjusted  data points from packet-based  traffic.  We found 
+no information  about public availability.  
+SSENet-2014  ( Bhattacharya  and Selvakumar,  2014 ). 
+SSENet-2014  is created  by extracting  attributes  from the 
+packet-based  files of SSENet-2011  ( Vasudevan  et al., 2011 ). 
+Thus, like SSENet-2011,  the data set is categorized  as other . 
+The authors  extracted  28 attributes  for each data point which 
+describe  host-based  and network-based  attributes.  The cre- 
+ated attributes  are in line with KDD CUP 1999. SSENet-2014  
+contains  200,000  labeled  data points and is divided  into a 
+training  and test subnet.  SSENet-2014  is the only known  data 
+set with a balanced  training  subset.  Again, no information  on 
+public availability  could be found.  
+SSHCure  ( Hofstede  et al., 2014 ). Hofstede  et al. (2014) pro- 
+pose SSHCure,  a tool for SSH attack detection.  To evaluate  their 
+work, the authors  captured  two data sets (each with a period 
+of one month)  within  a university  network.  The resulting  data 
+sets are publicly  available  29 and contain  exclusively  SSH net- 
+work traffic.  The flow-based  network  traffic is not directly  la- 
+beled. Instead,  the authors  provide  additional  host-based  logs 
+files which may be used to check if SSH login attempts  were 
+successful  or not. 
+TRAbID  ( Viegas  et al., 2017 ). Viegas  et al. proposed  the TRA- 
+bID database  ( Viegas  et al., 2017 ) in 2017. This database  con- 
+tains 16 different  scenarios  for evaluating  IDS. Each scenario  
+was captured  within  an emulated  environment  (1 honeypot  
+server and 100 clients).  In each scenario,  the traffic was cap- 
+tured for a period of 30 minutes  and some attacks  were exe- 
+cuted. To label the network  traffic,  the authors  used the IP ad- 
+dresses  of the clients.  All clients  were Linux machines.  Some 
+29 https://www.simpleweb.org/wiki/index.php  
+--- Page 14 ---
+
+160 computers  & security  86 (2019)  147–167  
+clients  exclusively  performed  attacks  while most of the clients  
+exclusively  handled  normal  user requests  to the honeypot  
+server.  Normal  user behavior  includes  HTTP, SMTP, SSH and 
+SNMP traffic while malicious  network  traffic encompasses  
+port scans and DoS attacks.  TRAbID  is publicly  available.30 
+TUIDS  ( Gogoi et al., 2012 ), ( Bhuyan  et al., 2015 ). The la- 
+beled TUIDS data set can be divided  into three parts: TUIDS 
+Intrusion  data set, TUIDS coordinated  scan data set and TU- 
+IDS DDoS data set. As the names  already  indicate,  the data 
+sets contain  normal  user behavior  and primarily  attacks  like 
+port scans or DDoS. Data were generated  within  an emulated  
+environment  which contains  around  250 clients.  Traffic was 
+captured  in packet-based  and bidirectional  flow-based  format.  
+Each subset  spans a period of seven days and all three subsets  
+contain  around  250,000  flows. Unfortunately,  the link 31 to the 
+data set in the original  publication  seems to be outdated.  How- 
+ever, the authors  respond  to e-mail  requests.  
+Twente  ( Sperotto  et al., 2009 ). Sperotto  et al. (2009) pub- 
+lished one of the first flow-based  intrusion  detection  data sets 
+in 2008. This data set spans six days of traffic involving  a hon- 
+eypot server which offers web, FTP, and SSH services.  Due to 
+this approach,  the data set contains  only network  traffic from 
+the honeypot  and nearly all flows are malicious  without  nor- 
+mal user behavior.  The authors  analyzed  log files and traffic in 
+packet-based  format  for labeling  the flows of this data set. The 
+data set is publicly  available  32 and IP addresses  were removed  
+due to privacy  concerns.  
+UGR’16  ( Maciá-Fernández  et al., 2018 ). UGR’16  is a unidirec-  
+tional flow-based  data set. Its focus lies on capturing  periodic  
+effects  in an ISP environment.  Thus, it spans a period of four 
+months  and contains  16,900 million  unidirectional  flows. IP 
+addresses  are anonymized  and the flows are labeled  as nor- 
+mal, background,  or attack.  The authors  explicitly  executed  
+several  attacks  (botnet,  DoS, and port scans) within  that data 
+set. The corresponding  flows are labeled  as attacks  and some 
+other attacks  were identified  and manually  labeled  as attack.  
+Injected  normal  user behavior  and traffic which matches  cer- 
+tain patterns  are labeled  as normal.  However,  most of the traf- 
+fic is labeled  as background  which could be normal  or an at- 
+tack. The data set is publicly  available.33 
+UNIBS 2009 ( Gringoli  et al., 2009 ). Like LBNL ( Pang et al., 
+2005 ), the UNIBS 2009 data set was not created  for intrusion  
+detection.  Since UNIBS 2009 is referenced  in other work, it is 
+still added to the list. Gringoli  et al. (2009) used the data set to 
+identify  applications  (e.g. web browsers,  Skype or mail clients)  
+based on their flow-based  network  traffic.  UNIBS 2009 con- 
+tains around  79,000 flows without  malicious  behavior.  Since 
+the labels just describe  the application  protocols  of the flows, 
+network  traffic is not categorized  as normal  or attack.  Conse-  
+quently,  the property  label in the categorization  scheme  is set 
+to no . The data set is publicly  available.34 
+Unified  Host and Network  Data Set ( Turcotte  et al., 2017 ). 
+This data set contains  host and network-based  data which 
+were captured  within  a real environment,  the LANL (Los 
+30 https://secplab.ppgia.pucpr.br/trabid  
+31 http://agnigarh.tezu.ernet.in/  ∼dkb/resources.html  
+32 https://www.simpleweb.org/wiki/index.php  
+33 https://nesg.ugr.es/nesg-ugr16/index.php  
+34 http://netweb.ing.unibs.it/  ∼ntw/tools/traces/)  Alamos  National  Laboratory)  enterprise  network.  For privacy  
+reasons,  attributes  like IP addresses  and timestamps  were 
+anoynmized  in bidirectional  flow-based  network  traffic files. 
+The network  traffic was collected  for a period of 90 days and 
+has no labels. The data set is publicly  available.35 
+UNSW-NB15  ( Moustafa  and Slay, 2015 ). The UNSW-NB15  
+data set encompasses  normal  and malicious  network  traffic in 
+packet-based  format  which was created  using the IXIA Perfect  
+Storm tool in a small emulated  environment  over 31 hours. 
+It contains  nine different  families  of attacks  like backdoors,  
+DoS, exploits,  fuzzers,  or worms.  The data set is also available  
+in flow-based  format  with additional  attributes.  UNSW-NB15  
+comes  along with predefined  splits for training  and test. The 
+data set includes  45 distinct  IP addresses  and is publicly  avail- 
+able.36 
+6. Other  data sources  
+Besides  network-based  data sets, there are some other data 
+sources  for packet-based  and flow-based  network  traffic.  In 
+the following,  we shortly  discuss  data repositories  and traffic 
+generators.  
+6.1. Data repositories  
+Besides  traditional  data sets, several  data repositories  can be 
+found on the internet.  Since type and structure  of those repos- 
+itories differ greatly,  we abstain  from a tabular  comparison.  
+Instead,  we give a brief textual  overview  in alphabetical  order. 
+Repositories  have been checked  on 26 February  2019 with re- 
+spect to actuality.  
+AZSecure  37 . AZSecure  is a repository  of network  data at 
+the University  of Arizona  for use by the research  community.  
+It includes  various  data sets in pcap, arff and other formats  
+some of which are labeled,  while other are not. AZSecure  en- 
+compasses,  among  others,  the CTU-13  data set ( Garcia et al., 
+2014 ) or the Unified  Host and Network  Data Set ( Turcotte  et al., 
+2017 ). The repository  is managed  and contains  some recent 
+data sets. 
+CAIDA  38 . CAIDA  collects  different  types of data sets, with 
+varying  degree  of availability  (public  access  or on request),  and 
+provides  a search  engine.  Generally,  a form needs to be filled 
+out to gain access  to some of the public data sets. Additionally,  
+most network-based  data sets can exclusively  be requested  
+through  an IMPACT  (see below)  login since CAIDA  supports  
+IMPACT  as Data Provider.  The repository  is managed  and up- 
+dated with new data. 
+Contagiodump  39 . Contagiodump  is a blog about malware  
+dumps.  There are several  posts each year and the last post 
+was on 20th March 2018. The website  contains,  among  other 
+things,  a collection  of pcap files from malware  analysis.  
+35 https://csr.lanl.gov/data/2017.html  
+36 https://www.unsw.adfa.edu.au/unsw-  canberra-  cyber/ 
+cybersecurity/ADFA-  NB15- Datasets/  
+37 https://www.azsecure-  data.org/other-  data.html  
+38 http://www.caida.org/data/overview/  
+39 http://contagiodump.blogspot.com/  
+--- Page 15 ---
+
+computers  & security  86 (2019)  147–167  161 
+covert.io  40 . Covert.io  is a blog about security  and machine  
+learning  by Jason Trost. The blog maintains  different  lists of 
+tutorials,  GitHub  repositories,  research  papers  and other blogs 
+concerning  security,  big data, and machine  learning,  but also a 
+collection  of various  security-based  data resources  41 . The lat- 
+est entry was posted  on August  14, 2017 by Jason Trost. 
+DEF CON CTF Archive  42 . DEF CON is a popular  annual  
+hacker  convention.  The event includes  a capture  the flag (CTF) 
+competition  where every team has to defend  their own net- 
+work against  the other teams whilst simultaneously  hack- 
+ing the opponents’  networks.  The competition  is typically  
+recorded  and available  in packet-based  format  on the web- 
+site. Given the nature  of the competition,  the recorded  data al- 
+most exclusively  contain  attack traffic and little normal  user 
+behavior.  The website  is current  and updated  annually  with 
+new data from the CTF competitions.  
+IMPACT  43 . IMPACT  Cyber Trust, formerly  known  as PRE- 
+DICT, is a community  of data providers,  cyber security  re- 
+searchers  as well as coordinators.  IMPACT  is administrated  
+and up-to-date.  A data catalog  is given on the site to browse  
+the data sets provided  by the community.  The data providers  
+are (among  others)  DARPA,  the MIT Lincoln  Laboratory,  or the 
+UCSD - Center  for Applied  Internet  Data Analysis  (CAIDA).  
+However,  the data sets can only be downloaded  with an ac- 
+count that may be requested  exclusively  by researchers  from 
+eight selected  countries  approved  by the US Department  of 
+Homeland  Security.  As Germany  is not among  the approved  
+locations,  no further  statements  about the data sets can be 
+made. 
+Internet  Traffic Archive  44 . The Internet  Traffic Archive  is 
+a repository  of internet  traffic traces sponsored  by ACM SIG- 
+COMM.  The list includes  four extensively  anonymized  packet-  
+based traces.  In particular,  the payload  has been removed,  all 
+timestamps  are relative  to the first packet,  and IP addresses  
+have been changed  to numerical  representations.  The packet-  
+based data sets were captured  more than 20 years ago and can 
+be downloaded  without  restriction.  
+Kaggle  45 . Kaggle  is an online platform  for sharing  and pub- 
+lishing  data sets. The platform  contains  security-based  data 
+sets like KDD CUP 99 and has a search  function.  It allows reg- 
+istered  users also to upload  and explore  data analysis  models.  
+Malware  Traffic Analysis  46 . Malware  Traffic Analysis  is a 
+repository  which contains  blog posts and exercises  related  to 
+network  traffic analysis,  e.g. identifying  malicious  activities.  
+Exercises  come along with packet-based  network  traffic which 
+is indirectly  labeled  through  the provided  answers  to the exer- 
+cises. Downloadable  files are secured  with a password  which 
+can be obtained  from the website.  The repository  is recent and 
+new blog posts are issued almost  daily. 
+Mid-Atlantic  CCDC 47 . Similar  to DEFCON  CTF, MACCDC  is 
+an annual  competition  hosted  by the US National  CyberWatch  
+40 http://www.covert.io  
+41 http://www.covert.io/data-links/  
+42 https://www.defcon.org/html/links/dc-ctf.html  
+43 https://www.impactcybertrust.org/  
+44 http://ita.ee.lbl.gov/html/traces.html  
+45 https://www.kaggle.com/  
+46 http://malware-  traffic- analysis.net/  
+47 http://maccdc.org/  Center  where the captured  packet-based  traffic of the compe-  
+titions  is made available.  Teams  have to assure  that services  
+provided  by their network  are not interrupted  in any way. Sim- 
+ilar to the DEFCON  CTF archives,  MACCDC  data contain  almost  
+exclusively  attack traffic and little normal  user behavior.  The 
+latest competition  took place in 2018. 
+MAWILab  48 . The MAWILab  repository  contains  a huge 
+amount  of network  traffic over a long time which is captured  
+at a link between  USA and Japan. For each day since 2007, the 
+repository  contains  a 15 minute  trace in packet-based  format.  
+For privacy  reasons,  IP addresses  are anonymized  and packet  
+payloads  are omitted.  The captured  network  traffic is labeled  
+using different  anomaly  detection  methods  ( Fontugne  et al., 
+2010 ). 
+MWS 49 . The anti malware  engineering  workshop  (MWS)  
+is an annual  workshop  about malware  in Japan. The work- 
+shop comes  along with several  MWS data sets which con- 
+tain packet-based  network  data as well as host-based  log files. 
+However,  the data sets are only shared  within  the MWS com- 
+munity  which consists  of researches  in industry  and academia  
+in Japan ( Hatada  et al., 2015 ). The latest workshop  took place 
+in 2018. 
+NETRECSEC  50 . NETRECSEC  maintains  a comprehensive  
+list of publicly  available  pcap files on the internet.  Similar  to 
+SecRepo,  NETRECSEC  refers to many repositories  mentioned  
+in this work, but also incorporates  additional  sources  like hon- 
+eypot dumps  or CTF events.  Its up-to-dateness  can only be 
+judged  indirectly  as NETRECSEC  also refers to data traces from 
+the year 2018. 
+OpenML  51 . OpenML  is an update-to-date  platform  for shar- 
+ing machine  learning  data sets. It contains  also security-based  
+data sets like KDD CUP 99. The platform  has a search  function  
+and comes  along with other possibilities  like creating  scien- 
+tific tasks. 
+RIPE Data Repository  52 . The RIPE data repository  hosts 
+a number  of data sets. Yet, no new data sets have been in- 
+cluded  for several  years. To obtain access,  users need to create 
+an account  and accept  the terms and conditions  of the data 
+sets. The repository  also mirrors  some data available  from the 
+Waikato  Internet  Traffic Storage  (see below).  
+SecRepo  53 . SecRepo  lists different  samples  of security  re- 
+lated data and is maintained  by Mike Sconzo.  The list is di- 
+vided in the following  categories:  Network,  Malware,  System,  
+File, Password,  Threat  Feeds and Other. The very detailed  list 
+contains  references  to typical  data sets like DARPA,  but also 
+to many repositories  (e.g. NETRECSEC).  The website  was last 
+updated  on November  20, 2018. 
+Simple  Web 54 . Simple  Web provides  a database  collection  
+and information  on network  management  tutorials  and soft- 
+ware. The repository  includes  traces in different  formats  like 
+packet  or flow-based  network  traffic.  It is hosted  by the Univer-  
+sity of Twente,  maintained  by members  of the DACS (Design  
+48 http://www.fukuda-lab.org/mawilab/  
+49 https://www.iwsec.org/mws/2018/en.html  
+50 http://www.netresec.com/?page=PcapFiles  
+51 https://www.openml.org/home  
+52 https://labs.ripe.net/datarepository  
+53 http://www.secrepo.com/  
+54 https://www.simpleweb.org/wiki/index.php/  
+--- Page 16 ---
+
+162 computers  & security  86 (2019)  147–167  
+and Analysis  of Communication  Systems)  group, and updated  
+with new results  from this group. 
+UMassTraceRepository  55 . UMassTraceRepository  provides  
+the research  community  with several  traces of network  traf- 
+fic. Some of these traces have been collected  by the suppli-  
+ers of the archive  themselves  while others have been donated.  
+The archive  includes  19 packet-based  data sets from different  
+sources.  The most recent data sets were captured  in 2018. 
+VAST Challenge  56 . The IEEE Visual Analytics  Science  and 
+Technology  (VAST)  challenge  is an annual  contest  with the 
+goal of advancing  the field of visual analytics  through  compe-  
+tition. In some challenges,  network  traffic data were provided  
+for contest  tasks. For instance,  the second  mini challenge  of 
+the VAST 2011 competition  involved  an IDS log consisting  of 
+packet-based  network  traffic in pcap format.  A similar  setup 
+was used in a follow-up  VAST challenge  in 2012. Furthermore,  
+a VAST challenge  in 2013 deals with flow-based  network  traf- 
+fic. 
+WITS: Waikato  Internet  Traffic Storage  57 . This website  
+aims to list all internet  traces possessed  by the WAND  re- 
+search  group. The data sets are typically  available  in packet-  
+based format  and free to download  from the Waikato  servers.  
+However,  the repository  has not been updated  for a long time. 
+6.2. Traffic generators  
+Another  source  of network  traffic for intrusion  detection  re- 
+search  are traffic generators.  Traffic generators  are models  
+which create synthetic  network  traffic.  In most cases, traffic 
+generators  use user-defined  parameters  or extract  basic prop- 
+erties of real network  traffic to create new synthetic  network  
+traffic.  While data sets and data repositories  provide  fixed 
+data, traffic generators  allow the generation  of network  traffic 
+which can be adapted  to certain  network  structures.  
+For instance,  the traffic generators  FLAME  ( Brauckhoff  
+et al., 2008 ) and ID2T ( Vasilomanolakis  et al., 2016 ) use real 
+network  traffic as input. This input traffic should  serve as a 
+baseline  for normal  user behavior.  Then, FLAME  and ID2T add 
+malicious  network  traffic by editing  values  of input traffic or by 
+injecting  synthetic  flows under consideration  of typical  attack 
+patterns.  Siska et al. (2010) present  a graph-based  flow gener- 
+ator which extracts  traffic templates  from real network  traf- 
+fic. Then, their generator  uses these traffic templates  in order 
+to create new synthetic  flow-based  network  traffic.  Ring et al. 
+(2019) adapted  GANs for generating  synthetic  network  traffic.  
+The authors  use Improved  Wasserstein  Generative  Adversar-  
+ial Networks  (WGAN-GP)  to create flow-based  network  traffic.  
+The WGAN-GP  is trained  with real network  traffic and learns 
+traffic characteristics.  After training,  the WGAN-GP  is able to 
+create new synthetic  flow-based  network  traffic with similar  
+characteristics.  Erlacher  and Dressler’s  traffic generator  GEN- 
+ESIDS ( Erlacher  and Dressler,  2018 ) generates  HTTP attack traf- 
+fic based on user defined  attack descriptions.  There are many 
+additional  traffic generators  which are not discussed  here for 
+the sake of brevity.  Besides  those traffic generators,  there are 
+many other traffic generators  which are not discussed  here. 
+55 http://traces.cs.umass.edu/  
+56 http://vacommunity.org/tiki-index.php  
+57 https://wand.net.nz/wits/catalogue.php  Instead,  we refer to Molnár  et al. (2013) for an overview  of traf- 
+fic generators.  
+Brogi and Tong (2017) come up with another  idea that in 
+some sense resembles  traffic generators.  Starting  out from the 
+problem  of sharing  data sets due to privacy  concerns,  they 
+present  Moirai,  a framework  which allows users to share com- 
+plete scenarios  instead  of data sets. The idea behind  Moirai is 
+to replay attack scenarios  in virtual  machines  such that users 
+can generate  data on the fly. 
+A third approach  - which is also categorized  into the larger 
+context  of traffic generators  - are frameworks  which support  
+users to label real network  traffic.  Rajasinghe  et al. present  
+such a framework  called INSecS-DCS  ( Rajasinghe  et al., 2018 ) 
+which captures  network  traffic at network  devices  or uses al- 
+ready captured  network  traffic in pcap files as input. Then, 
+INSecS-DCS  divides  the data stream  into time windows,  ex- 
+tracts data points with appropriate  attributes,  and labels the 
+network  traffic based on a user-defined  attacker  IP address  
+list. Consequently,  the focus of INSecS-DCS  is on labeling  net- 
+work traffic and on extracting  meaningful  attributes.  Aparicio-  
+Navarro  et al. (2014) present  an automatic  data set labeling  ap- 
+proach  using an unsupervised  anomaly-based  IDS. Since no 
+IDS is able to classify  each data point to the correct  class, the 
+authors  take some middle  ground  to reduce  the number  of 
+false positives  and true negatives.  The IDS assigns  belief val- 
+ues to each data point for the classes  normal  and attack.  If 
+the difference  between  the belief values  for these two classes  
+is smaller  than a predefined  threshold,  the data point is re- 
+moved  from the data set. This approach  increases  the quality  
+of the labels, but may discard  the most interesting  data points 
+of the data set. 
+7. Observations  and recommendations  
+Labeled  data sets are inevitable  for training  supervised  data 
+mining  methods  like classification  algorithms  and helpful  for 
+the evaluation  of supervised  as well as unsupervised  data 
+mining  methods.  Consequently,  labeled  network-based  data 
+sets can be used to compare  the quality  of different  NIDS with 
+each other. In any case, however,  the data sets must be rep- 
+resentative  to be suitable  for those tasks. The community  is 
+aware of the importance  of realistic  network-based  data, and 
+this survey  shows that there are many sources  for such data 
+(data sets, data repositories,  and traffic generators).  Further-  
+more, this work establishes  a collection  of data set properties  
+as a basis for comparing  available  data sets and for identifying  
+suitable  data sets, given specific  evaluation  scenarios.  
+In the following,  we discuss  some aspects  concerning  the 
+use of available  data sets and the creation  of new data sets. 
+Perfect  data set. The ever-increasing  number  of attack sce- 
+narios,  accompanied  by new and more complex  software  and 
+network  structures,  leads to the requirement  that data sets 
+should  contain  up-to-date  and real network  traffic.  Since there 
+is no perfect  IDS, labeling  of data points should  be checked  
+manually  rather than being done exclusively  by an IDS. Conse-  
+quently,  the perfect  network-based  data set is up-to-date,  cor- 
+rectly labeled,  publicly  available,  contains  real network  traf- 
+fic with all kinds of attacks  and normal  user behavior  as well 
+--- Page 17 ---
+
+computers  & security  86 (2019)  147–167  163 
+as payload,  and spans a long time. Such a data set, how- 
+ever, does not exist and will (probably)  never be created.  If 
+privacy  concerns  could be satisfied  and real-world  network  
+traffic (in packet-based  format)  with all kind of attacks  could 
+be recorded  over a sufficiently  long time, accurate  labeling  of 
+such traffic would be very time-consuming.  As a consequence,  
+the labeling  process  would take so much time that the data set 
+is slightly  outdated  since new attack scenarios  appear  contin-  
+uously.  However,  several  available  data sets satisfy  some prop- 
+erties of a perfect  data set. Besides,  most applications  do not 
+require  a perfect  data set - a data set which satisfies  certain  
+properties  is often sufficient.  For instance,  there is no need 
+that a data set contains  all types of attacks  when evaluating  
+a new port scan detection  algorithm,  or there is no need for 
+complete  network  configuration  when evaluating  the security  
+of a specific  server.  Therefore,  we hope that this work supports  
+researchers  to find the appropriate  data set for their specific  
+evaluation  scenario.  
+Use of several  data sets. As mentioned  above, no perfect  
+network-based  data set exists. However,  this survey  shows 
+that there are several  data sets (and other data sources)  avail- 
+able for packet-  and flow-based  network  traffic.  Therefore,  we 
+recommend  users to evaluate  their intrusion  detection  meth- 
+ods with more than one data set in order to avoid over-fitting  
+to a certain  data set, reduce  the influence  of artificial  artifacts  
+of a certain  data set, and evaluate  their methods  in a more 
+general  context.  In addition  to that, Hofstede  et al. (2018) show 
+that flow-based  network  traffic differs  between  lab environ-  
+ments and production  networks.  Therefore,  another  approach  
+could be to use both, emulated  respectively  synthetic  data sets 
+and real world network  traffic to emphasize  these points.  
+In order to ensure  reproducibility  for third parties,  we rec- 
+ommend  evaluating  intrusion  detection  methods  with at least 
+one publicly  available  data set. 
+Further,  we would like to give a general  recommendation  
+for the use of the CICIDS  2017, CIDDS-001,  UGR’16  and UNSW-  
+NB15 data sets. These data sets may be suitable  for general  
+evaluation  settings.  CICIDS  2017 and UNSW-NB15  contain  a 
+wide range of attack scenarios.  CIDDS-001  contains  detailed  
+metadata  for deeper  investigations.  UGR’16  stands  out by the 
+huge amount  of flows. However,  it should  be considered  that 
+this recommendation  reflects  our personal  views. The rec- 
+ommendation  does not imply that other data sets are inap- 
+propriate.  For instance,  we only refrain  to include  the more 
+widespread  CTU-13  and ISCX 2012 data sets in our recommen-  
+dation  due to their increasing  age. Further,  other data sets like 
+AWID or Botnet  are better suited for certain  evaluation  scenar-  
+ios. 
+Predefined  Subsets.  Furthermore,  we want to make a note 
+on the evaluation  of anomaly-based  NIDS. Machine  learning  
+and data mining  methods  often use so-called  10-fold  cross- 
+validation  ( Han et al., 2011 ). This method  divides  the data set 
+into ten equal-sized  subsets.  One subset  is used for testing  
+and the other nine subsets  are used for training.  This proce- 
+dure is repeated  ten times, such that every subset  has been 
+used once for testing.  However,  this straight-forward  splitting  
+of data sets makes  only limited  sense for intrusion  detection.  
+For instance,  the port scan data set CIDDS-002  ( Ring et al., 2017 ) contains  two weeks of network  traffic in flow-based  for- 
+mat. Each port scan within  this data set may cause thousands  
+of flows. Using 10-fold  cross-validation  would lead to the sit- 
+uation  that probably  some flows of each attack appear  in the 
+training  data set. Thus, attack detection  in test data is facili- 
+tated and generalization  is not properly  evaluated.  
+In that scenario,  it would be better to train on week1 and 
+test on week2 (and vice versa) for the CIDDS-002  data set. 
+Defining  subsets  on that approach  may also consider  the im- 
+pact of concept  drift in network  traffic over time. Another  
+approach  for creating  suitable  subsets  might be to split the 
+whole data set based on traffic characteristics  like source  IP 
+addresses.  However,  such subsets  must be well designed  to 
+preserve  the basic network  structures  of the data set. For in- 
+stance,  a training  data set with exclusively  source  IP addresses  
+which represent  clients  and no severs would be inappropriate.  
+Based on these observations,  we recommend  creating  
+meaningful  training  and test splits with respect  to the ap- 
+plication  domain  IT security.  Therefore,  benchmark  data sets 
+should  be published  with predefined  splits for training  and 
+test to facilitate  comparisons  of different  approaches  evalu- 
+ated on the same data. 
+Closer collaboration.  This study shows (see Section  5 ) that 
+many data sets have been published  in the last few years and 
+the community  works on creating  new intrusion  detection  
+data sets continuously.  Further,  the community  could bene- 
+fit from closer collaboration  and a single generally  accepted  
+platform  for sharing  intrusion  detection  data sets without  any 
+access  restrictions.  For instance,  Cermak  et al. (2018) work on 
+establishing  such a platform  for sharing  intrusion  detection  
+data sets. Likewise,  Ring et al. (2017c)  published  their scripts  
+for emulating  normal  user behavior  and attacks  such that they 
+can be used and improved  by third parties.  A short summary  
+of all mentioned  data sets and data repositories  can be found 
+at our website  58 and we intend  to update  this website  with 
+upcoming  network-based  data sets. 
+Standard  formats.  Most network-based  intrusion  detection  
+approaches  require  standard  input data formats  and cannot  
+handle  preprocessed  data. Further,  it is questionable  if data 
+sets from category  other ( Section  3.3 ) can be calculated  in real 
+time which may affect their usefulness  in NIDS. Therefore,  
+we suggest  providing  network-based  data sets in standard  
+packet-based  or flow-based  formats  as they are captured  in 
+real network  environments.  Simultaneously,  many anomaly-  
+based approaches  (e.g., Wang et al., 2010 or Zhang et al., 2008 ) 
+achieve  high detection  rates in data sets from the category  
+other which is an indicator  that the calculated  attributes  are 
+promising  for intrusion  detection.  Therefore,  we recommend  
+publishing  both, the network-based  data sets in a standard  
+format  and the scripts  for transforming  the data sets to other 
+formats.  Such an approach  would have two advantages.  First, 
+users may decide  if they want to transfer  data sets to other 
+formats  and a larger number  of researchers  could use the cor- 
+responding  data sets. Second,  the scripts  could also be applied  
+to future data sets. 
+58 http://www.dmir.uni-  wuerzburg.de/datasets/nids-  ds 
+--- Page 18 ---
+
+164 computers  & security  86 (2019)  147–167  
+Anonymization.  Anonymization  is another  important  issue 
+since this may complicate  the analysis  of network-based  data 
+sets. Therefore,  it should  be carefully  evaluated  which at- 
+tributes  have to be discarded  and which attributes  may be 
+published  in anonymous  form. Various  authors  demonstrate  
+the effectiveness  of using only small parts of payload.  For 
+example,  Mahoney  (2003) proposes  an intrusion  detection  
+method  which uses the first 48 bytes of each packet  starting  
+with the IP header.  The flow exporter  YAF ( Inacio and Tram- 
+mell, 2010 ) allows the creation  of such attributes  by extracting  
+the first n bytes of payload  or by calculating  the entropy  of the 
+payload.  Generally,  there are several  methods  for anonymiza-  
+tion. For example,  Xu et al. (2002) propose  a prefix-preserving  
+IP address  anonymization  technique.  Tcpmkpub  ( Pang et al., 
+2006 ) is an anonymization  tool for packet-based  network  traf- 
+fic which allows the anonymization  of some attributes  like IP 
+addresses  and also computes  new values  for header  check-  
+sums. We refer to Kelly et al. (2008) for a more comprehensive  
+review  of anonymization  techniques  for network-based  data. 
+Publication.  We recommend  the publication  of network-  
+based data sets. Only publicly  available  data sets can be used 
+by third parties  and thus serve as a basis for evaluating  NIDS. 
+Likewise,  the quality  of data sets can only be checked  by third 
+parties  if they are publicly  available.  Last but not least, we 
+recommend  the publication  of additional  metadata  such that 
+third parties  are able to analyze  the data and their results  in 
+more detail. 
+8. Summary  
+Labeled  network-based  data sets are necessary  for training  
+and evaluating  NIDS. This paper provides  a literature  survey  
+of available  network-based  intrusion  detection  data sets. To 
+this end, standard  network-based  data formats  are analyzed  
+in more detail. Further,  15 properties  are identified  that may 
+be used to assess the suitability  of data sets. These properties  
+are grouped  into five categories:  General  Information,  Nature  
+of the Data, Data Volume,  Recording  Environment  and Evalu- 
+ation. 
+The paper’s  main contribution  is a comprehensive  
+overview  of 34 data sets which points out the peculiari-  
+ties of each data set. Thereby  a particular  focus was placed  
+on attack scenarios  within  the data sets and their interrela-  
+tionships.  In addition,  each data set assessed  with respect  to 
+the properties  of the categorization  scheme  developed  in the 
+first step. This detailed  investigation  aims to support  readers  
+to identify  data sets for their purposes.  The review  of data 
+sets shows that the research  community  has noticed  a lack 
+of publicly  available  network-based  data sets and tries to 
+overcome  this shortage  by publishing  a considerable  number  
+of data sets over the last few years. Since several  research  
+groups  are active in this area, additional  intrusion  detection  
+data sets and improvements  can be expected  soon. 
+As further  sources  for network  traffic,  traffic generators  
+and data repositories  are discussed  in Section  6 . Traffic gener- 
+ators create synthetic  network  traffic and can be used to create 
+adapted  network  traffic for specific  scenarios.  Data reposito-  
+ries are collections  of different  network  traces on the internet.  Compared  to the data sets in Section  5 , data repositories  of- 
+ten provide  limited  documentation,  non-labeled  data sets or 
+network  traffic of specific  scenarios  (e.g., exclusively  FTP con- 
+nections).  However,  these data sources  should  be taken into 
+account  when searching  for suitable  data, especially  for spe- 
+cialized  scenarios.  Finally,  we discussed  some observations  
+and recommendations  for the use and generation  of network-  
+based intrusion  detection  data sets. We encourage  users to 
+evaluate  their methods  on several  data sets to avoid over- 
+fitting to a certain  data set and to reduce  the influence  of arti- 
+ficial artifacts  of a certain  data set. Further,  we advocate  data 
+sets in standard  formats  including  predefined  training  and 
+test subsets.  Overall,  there probably  won’t be a perfect  data 
+set, but there are many very good data sets available  and the 
+community  could benefit  from closer collaboration.  
+Declarations  of interest  
+None. 
+Acknowledgments  
+M.R. and S.W. were supported  by the BayWISS  Consortium  
+Digitisation.  S.W. is additionally  funded  by the Bavarian  State 
+Ministry  of Science  and Arts in the framework  of the Centre  
+Digitisation.Bavaria  (ZD.B).  
+REFERENCES  
+Alkasassbeh  M ,Al-Naymat  G ,Hassanat  A ,Almseidin  M . 
+Detecting  distributed  denial of service  attacks  using data 
+mining  techniques.  Int J Adv Comput  Sci Appl (IJACSA)  
+2016;7(1):436–45  .
+Anwar S ,Mohamad  Zain J ,Zolkipli  MF ,Ina y at  Z ,Khan S ,
+Anthony  B ,Chang  V . From intrusion  detection  to an intrusion  
+response  system:  fundamentals,  requirements,  and future 
+directions.  Algorithms  2017;10(2):39  .
+Aparicio-Navarro  FJ, Kyriakopoulos  KG, Parish DJ. Automatic  
+dataset  labelling  and feature  selection  for intrusion  detection  
+systems.  In: Proceedings  of the IEEE military  communications  
+conference  (MILCOM).  IEEE; 2014. p. 46–51. 
+doi: 10.1109/MILCOM.2014.17  .
+Aviv AJ ,Haeberlen  A . Challenges  in Experimenting  with Botnet 
+Detection  Systems.  Proceedings  of the conference  on cyber 
+security  experimentation  and test (CEST).  Berkeley,  CA, USA: 
+USENIX  Association,  2011 .
+Beer F ,Hofer T ,Karimi  D ,Bühler  U . A new Attack Composition  for 
+Network  Security.  In: 10. DFN-Forum  
+Kommunikationstechnologien.  Gesellschaft  für Informatik  
+eV; 2017. p. 11–20 .
+Beigi EB, Jazi HH, Stakhanova  N, Ghorbani  AA. Towards  effective  
+feature  selection  in machine  learning-based  botnet detection  
+approaches.  In: Proceedings  of the IEEE conference  on 
+communications  and network  security.  IEEE; 2014. p. 247–55.  
+doi: 10.1109/CNS.2014.6997492  .
+Bhattacharya  S, Selvakumar  S. SSENet-2014  Dataset:  A Dataset  
+for Detection  of Multiconnection  Attacks.  In: Proceedings  of 
+the international  conference  on eco-friendly  computing  and 
+communication  systems  (ICECCS).  IEEE; 2014. p. 121–6. 
+doi: 10.1109/Eco-friendly.2014.100  .
+--- Page 19 ---
+
+computers  & security  86 (2019)  147–167  165 
+Bhuyan  MH, Bhattacharyya  DK, Kalita JK. Network  anomaly  
+detection:  methods,  systems  and tools. IEEE Commun  Surv 
+Tutor 2014;16(1):303–36.  doi: 10.1109/SURV.2013.052213.00046  .
+Bhuyan  MH ,Bhattacharyya  DK ,Kalita  JK . Towards  generating  
+real-life  datasets  for network  intrusion  detection.  Int J Netw 
+Secur (IJNS) 2015;17(6):683–701  .
+Brauckhoff  D ,W a gner  A ,Ma y M . FLAME:  a flow-level  anomaly  
+modeling  engine.  In: Proceedings  of the workshop  on cyber 
+security  experimentation  and test (CSET).  USENIX  
+Association;  2008. p. 1:1–1:6 .
+Brogi G ,T ong VVT . Sharing  and replaying  attack scenarios  with 
+Moirai.  RESSI 2017: Rendez-vous  de la Recherche  et de 
+l’Enseignement  de la Sécurité des  Systémes  d’Information,  
+2017 .
+Celik ZB ,Ra ghur am  J ,Kesidis  G ,Miller  DJ . Salting  public traces 
+with attack traffic to test flow classifiers.  Proceedings  of the 
+workshop  on cyber security  experimentation  and test (CSET),  
+2011 .
+Cermak  M, Jirsik T, Velan P, Komarkova  J, Spacek  S, Drasar M, 
+Plesnik  T. Towards  provable  network  traffic measurement  and 
+analysis  via semi-labeled  trace datasets.  In: Proceedings  of the 
+network  traffic measurement  and analysis  conference  (TMA). 
+IEEE; 2018. p. 1–8. doi: 10.23919/TMA.2018.8506498  .
+Chandola  V ,Eilertson  E ,Ertoz L ,Simon  G ,K umar  V . Data mining  
+for cyber security.  In: Singhal  A, editor. In: Data warehousing  
+and data mining  techniques  for computer  security.  Springer;  
+2006. p. 83–107 .
+Claise B. Cisco Systems  NetFlow  Services  Export Version  9. 
+Internet  Engineering  Task Force 2004. doi: 10.17487/RFC3954  .
+https://www.rfc-editor.org/rfc/rfc3954.txt  
+Claise B. Specification  of the IP Flow Information  Export (IPFIX) 
+Protocol  for the Exchange  of IP Traffic Flow Information.  
+Internet  Engineering  Task Force 2008. doi: 10.17487/RFC5101  .
+https://www.rfc-editor.org/rfc/rfc5101.txt  
+Creech  G, Hu J. Generation  of a New IDS Test Dataset:  Time to 
+Retire the KDD Collection.  In: Proceedings  of the IEEE wireless  
+communications  and networking  conference  (WCNC).  IEEE; 
+2013. p. 4487–92.  doi: 10.1109/WCNC.2013.6555301  .
+Erlacher  F, Dressler  F. How to Test an IDS?: GENESIDS:  an 
+automated  system  for generating  attack traffic. In: 
+Proceedings  of the workshop  on traffic measurements  for 
+cybersecurity  (WTMC).  New York, NY, USA: ACM; 2018. 
+p. 46–51. doi: 10.1145/3229598.3229601  .
+Fontugne  R, Borgnat  P, Abry P, Fukuda  K. MAWILab:  Combining  
+diverse  anomaly  detectors  for automated  anomaly  labeling  
+and performance  benchmarking.  In: Proceedings  of the 
+international  conference  on emerging  networking  
+experiments  and technologies  (CoNEXT).  New York, NY, USA: 
+ACM; 2010. p. 8:1–8:12.  doi: 10.1145/1921168.1921179  .
+Garcia S, Grill M, Stiborek  J, Zunino  A. An empirical  comparison  of 
+botnet detection  methods.  Comput  Secur 2014;45:100–23.  
+doi: 10.1016/j.cose.2014.05.011  .
+Giménez  CT, Villegas  AP, Marañón  GÁ. HTTP data set CSIC 2010. 
+CSIC 2010 .http://www.isi.csic.es/dataset/  
+Glass-Vanderlan  T.R., Iannacone  M.D., Vincent  M.S., Bridges  R.A., 
+et al. A survey of intrusion  detection  systems  leveraging  host 
+data. arXiv: 180506070  2018;.
+Gogoi P, Bhuyan  MH, Bhattacharyya  D, Kalita JK. Packet and flow 
+based network  intrusion  dataset.  In: Proceedings  of the 
+international  conference  on contemporary  computing.  
+Springer;  2012. p. 322–34.  doi: 10.1007/978-3-642-32129-0_34  .
+Gringoli  F, Salgarelli  L, Dusi M, Cascarano  N, Risso F, et al. GT: 
+picking  up the truth from the ground  for internet  traffic. ACM 
+SIGCOMM  Comput  Commun  Rev 2009;39(5):12–18.  
+doi: 10.1145/1629607.1629610  .
+Haddadi  F, Zincir-Heywood  AN. Benchmarking  the effect of flow 
+exporters  and protocol  filters on botnet traffic classification.  
+IEEE Syst J 2016;10(4):1390–401.  
+doi: 10.1109/JSYST.2014.2364743  .Haider W, Hu J, Slay J, Turnbull  B, Xie Y. Generating  realistic  
+intrusion  detection  system  dataset  based on fuzzy qualitative  
+modeling.  J Netw Comput  Appl 2017;87:185–92.  
+doi: 10.1016/j.jnca.2017.03.018  .
+Han J ,P ei J ,Kamber  M . Data mining:  concepts  and techniques.  
+3rd. Elsevier;  2011 .
+Hatada  M, Akiyama  M, Matsuki  T, Kasama  T. Empowering  
+anti-malware  research  in Japan by sharing  the MWS datasets.  
+J Inf Process  2015;23(5):579–88.  doi: 10.2197/ipsjjip.23.579  .
+He H, Garcia EA. Learning  from imbalanced  data. IEEE Trans 
+Knowl Data Eng 2009;21(9):1263–84.  
+doi: 10.1109/TKDE.2008.239  .
+Hellemons  L, Hendriks  L, Hofstede  R, Sperotto  A, Sadre R, Pras A. 
+SSHCure:  a flow-based  SSH intrusion  detection  system.  In: 
+Proceedings  of the international  conference  on autonomous  
+infrastructure,  management  and security  (IFIP). Springer;  
+2012. p. 86–97. doi: 10.1007/978-3-642-30633-4_11  .
+Hofstede  R, Hendriks  L, Sperotto  A, Pras A. SSH compromise  
+detection  using NetFlow/IPFIX.  ACM SIGCOMM  Comput  
+Commun  Rev 2014;44(5):20–6.  doi: 10.1145/2677046.2677050  .
+Hofstede  R, Pras A, Sperotto  A, Rodosek  GD. Flow-based  
+compromise  detection:  lessons  learned.  IEEE Secur Privacy  
+2018;16(1):82–9.  doi: 10.1109/MSP.2018.1331021  .
+Inacio CM ,Trammell  B . YAF: yet another  flowmeter.  In: 
+Proceedings  of the large installation  system  administration  
+conference;  2010. p. 107–18 .
+Javed M, Paxson  V. Detecting  Stealthy,  Distributed  SSH 
+Brute-Forcing.  In: Proceedings  of the ACM SIGSAC  conference  
+on computer  & communications  security.  ACM; 2013. p. 85–96. 
+doi: 10.1145/2508859.2516719  .
+Jazi HH, Gonzalez  H, Stakhanova  N, Ghorbani  AA. Detecting  
+HTTP-based  application  layer DoS attacks  on web servers  in 
+the presence  of sampling.  Comput  Netw 2017;121:25–36.  
+doi: 10.1016/j.comnet.2017.03.018  .
+Jung J, Paxson  V, Berger AW, Balakrishnan  H. Fast portscan  
+detection  using sequential  hypothesis  testing.  In: Proceedings  
+of the IEEE symposium  on security  & privacy.  IEEE; 2004. 
+p. 211–25.  doi: 10.1109/SECPRI.2004.1301325  .
+Kelly DJ, Raines RA, Grimaila  MR, Baldwin  RO, Mullins  BE. A 
+survey of state-of-the-art  in anonymity  metrics.  In: 
+Proceedings  of the ACM workshop  on network  data 
+anonymization.  ACM; 2008. p. 31–40. 
+doi: 10.1145/1456441.1456453  .
+Kent AD. Comprehensive,  multi-source  cyber-security  events.  Los 
+Alamos  National  Laboratory;  2015a. doi: 10.17021/1179829  .
+Kent AD. Cybersecurity  data sources  for dynamic  network  
+research.  In: Dynamic  networks  in cybersecurity.  Imperial  
+College  Press; 2015b. p. 37–65. 
+doi: 10.1142/9781786340757_0002  .
+Koch R ,Golling  M ,Rodosek  GD . Towards  comparability  of 
+intrusion  detection  systems:  new data sets. Proceedings  of the 
+TERENA  networking  conference,  2014 .
+Kolias C, Kambourakis  G, Stavrou  A, Gritzalis  S. Intrusion  
+detection  in 802.11 networks:  empirical  evaluation  of threats  
+and a public dataset.  IEEE Commun  Surv Tutor 
+2016;18(1):184–208.  doi: 10.1109/COMST.2015.2402161  .
+Lippmann  RP, Fried DJ, Graf I, Haines  JW, Kendall  KR, McClung  D, 
+Weber D, Webster  SE, Wyschogrod  D, Cunningham  RK, et al. 
+Evaluating  intrusion  detection  systems  : the 1998 DARPA 
+off-line  intrusion  detection  evaluation,  2. IEEE; 2000a. p. 12–26. 
+doi: 10.1109/DISCEX.2000.821506  .
+Lippmann  R, Haines  JW, Fried DJ, Korba J, Das K. The 1999 DARPA 
+off-line  intrusion  detection  evaluation.  Comput  Netw 
+2000b;34(4):579–95.  doi: 10.1016/S1389-1286(00)00139-0  .
+Maciá-Fernández  G, Camacho  J, Magán-Carrión  R, 
+García-Teodoro  P, Therón  R. UGR’16:  a new dataset  for the 
+evaluation  of cyclostationarity-based  network  IDSs. Comput  
+Secur 2018;73:411–24.  doi: 10.1016/j.cose.2017.11.004  .
+--- Page 20 ---
+
+166 computers  & security  86 (2019)  147–167  
+Mahoney  MV. Network  traffic anomaly  detection  based on packet 
+bytes. In: Proceedings  of the ACM symposium  on applied  
+computing.  ACM; 2003. p. 346–50.  doi: 10.1145/952532.952601  .
+Małowidzki  M ,Berezinski  P ,Mazur  M . Network  intrusion  
+detection:  half a kingdom  for a good dataset.  Proceedings  of 
+the NATO STO SAS-139  workshop,  Portugal,  2015 .
+McHugh  J. Testing  intrusion  detection  systems:  a critique  of the 
+1998 and 1999 DARPA intrusion  detection  system  evaluations  
+as performed  by lincoln  laboratory.  ACM Trans Inf Syst Secur 
+(TISSEC)  2000;3(4):262–94.  doi: 10.1145/382912.382923  .
+McKeown  N, Anderson  T, Balakrishnan  H, Parulkar  G, Peterson  L, 
+Rexford  J, Shenker  S, Turner J. OpenFlow:  enabling  innovation  
+in campus  networks.  ACM SIGCOMM  Comput  Commun  Rev 
+2008;38(2):69–74.  doi: 10.1145/1355734.1355746  .
+Molnár  S, Megyesi  P, Szabo G. How to validate  traffic generators?.  
+In: Proceedings  of the IEEE international  conference  on 
+communications  workshops  (ICC). IEEE; 2013. p. 1340–4.  
+doi: 10.1109/ICCW.2013.6649445  .
+Moustafa  N, Slay J. UNSW-NB15:  a comprehensive  data set for 
+network  intrusion  detection  systems.  In: Proceedings  of the 
+military  communications  and information  systems  
+conference  (MilCIS).  IEEE; 2015. p. 1–6. 
+doi: 10.1109/MilCIS.2015.7348942  .
+Najafabadi  MM, Khoshgoftaar  TM, Kemp C, Seliya N, Zuech R. 
+Machine  learning  for detecting  brute force attacks  at the 
+network  level. In: Proceedings  of the international  conference  
+on bioinformatics  and bioengineering  (BIBE). IEEE; 2014. 
+p. 379–85.  doi: 10.1109/BIBE.2014.73  .
+Nehinbe  JO. A critical  evaluation  of datasets  for investigating  
+IDSs and IPSs Researches.  In: Proceedings  of the IEEE 
+international  conference  on cybernetic  intelligent  systems  
+(CIS). IEEE; 2011. p. 92–7. doi: 10.1109/CIS.2011.6169141  .
+Nisioti A, Mylonas  A, Yoo PD, Katos V. From intrusion  detection  to 
+attacker  attribution:  a comprehensive  survey of unsupervised  
+methods.  IEEE Commun  Surv Tutor 2018;20(4):3369–88.  
+doi: 10.1109/COMST.2018.2854724  .
+Pang R ,Allman  M ,Bennett  M ,Lee J ,Paxson  V ,Tierney  B . A first 
+look at modern  enterprise  traffic. In: Proceedings  of the ACM 
+SIGCOMM  conference  on internet  measurement  (IMC). 
+Berkeley,  CA, USA: USENIX  Association;  2005. p. 
+15–28 .
+Pang R, Allman  M, Paxson  V, Lee J. The devil and packet trace 
+anonymization.  ACM SIGCOMM  Comput  Commun  Rev 
+2006;36(1):29–38.  doi: 10.1145/1111322.1111330  .
+Phaal P. sFlow Specification  Version  5. 2004. 
+https://sflow.org/sflow  _ version  _ 5.txt 
+Rajasinghe  N, Samarabandu  J, Wang X. INSecS-DCS:  a highly 
+customizable  network  intrusion  dataset  creation  framework.  
+In: Proceedings  of the Canadian  conference  on electrical  & 
+computer  engineering  (CCECE).  IEEE; 2018. p. 1–4. 
+doi: 10.1109/CCECE.2018.8447661  .
+Rehák M, Pechoucek  M, Bartos K, Grill M, Celeda P, Krmicek  V. 
+CAMNEP:  an intrusion  detection  system  for high-speed  
+networks.  Prog Inform  2008;5(5):65–74.  
+doi: 10.2201/NiiPi.2008.5.7  .
+Ring M, Schlör D, Landes  D, Hotho A. Flow-based  network  traffic 
+generation  using generative  adversarial  networks.  Comput  
+Secur 2019;82:156–72.  doi: 10.1016/j.cose.2018.12.012  .
+Ring M, Wunderlich  S, Grüdl D, Landes  D, Hotho A. A toolset for 
+intrusion  and insider  threat detection.  In: Palomares  I, 
+Kalutarage  H, Huang Y, editors.  In: Data analytics  and decision  
+support  for cybersecurity:  trends,  methodologies  and 
+applications.  Springer;  2017. p. 3–31. 
+doi: 10.1007/978-3-319-59439-2_1  .
+Ring M ,Wunderlich  S ,Grüdl D ,Landes  D ,Hotho  A . Creation  of 
+flow-based  data sets for intrusion  detection.  J Inf Warf 
+2017;16:40–53  .
+Ring M ,Wunderlich  S ,Grüdl D ,Landes  D ,Hotho  A . Flow-based  benchmark  data sets for intrusion  detection.  In: Proceedings  
+of the European  conference  on cyber warfare  and security  
+(ECCWS).  ACPI; 2017c. p. 361–9 .
+Ring M, Landes  D, Hotho A. Detection  of slow port scans in 
+flow-based  network  traffic. PLOS ONE 2018;13(9):1–18.  
+doi: 10.1371/journal.pone.0204507  .
+Saad S, Traore I, Ghorbani  A, Sayed B, Zhao D, Lu W, Felix J, 
+Hakimian  P. Detecting  P2P botnets  through  network  behavior  
+analysis  and machine  learning.  In: Proceedings  of the 
+international  conference  on privacy,  security  and trust (PST). 
+IEEE; 2011. p. 174–80.  doi: 10.1109/PST.2011.5971980  .
+Sangster  B ,O’Connor  T ,Cook T ,Fanelli  R ,Dean E ,Morr ell  C ,
+Conti GJ . Toward  instrumenting  network  warfare  competitions  
+to generate  labeled  datasets.  Proceedings  of the workshop  on 
+cyber security  experimentation  and test (CSET),  2009 .
+Santanna  JJ, van Rijswijk-Deij  R, Hofstede  R, Sperotto  A, 
+Wierbosch  M, Granville  LZ, Pras A. Booters  - An analysis  of 
+DDoS-as-a-service  attacks.  In: Proceedings  of the IFIP/IEEE  
+international  symposium  on integrated  network  management  
+(IM); 2015. p. 243–51.  doi: 10.1109/INM.2015.7140298  .
+Sharafaldin  I, Gharib A, Lashkari  AH, Ghorbani  AA. Towards  a 
+reliable  intrusion  detection  benchmark  dataset.  Softw Netw 
+2018;2018(1):177–200.  doi: 10.13052/jsn2445-9739.2017.009  .
+Sharafaldin  I, Lashkari  AH, Ghorbani  AA. Toward  generating  a 
+new intrusion  detection  dataset  and intrusion  traffic 
+characterization.  In: Proceedings  of the international  
+conference  on information  systems  security  and privacy  
+(ICISSP);  2018. p. 108–16.  doi: 10.5220/0006639801080116  .
+Sharma  R, Singla R, Guleria  A. A new labeled  flow-based  DNS 
+dataset  for anomaly  detection:  PUF dataset.  Procedia  Comput  
+Sci 2018;132:1458–66.  doi: 10.1016/j.procs.2018.05.079  .
+International  Conference  on Computational  Intelligence  and 
+Data Science  
+Shiravi  A, Shiravi  H, Tavallaee  M, Ghorbani  AA. Toward  
+developing  a systematic  approach  to generate  benchmark  
+datasets  for intrusion  detection.  Comput  Secur 
+2012;31(3):357–74.  doi: 10.1016/j.cose.2011.12.012  .
+Singh R, Kumar H, Singla R. A reference  dataset  for network  
+traffic activity  based intrusion  detection  system.  Int J Comput  
+Commun  Control  2015;10(3):390–402.  
+doi: 10.15837/ijccc.2015.3.1924  .
+Siska P, Stoecklin  MP, Kind A, Braun T. A flow trace generator  
+using graph-based  traffic classification  techniques.  In: 
+Proceedings  of the international  wireless  communications  
+and mobile  computing  conference  (IWCMC).  ACM; 2010. 
+p. 457–62.  doi: 10.1145/1815396.1815503  .
+Sommer  R, Paxson  V. Outside  the closed world: on using machine  
+learning  for network  intrusion  detection.  In: Proceedings  of 
+the IEEE symposium  on security  and privacy.  IEEE; 2010. 
+p. 305–16.  doi: 10.1109/SP.2010.25  .
+Song J, Takakura  H, Okabe Y, Eto M, Inoue D, Nakao K. Statistical  
+analysis  of honeypot  data and building  of Kyoto 2006+ Dataset  
+for NIDS evaluation.  In: Proceedings  of the workshop  on 
+building  analysis  datasets  and gathering  experience  returns  
+for security.  ACM; 2011. p. 29–36. doi: 10.1145/1978672.1978676  .
+Sperotto  A, Sadre R, de Boer PT, Pras A. Hidden  Markov  model 
+modeling  of SSH brute-force  attacks.  In: Proceedings  of the 
+international  workshop  on distributed  systems:  operations  
+and management.  Springer;  2009. p. 164–76.  
+doi: 10.1007/978-3-642-04989-7_13  .
+Sperotto  A, Sadre R, Van Vliet F, Pras A. A labeled  data set for 
+flow-based  intrusion  detection.  In: Proceedings  of the 
+international  workshop  on IP operations  and management.  
+Springer;  2009. p. 39–50. doi: 10.1007/978-3-642-04968-2_4  .
+Sridharan  A, Ye T, Bhattacharyya  S. Connectionless  port scan 
+detection  on the backbone.  In: Proceedings  of the IEEE 
+international  performance  computing  and communications  
+conference.  IEEE; 2006. p. 10–19. doi: 10.1109/.2006.1629454  .
+--- Page 21 ---
+
+computers  & security  86 (2019)  147–167  167 
+Staniford  S ,Hoagland  JA ,McAlerney  JM . Practical  automated  
+detection  of stealthy  portscans.  J Comput  Secur 
+2002;10(1–2):105–36  .
+Stevanovic  M, Pedersen  JM. An analysis  of network  traffic 
+classification  for botnet detection.  In: Proceedings  of the IEEE 
+international  conference  on cyber situational  awareness,  data 
+analytics  and assessment  (CyberSA).  IEEE; 2015. p. 1–8. 
+doi: 10.1109/CyberSA.2015.7361120  .
+Stolfo S.. (Date last accessed  22-June).  2018 http: 
+//kdd.ics.uci.edu/databases/kddcup99/kddcup99.html  
+Szabó G,  Orincsay  D, Malomsoky  S, Szabó I.  On the validation  of 
+traffic classification  algorithms.  In: Proceedings  of the 
+international  conference  on passive  and active network  
+measurement.  Springer;  2008. p. 72–81. 
+doi: 10.1007/978-3-540-79232-1_8  .
+Tanenbaum  AS ,W ether all  D . Computer  networks.  5th. Pearson;  
+2011 .
+Tavallaee  M, Bagheri  E, Lu W, Ghorbani  AA. A detailed  analysis  of 
+the KDD CUP 99 data set. In: Proceedings  of the IEEE 
+symposium  on computational  intelligence  for security  and 
+defense  applications;  2009. p. 1–6. 
+doi: 10.1109/CISDA.2009.5356528  .
+Turcotte  M.J., Kent A.D., Hash C. Unified  host and network  data 
+set. arXiv: 170807518  2017;.
+Vasilomanolakis  E, Cordero  CG, Milanov  N, Mühlhäuser  M. 
+Towards  the creation  of synthetic,  yet realistic,  intrusion  
+detection  datasets.  In: Proceedings  of the IEEE network  
+operations  and management  symposium  (NOMS).  IEEE; 2016. 
+p. 1209–14.  doi: 10.1109/NOMS.2016.7502989  .
+Vasudevan  AR, Harshini  E, Selvakumar  S. SSENet-2011:  a network  
+intrusion  detection  system  dataset  and its comparison  with 
+KDD CUP 99 dataset.  In: Proceedings  of the second  Asian 
+Himalayas  international  conference  on Internet  (AH-ICI);  
+2011. p. 1–5. doi: 10.1109/AHICI.2011.6113948  .
+Viegas EK, Santin AO, Oliveira  LS. Toward  a reliable  
+anomaly-based  intrusion  detection  in real-world  
+environments.  Comput  Netw 2017;127:200–16.  
+doi: 10.1016/j.comnet.2017.08.013  .
+Wang G, Hao J, Ma J, Huang L. A new approach  to intrusion  
+detection  using artificial  neural networks  and fuzzy 
+clustering.  Expert Syst Appl 2010;37(9):6225–32.  
+doi: 10.1016/j.eswa.2010.02.102  .
+Wang J, Paschalidis  IC. Botnet detection  based on anomaly  and 
+community  detection.  IEEE Trans Control  Netw Syst 
+2017;4(2):392–404.  doi: 10.1109/TCNS.2016.2532804  .
+Wheelus  C, Khoshgoftaar  TM, Zuech R, Najafabadi  MM. A session  
+based approach  for aggregating  network  traffic data - The 
+SANTA  dataset.  In: Proceedings  of the IEEE international  
+conference  on bioinformatics  and bioengineering  (BIBE). IEEE; 
+2014. p. 369–78.  doi: 10.1109/BIBE.2014.72  .
+Wilkinson  MD, Dumontier  M, Aalbersberg  IJ, Appleton  G, 
+Axton M, Baak A, Blomberg  N, Boiten JW, da Silva Santos LB, 
+Bourne  PE, et al. The FAIR guiding  principles  for scientific  data 
+management  and stewardship.  Sci Data 2016;3. 
+doi: 10.1038/sdata.2016.18  .
+Xu J, Fan J, Ammar  MH, Moon SB. Prefix-Preserving  IP Address  
+Anonymization:  measurement-based  security  evaluation  and 
+a new cryptography-based  Scheme.  In: Proceedings  of the IEEE 
+international  conference  on network  protocols.  IEEE; 2002. 
+p. 280–9. doi: 10.1109/ICNP.2002.1181415  .
+Yavanoglu  O, Aydos M. A review on cyber security  datasets  for 
+machine  learning  algorithms.  In: Proceedings  of the IEEE 
+international  conference  on big data. IEEE; 2017. p. 2186–93.  
+doi: 10.1109/BigData.2017.8258167  .
+Yin C, Zhu Y, Liu S, Fei J, Zhang H. An enhancing  framework  for 
+botnet detection  using generative  adversarial  networks.  In: Proceedings  of the international  conference  on artificial  
+intelligence  and big data (ICAIBD);  2018. p. 228–34.  
+doi: 10.1109/ICAIBD.2018.8396200  .
+Zhang J, Zulkernine  M, Haque A. Random-forests-based  network  
+intrusion  detection  systems.  IEEE Trans Syst Man Cybern  Part 
+C (Appl Rev) 2008;38(5):649–59.  
+doi: 10.1109/TSMCC.2008.923876  .
+Zuech R ,Khoshgoftaar  TM ,Seliya  N ,Najafabadi  MM ,K emp  C . A 
+new intrusion  detection  benchmarking  system.  In: 
+Proceedings  of the international  florida artificial  intelligence  
+research  society  conference  (FLAIRS).  AAAI Press; 2015. 
+p. 252–6 .
+Markus  Ring is a research  associate  at Coburg  University  of Ap- 
+plied Sciences  and Arts where he is working  on his doctoral  thesis. 
+He previously  studied  Informatics  at Coburg  and worked  as a net- 
+work administrator  at T-Systems  Enterprise  GmbH.  His research  
+interests  include  the generation  of realistic  flow-based  network  
+data and the application  of data-mining  methods  for intrusion  de- 
+tection.  
+Sarah Wunderlich  is a Research  Associate  at the Coburg  Univer-  
+sity of Applied  Sciences  and Arts. She earned  a master’s  degree 
+in Computer  Science  from Coburg  in 2016. She has also worked  
+as a Lecturer  in Data Mining  at Coburg.  Her research  interests  in- 
+clude the generation  of realistic  flow-based  network  data and the 
+application  of data-mining  methods  for cyber-security  intrusion  
+detection.  
+Deniz Scheuring  is an undergraduate  student  at Coburg  University  
+of Applied  Sciences  and Arts, where he is about to finish his stud- 
+ies in Informatics.  During  his undergraduate  studies  he worked  in 
+a research  team investigating  Intrusion  Detection  Systems  (IDSs) 
+in theory and practise.  
+Dr. Dieter Landes  is a professor  of software  engineering  and 
+database  systems  at Coburg  University  of Applied  Sciences  and 
+Arts. He holds a diploma  in informatics  from the University  of 
+Erlangen-Nuremberg,  and a doctorate  in Knowledge-Based  Sys- 
+tems from the University  of Karlsruhe.  After several  years work- 
+ing in industry  - including  time with Daimler  Research  - he joined 
+Coburg  in 1999. He has published  70 papers in journals,  books, and 
+at conferences.  His research  interests  include  requirements  engi- 
+neering,  software-  engineering  education,  learning  analytics,  and 
+data mining.  
+Andreas  Hotho is professor  at the University  of Wrzburg.  He holds 
+a Ph.D. from the University  of Karlsruhe,  where he worked  from 
+1999 to 2004 at the Institute  of Applied  Informatics  and Formal  De- 
+scription  Methods  (AIFB) in the areas of text, data, and web min- 
+ing, semantic  web and information  retrieval.  From 2004 to 2009 
+he was a senior researcher  at the University  of Kassel.  He joined 
+the L3S in 2011. Since 2005 he has been leading  the development  
+of the social bookmark  and publication  sharing  platform  BibSon-  
+omy. Andreas  Hotho has published  over 100 articles  in journals  
+and at conferences,  co-edited  several  special  issues and books, 
+and co-chaired  several  workshops.  He worked  as a reviewer  for 
+journals  and was a member  of many international  conferences  
+and workshops  program  committees.  His general  research  area is 
+on Data Science  with focuses  on the combination  of data mining,  
+information  retrieval  and the semantic  web. More specifically,  he 
+is interested  in the analysis  of social media systems,  especially  
+tagging,  sensor data emerging  trough ubiquitous  and social ac- 
+tivities,  security,  and the application  of Text Mining  on historic  
+literature.  
