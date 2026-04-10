@@ -1,1 +1,4 @@
-docker run --rm -v "d:\games\6800GNetTier-ML:/data" -w /data/acmart-primary texlive/texlive sh -c "pdflatex -jobname=experiment_report_v23 -interaction=nonstopmode -file-line-error experiment_report.tex && pdflatex -jobname=experiment_report_v23 -interaction=nonstopmode -file-line-error experiment_report.tex"
+docker run --rm -v "d:\games\6800GNetTier-ML:/data" -w /data/acmart-primary texlive/texlive sh -c 
+"pdflatex -jobname=experiment_report_v27 -interaction=nonstopmode 
+-file-line-error experiment_report2.tex && pdflatex -jobname=experiment_report_v27
+ -interaction=nonstopmode -file-line-error experiment_report2.tex"
